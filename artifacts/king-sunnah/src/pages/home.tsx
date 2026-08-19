@@ -48,24 +48,14 @@ function StarLattice({ className = '' }: { className?: string }) {
 
 function CourtyardDrawing() {
   return (
-    <svg
-      className="courtyard-drawing"
-      viewBox="0 0 580 270"
-      role="img"
-      aria-label="رسم خطي لواجهة مكتبة أندلسية"
-    >
-      <g fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M18 242h544M48 242V124l72-48 72 48v118M210 242V103l80-62 80 62v139M402 242V124l65-48 65 48v118" />
-        <path d="M83 242v-64q0-38 37-38t37 38v64M236 242v-92q0-48 54-48t54 48v92M432 242v-64q0-38 35-38t35 38v64" />
-        <path d="M267 102h46M290 54v38M72 124h96M434 124h68M25 242v-18h537v18" />
-        <path d="M264 150h52M256 170h68M251 190h78M246 210h88" />
-      </g>
-      <g fill="currentColor" opacity=".9">
-        <path d="M290 35 296 48 310 54 296 60 290 74 284 60 270 54 284 48Z" />
-        <circle cx="120" cy="120" r="4" />
-        <circle cx="467" cy="120" r="4" />
-      </g>
-    </svg>
+    <div className="alifta-building-photo">
+      <img
+        className="alifta-building-image"
+        src="/images/alifta-mufti.jpg"
+        alt="صورة فوتوغرافية للمفتي العام للمملكة في لقاء رسمي"
+      />
+      <span className="building-photo-overlay" aria-hidden="true" />
+    </div>
   );
 }
 
@@ -216,15 +206,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-art" aria-hidden="true">
+          <div className="hero-art">
             <div className="architrave">
-              <span>الحمد لله رب العالمين</span>
+              <span>من منارات العلم الشرعي في المملكة</span>
             </div>
             <CourtyardDrawing />
             <div className="art-caption">
-              <span>دار الحديث</span>
+              <span>لقاء علمي رسمي</span>
               <i />
-              <span>قراءة · تحقيق · إسناد</span>
+              <span>علم · إفتاء · توثيق</span>
             </div>
           </div>
         </div>
@@ -288,6 +278,100 @@ export default function Home() {
               ابدأ بحثاً دقيقاً <ArrowLeft size={15} />
             </span>
           </Link>
+        </div>
+      </section>
+
+      {/* ── News section ──────────────────────────────────────── */}
+      <section
+        className="golden-container news-section"
+        id="news"
+        aria-labelledby="news-heading"
+      >
+        <div className="section-heading">
+          <div>
+            <span className="section-kicker">الأخبار والمستجدات</span>
+            <h2 id="news-heading">آخر الأخبار</h2>
+          </div>
+          <p>
+            تابع آخر أخبار الرئاسة العامة للبحوث العلمية والإفتاء وبياناتها
+            العلمية الرسمية.
+          </p>
+        </div>
+        <div className="news-grid">
+          <a
+            href="https://alifta.gov.sa/news/1111"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="news-card"
+          >
+            <div className="news-card-top">
+              <span className="news-category">خبر عام</span>
+              <span className="news-external-icon" aria-hidden="true">↗</span>
+            </div>
+            <h3 className="news-card-title">
+              مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق
+            </h3>
+            <p className="news-card-excerpt">
+              استقبل صاحب الفضيلة المفتي العام مفوضي الإفتاء في مناطق المملكة
+              في لقاء علمي رسمي لمتابعة سير العمل الإفتائي.
+            </p>
+            <div className="news-card-footer">
+              <time className="news-date">١٧ أغسطس ٢٠٢٦</time>
+            </div>
+          </a>
+          <a
+            href="https://alifta.gov.sa/news/1110"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="news-card"
+          >
+            <div className="news-card-top">
+              <span className="news-category">خبر عام</span>
+              <span className="news-external-icon" aria-hidden="true">↗</span>
+            </div>
+            <h3 className="news-card-title">
+              برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة
+              والتسعين
+            </h3>
+            <p className="news-card-excerpt">
+              عقدت هيئة كبار العلماء دورتها التاسعة والتسعين برئاسة فضيلة
+              المفتي العام، وتناولت عدداً من الموضوعات الشرعية ذات الأثر العام.
+            </p>
+            <div className="news-card-footer">
+              <time className="news-date">١٦ أغسطس ٢٠٢٦</time>
+            </div>
+          </a>
+          <a
+            href="https://alifta.gov.sa/news/1112"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="news-card"
+          >
+            <div className="news-card-top">
+              <span className="news-category">خبر عام</span>
+              <span className="news-external-icon" aria-hidden="true">↗</span>
+            </div>
+            <h3 className="news-card-title">
+              (54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً
+            </h3>
+            <p className="news-card-excerpt">
+              تستعرض الرئاسة مسيرتها العلمية الممتدة عبر أربعة وخمسين عاماً من
+              البحث والإفتاء، مع إصدار أكثر من ألف ومئة قرار علمي موثق.
+            </p>
+            <div className="news-card-footer">
+              <time className="news-date">١٥ أغسطس ٢٠٢٦</time>
+            </div>
+          </a>
+        </div>
+        <div className="news-section-footer">
+          <a
+            href="https://alifta.gov.sa/news"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-link news-all-link"
+          >
+            عرض جميع الأخبار <ChevronLeft size={15} />
+          </a>
         </div>
       </section>
 
