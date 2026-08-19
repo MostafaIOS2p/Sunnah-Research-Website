@@ -46,6 +46,14 @@ function formatNewsDate(value: string): string {
     timeZone: 'Asia/Riyadh',
   }).format(date);
 }
+
+function getFeaturedExcerpt(text: string, limit = 130): string {
+  const normalizedText = text.replace(/\s+/g, ' ').trim();
+  return normalizedText.length > limit
+    ? `${normalizedText.slice(0, limit).trimEnd()}…`
+    : normalizedText;
+}
+
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isSaved, saveItem, removeItem } = useStore();
@@ -305,18 +313,18 @@ export default function Home() {
       </section>
 
       {/* 5. Featured Hadiths */}
-      <section className="alifta-section">
+      <section className="alifta-section featured-section">
         <div className="alifta-container">
           <div className="section-header">
             <div className="header-content">
               <h2 className="section-title">مختارات موثقة</h2>
-              <p className="section-desc">أحاديث نبوية منتقاة بعناية، مع بيان درجاتها ومصادرها الأصلية.</p>
+              <p className="section-desc">مختارات حديثية بدرجاتها ومصادرها الأصلية.</p>
             </div>
             <Link href="/search" className="view-all">
               عرض جميع المختارات <ChevronLeft size={16} />
             </Link>
           </div>
-          <div className="grid-3">
+          <div className="grid-3 featured-grid">
             {featuredHadiths.map((hadith) => (
               <article className="hadith-card" key={hadith.id}>
                 <Link href={`/hadith/${hadith.id}`} className="hadith-content">
@@ -324,7 +332,7 @@ export default function Home() {
                     <span className="book-name">{hadith.bookName}</span>
                     <span className="grade-chip">{hadith.grade}</span>
                   </div>
-                  <p className="hadith-text">«{hadith.textAr}»</p>
+                  <p className="hadith-text">«{getFeaturedExcerpt(hadith.textAr)}»</p>
                 </Link>
                 <div className="hadith-footer">
                   <Link href={`/hadith/${hadith.id}`} className="hadith-link">

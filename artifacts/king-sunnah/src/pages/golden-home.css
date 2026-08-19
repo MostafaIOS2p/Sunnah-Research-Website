@@ -477,6 +477,40 @@
   gap: 24px;
 }
 
+/* ── Compact featured hadiths ───────────────────────── */
+.featured-section {
+  padding: 40px 0 56px;
+}
+.featured-section .section-header {
+  margin-bottom: 24px;
+}
+.featured-section .section-title {
+  font-size: 24px;
+}
+.featured-section .section-desc {
+  font-size: 14px;
+}
+.featured-grid {
+  gap: 16px;
+}
+.featured-grid .hadith-content {
+  padding: 20px;
+}
+.featured-grid .hadith-meta {
+  margin-bottom: 12px;
+}
+.featured-grid .hadith-text {
+  font-size: 17px;
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.featured-grid .hadith-footer {
+  padding: 12px 20px;
+}
+
 /* ── 4.5 How to Start (Steps) ────────────────────────────── */
 .bg-tint {
   background-color: var(--color-green-light);
@@ -1001,6 +1035,13 @@
   .desktop-btn { display: none; }
   .mobile-menu-btn { display: flex; }
   .grid-3 { grid-template-columns: 1fr; }
+  .featured-section { padding: 32px 0 44px; }
+  .featured-section .section-header { margin-bottom: 20px; }
+  .featured-section .section-title { font-size: 23px; }
+  .featured-grid .hadith-text {
+    font-size: 17px;
+    -webkit-line-clamp: 3;
+  }
   .steps-grid { gap: 24px; }
   .hero-section { padding: 48px 0; }
   .hero-title { font-size: 36px; margin-bottom: 20px; }
