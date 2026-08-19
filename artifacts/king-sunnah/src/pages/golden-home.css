@@ -4,17 +4,18 @@
    ============================================================ */
 
 .alifta-home {
+  /* Softer reading palette: Warm ivory surfaces on a gentle green-tinted background to reduce screen glare */
   --color-green: #0f6038;
   --color-green-light: #e8f3ed;
   --color-gold: #b88947;
   --color-ink: #11181c;
   --color-ink-soft: #525f68;
   --color-ink-xsoft: #8896a0;
-  --color-surface: #ffffff;
-  --color-bg: #fdfdfc;
+  --color-surface: #fffefa;
+  --color-bg: #f4f7f4;
   
-  --color-border: rgba(0, 0, 0, 0.06);
-  --color-border-hover: rgba(0, 0, 0, 0.12);
+  --color-border: rgba(0, 0, 0, 0.09);
+  --color-border-hover: rgba(0, 0, 0, 0.15);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.02);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
@@ -109,7 +110,7 @@
 
 /* ── 2. Sticky Header ────────────────────────────── */
 .site-header {
-  background: rgba(255, 255, 255, 0.90);
+  background: rgba(255, 254, 250, 0.90);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   position: sticky;
@@ -894,7 +895,7 @@
 .alifta-home .btn-inverted {
   position: relative;
   z-index: 1;
-  background: white;
+  background: var(--color-surface);
   color: var(--color-green) !important;
   padding: 16px 32px;
   border-radius: 980px;
