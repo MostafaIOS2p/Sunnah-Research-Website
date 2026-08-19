@@ -18,6 +18,22 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * @summary List the latest official Alifta news
+ */
+export const ListNewsResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "excerpt": zod.string(),
+  "category": zod.string(),
+  "publishedAt": zod.string(),
+  "url": zod.string().url()
+})),
+  "isFallback": zod.boolean()
+})
+
+
+/**
  * @summary Search hadith corpus
  */
 export const listHadithsQueryPageDefault = 1;

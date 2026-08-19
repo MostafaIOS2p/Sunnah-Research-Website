@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: news
+    description: Official Alifta news feed
   - name: hadiths
     description: Hadith corpus search and detail operations
 paths:
@@ -26,6 +28,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /news:
+    get:
+      operationId: listNews
+      tags: [news]
+      summary: List the latest official Alifta news
+      responses:
+        "200":
+          description: Latest official news, or an internal fallback feed when Alifta is unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsFeed"
   /hadiths:
     get:
       operationId: listHadiths
@@ -177,6 +191,25 @@ components:
       required: [error]
       properties:
         error: { type: string }
+    NewsItem:
+      type: object
+      required: [id, title, excerpt, category, publishedAt, url]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        excerpt: { type: string }
+        category: { type: string }
+        publishedAt: { type: string }
+        url: { type: string, format: uri }
+    NewsFeed:
+      type: object
+      required: [items, isFallback]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewsItem"
+        isFallback: { type: boolean }
     HadithBook:
       type: object
       required: [id, title, author, description, hadithCount]

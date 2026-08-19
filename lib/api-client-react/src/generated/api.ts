@@ -24,6 +24,7 @@ import type {
   ListNarratorsParams,
   Narrator,
   NarratorPage,
+  NewsFeed,
   NotFoundResponse
 } from './api.schemas';
 
@@ -120,6 +121,83 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getHealthCheckQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListNewsUrl = () => {
+
+
+
+
+  return `/api/news`
+}
+
+/**
+ * @summary List the latest official Alifta news
+ */
+export const listNews = async ( options?: Parameters<typeof customFetch>[1]): Promise<NewsFeed> => {
+
+  return customFetch<NewsFeed>(getListNewsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListNewsQueryKey = () => {
+    return [
+    `/api/news`
+    ] as const;
+    }
+
+
+export const getListNewsQueryOptions = <TData = Awaited<ReturnType<typeof listNews>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listNews>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListNewsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNews>>> = ({ signal }) => listNews({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNews>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListNewsQueryResult = NonNullable<Awaited<ReturnType<typeof listNews>>>
+export type ListNewsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List the latest official Alifta news
+ */
+
+export function useListNews<TData = Awaited<ReturnType<typeof listNews>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listNews>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListNewsQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

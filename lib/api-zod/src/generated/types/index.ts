@@ -17,6 +17,8 @@ export * from './listNarratorsParams';
 export * from './narrator';
 export * from './narratorIdParameter';
 export * from './narratorPage';
+export * from './newsFeed';
+export * from './newsItem';
 export * from './notFoundResponse';
 export * from './pageParameter';
 export * from './pageSizeParameter';

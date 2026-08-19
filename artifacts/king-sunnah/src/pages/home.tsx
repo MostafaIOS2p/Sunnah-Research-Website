@@ -18,8 +18,12 @@ import {
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import './golden-home.css';
-import { useListHadiths } from '@workspace/api-client-react';
-
+import {
+  useListHadiths,
+  useListNews,
+  type Hadith,
+  type NewsItem,
+} from '@workspace/api-client-react';
 function StarDivider({ className = '' }: { className?: string }) {
   return (
     <svg className={className} width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -27,12 +31,28 @@ function StarDivider({ className = '' }: { className?: string }) {
     </svg>
   );
 }
+
+function formatNewsDate(value: string): string {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return 'تحديث من موقع الإفتاء';
+  }
+
+  return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Asia/Riyadh',
+  }).format(date);
+}
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isSaved, saveItem, removeItem } = useStore();
   const [query, setQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: featuredData } = useListHadiths({ page: 1, pageSize: 3 });
+  const { data: newsData } = useListNews();
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -47,6 +67,7 @@ export default function Home() {
   const closeMenu = () => setIsMobileMenuOpen(false);
 
   const featuredHadiths = featuredData?.items ?? [];
+  const [leadNews, ...supportingNews] = newsData?.items ?? [];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +77,7 @@ export default function Home() {
     }
   };
 
-  const handleToggleSave = (e: React.MouseEvent, hadith: any) => {
+  const handleToggleSave = (e: React.MouseEvent, hadith: Hadith) => {
     e.preventDefault();
     if (isSaved(hadith.id)) {
       removeItem(hadith.id);
@@ -296,7 +317,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid-3">
-            {featuredHadiths.map((hadith: any) => (
+            {featuredHadiths.map((hadith) => (
               <article className="hadith-card" key={hadith.id}>
                 <Link href={`/hadith/${hadith.id}`} className="hadith-content">
                   <div className="hadith-meta">
@@ -340,53 +361,17 @@ export default function Home() {
               عرض جميع الأخبار <ChevronLeft size={16} />
             </a>
           </div>
-          <div className="news-showcase">
-            {/* Lead Card */}
-            <a href="https://alifta.gov.sa/news/1111" target="_blank" rel="noopener noreferrer" className="news-lead-card" aria-label="قراءة خبر: مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق" title="مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق">
-              <div className="news-lead-eyebrow">
-                <span className="news-lead-mark">
-                  <Newspaper size={16} strokeWidth={2.5} /> خبر رئيسي
-                </span>
-                <span className="news-lead-line" aria-hidden="true"></span>
-              </div>
-              <div className="news-lead-content">
-                <div className="news-meta">
-                  <span className="chip">خبر عام</span>
-                  <time>١٧ أغسطس ٢٠٢٦</time>
-                </div>
-                <h3 className="news-lead-title">مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق</h3>
-                <p className="news-lead-excerpt">استقبل سماحة المفتي العام للمملكة رئيس هيئة كبار العلماء والرئيس العام للبحوث العلمية والإفتاء، في مكتبه مفوضي الإفتاء بالمناطق واستعرض معهم أبرز المستجدات لتعزيز التعاون والعمل المشترك بين الإدارات المختلفة.</p>
-                <span className="news-cta" aria-hidden="true">
-                  قراءة الخبر <ArrowUpLeft size={16} strokeWidth={2.5} />
-                </span>
-              </div>
-            </a>
+          <div className="news-showcase" aria-live="polite">
+            {leadNews ? (
+              <NewsLeadCard news={leadNews} />
+            ) : (
+              <div className="news-loading-card">جارٍ تحميل آخر الأخبار…</div>
+            )}
 
-            {/* Supporting Column */}
             <div className="news-supporting-col">
-              <a href="https://alifta.gov.sa/news/1110" target="_blank" rel="noopener noreferrer" className="news-support-card" aria-label="التفاصيل: برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين" title="برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين">
-                <div className="news-meta">
-                  <span className="chip">خبر عام</span>
-                  <time>١٦ أغسطس ٢٠٢٦</time>
-                </div>
-                <h3 className="news-support-title">برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين</h3>
-                <p className="news-support-excerpt">عقدت هيئة كبار العلماء دورتها التاسعة والتسعين برئاسة سماحة المفتي العام، لمناقشة عدد من الموضوعات المدرجة على جدول الأعمال واتخاذ القرارات اللازمة بشأنها...</p>
-                <span className="news-cta-text" aria-hidden="true">
-                  التفاصيل <ArrowUpLeft size={16} strokeWidth={2} />
-                </span>
-              </a>
-
-              <a href="https://alifta.gov.sa/news/1112" target="_blank" rel="noopener noreferrer" className="news-support-card" aria-label="التفاصيل: (54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً" title="(54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً">
-                <div className="news-meta">
-                  <span className="chip">خبر عام</span>
-                  <time>١٥ أغسطس ٢٠٢٦</time>
-                </div>
-                <h3 className="news-support-title">(54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً</h3>
-                <p className="news-support-excerpt">أصدرت الأمانة العامة لهيئة كبار العلماء تقريراً إحصائياً بمناسبة مرور 54 عاماً على تأسيسها، يستعرض مسيرتها العلمية الحافلة وأبرز القرارات والموضوعات التي تمت دراستها...</p>
-                <span className="news-cta-text" aria-hidden="true">
-                  التفاصيل <ArrowUpLeft size={16} strokeWidth={2} />
-                </span>
-              </a>
+              {supportingNews.map((news) => (
+                <NewsSupportingCard key={news.id} news={news} />
+              ))}
             </div>
           </div>
         </div>
@@ -421,5 +406,59 @@ export default function Home() {
         </div>
       </footer>
     </main>
+  );
+}
+
+function NewsSupportingCard({ news }: { news: NewsItem }) {
+  return (
+    <a
+      href={news.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="news-support-card"
+      aria-label={`التفاصيل: ${news.title}`}
+      title={news.title}
+    >
+      <div className="news-meta">
+        <span className="chip">{news.category}</span>
+        <time dateTime={news.publishedAt}>{formatNewsDate(news.publishedAt)}</time>
+      </div>
+      <h3 className="news-support-title">{news.title}</h3>
+      <p className="news-support-excerpt">{news.excerpt}</p>
+      <span className="news-cta-text" aria-hidden="true">
+        التفاصيل <ArrowUpLeft size={16} strokeWidth={2} />
+      </span>
+    </a>
+  );
+}
+
+function NewsLeadCard({ news }: { news: NewsItem }) {
+  return (
+    <a
+      href={news.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="news-lead-card"
+      aria-label={`قراءة خبر: ${news.title}`}
+      title={news.title}
+    >
+      <div className="news-lead-eyebrow">
+        <span className="news-lead-mark">
+          <Newspaper size={16} strokeWidth={2.5} /> خبر رئيسي
+        </span>
+        <span className="news-lead-line" aria-hidden="true"></span>
+      </div>
+      <div className="news-lead-content">
+        <div className="news-meta">
+          <span className="chip">{news.category}</span>
+          <time dateTime={news.publishedAt}>{formatNewsDate(news.publishedAt)}</time>
+        </div>
+        <h3 className="news-lead-title">{news.title}</h3>
+        <p className="news-lead-excerpt">{news.excerpt}</p>
+        <span className="news-cta" aria-hidden="true">
+          قراءة الخبر <ArrowUpLeft size={16} strokeWidth={2.5} />
+        </span>
+      </div>
+    </a>
   );
 }

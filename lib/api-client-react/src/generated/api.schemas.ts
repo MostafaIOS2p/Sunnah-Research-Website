@@ -13,6 +13,20 @@ export interface ErrorResponse {
   error: string;
 }
 
+export interface NewsItem {
+  id: number;
+  title: string;
+  excerpt: string;
+  category: string;
+  publishedAt: string;
+  url: string;
+}
+
+export interface NewsFeed {
+  items: NewsItem[];
+  isFallback: boolean;
+}
+
 export interface HadithBook {
   id: string;
   title: string;
