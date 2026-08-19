@@ -372,17 +372,23 @@
   z-index: 2;
 }
 .hero-search .search-icon {
+  position: relative;
+  z-index: 3;
   color: var(--color-ink-xsoft);
   margin-left: 16px;
   flex-shrink: 0;
 }
 .hero-search input {
+  position: relative;
+  z-index: 3;
   flex: 1;
   border: none;
   outline: none;
   font-size: 16px;
   background: transparent;
   color: var(--color-ink);
+  caret-color: var(--color-green);
+  cursor: text;
   min-width: 0;
 }
 .hero-search input:focus-visible {
@@ -390,8 +396,11 @@
 }
 .hero-search input::placeholder {
   color: var(--color-ink-xsoft);
+  opacity: 1;
 }
 .hero-search .btn-submit {
+  position: relative;
+  z-index: 3;
   background: var(--color-green);
   color: white;
   border: none;
