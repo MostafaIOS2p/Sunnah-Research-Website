@@ -1,1 +1,2 @@
 - [Alifta brand alignment](alifta-brand-alignment.md) — This is an Alifta.gov.sa product; preserve its official green, gold, government-service visual language.
+- [Hadith corpus provenance](hadith-corpus-provenance.md) — The imported source supplies Arabic texts and reporter fields, not verified full isnads or rijāl biographies.

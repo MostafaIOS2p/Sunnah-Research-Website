@@ -1,24 +1,25 @@
 import React from 'react';
 import { useParams, Link } from 'wouter';
-import { getNarratorById, searchHadiths } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Bookmark, ChevronLeft, Users, FileText, ScrollText } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
+import { useGetNarrator, useListNarratorHadiths } from '@workspace/api-client-react';
 
 export default function NarratorProfile() {
   const { id } = useParams<{ id: string }>();
-  const narrator = getNarratorById(id || '');
+  const { data: narrator, isLoading, isError } = useGetNarrator(id || '');
+  const { data: relatedData } = useListNarratorHadiths(id || '');
   const { saveItem, removeItem, isSaved } = useStore();
   const { toast } = useToast();
+  const relatedHadiths = relatedData?.items ?? [];
 
-  const relatedHadiths = React.useMemo(() => {
-    // A simplistic way to find hadiths containing this narrator in chain
-    return searchHadiths('').filter(h => h.narratorsChain.includes(id || ''));
-  }, [id]);
+  if (isLoading) {
+    return <div className="text-center py-20 text-muted-foreground">جارٍ تحميل ترجمة الراوي...</div>;
+  }
 
-  if (!narrator) {
+  if (!narrator || isError) {
     return <div className="text-center py-20 text-muted-foreground">الراوي غير موجود</div>;
   }
 
@@ -53,10 +54,7 @@ export default function NarratorProfile() {
               <h1 className="text-3xl md:text-4xl font-bold mb-2">{narrator.name}</h1>
               <div className="flex flex-wrap items-center gap-3">
                 <Badge variant="outline" className="text-sm bg-background">
-                  {narrator.generation}
-                </Badge>
-                <Badge className="text-sm bg-secondary text-secondary-foreground hover:bg-secondary">
-                  {narrator.reliability}
+                  الاسم كما ورد في المصدر
                 </Badge>
               </div>
             </div>
@@ -75,21 +73,21 @@ export default function NarratorProfile() {
         <div className="relative z-10 mt-8 pt-8 border-t border-border">
           <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
             <ScrollText className="h-5 w-5 text-muted-foreground" />
-            نبذة
+            ملاحظة عن المصدر
           </h3>
           <p className="text-lg text-foreground/80 leading-relaxed max-w-3xl">
-            {narrator.bio}
+            لا تتوفر في مصدر corpus الحالي ترجمة موثقة أو حكم رجالي مستقل لهذا الاسم.
           </p>
         </div>
 
         <div className="relative z-10 mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-background border border-border rounded-lg p-4">
-            <div className="text-sm text-muted-foreground mb-1">مروياته</div>
+            <div className="text-sm text-muted-foreground mb-1">أحاديث مرتبطة بالاسم</div>
             <div className="text-2xl font-bold text-primary">{narrator.hadithCount}</div>
           </div>
           <div className="bg-background border border-border rounded-lg p-4">
-            <div className="text-sm text-muted-foreground mb-1">الطبقة</div>
-            <div className="text-lg font-bold">{narrator.generation}</div>
+            <div className="text-sm text-muted-foreground mb-1">نوع البيانات</div>
+            <div className="text-lg font-bold">تعريف المصدر</div>
           </div>
         </div>
       </div>
@@ -97,7 +95,7 @@ export default function NarratorProfile() {
       <div className="space-y-4">
         <h2 className="text-2xl font-bold flex items-center gap-2">
           <FileText className="h-6 w-6 text-primary" />
-          أحاديث رواها
+          أحاديث مرتبطة بالاسم في المصدر
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {relatedHadiths.map(hadith => (
@@ -117,7 +115,7 @@ export default function NarratorProfile() {
           ))}
           {relatedHadiths.length === 0 && (
             <div className="col-span-full text-center py-8 text-muted-foreground bg-card border border-dashed rounded-xl">
-              لا تتوفر مرويات في النموذج الحالي.
+              لا تتوفر مرويات لهذا الراوي في المصدر.
             </div>
           )}
         </div>

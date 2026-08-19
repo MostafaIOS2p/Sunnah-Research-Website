@@ -1,14 +1,16 @@
 import React from 'react';
 import { BarChart3, Database, BookOpen, Users, Activity } from 'lucide-react';
-import { MOCK_BOOKS, MOCK_NARRATORS, MOCK_HADITHS } from '@/lib/mock-data';
+import { useListHadithBooks, useListNarrators } from '@workspace/api-client-react';
 
 export default function Stats() {
-  const totalHadiths = MOCK_BOOKS.reduce((acc, b) => acc + b.hadithCount, 0);
+  const { data: books = [] } = useListHadithBooks();
+  const { data: narratorData } = useListNarrators({ page: 1, pageSize: 1 });
+  const totalHadiths = books.reduce((acc, b) => acc + b.hadithCount, 0);
 
   const stats = [
     { label: 'إجمالي الأحاديث المخرّجة', value: totalHadiths.toLocaleString('ar-SA'), icon: Database, color: 'text-blue-500' },
-    { label: 'الكتب والمصادر', value: MOCK_BOOKS.length.toLocaleString('ar-SA'), icon: BookOpen, color: 'text-primary' },
-    { label: 'تراجم الرواة', value: (MOCK_NARRATORS.length * 1250).toLocaleString('ar-SA'), icon: Users, color: 'text-secondary' }, // Fake multiplier for visual
+    { label: 'الكتب والمصادر', value: books.length.toLocaleString('ar-SA'), icon: BookOpen, color: 'text-primary' },
+    { label: 'تراجم الرواة', value: (narratorData?.total ?? 0).toLocaleString('ar-SA'), icon: Users, color: 'text-secondary' },
     { label: 'عمليات البحث اليومية', value: '١٢,٤٥٠', icon: Activity, color: 'text-green-500' },
   ];
 
@@ -40,8 +42,8 @@ export default function Stats() {
             توزيع الأحاديث حسب الكتب
           </h3>
           <div className="space-y-4">
-            {MOCK_BOOKS.map((book) => {
-              const percentage = (book.hadithCount / totalHadiths) * 100;
+            {books.map((book) => {
+              const percentage = totalHadiths ? (book.hadithCount / totalHadiths) * 100 : 0;
               return (
                 <div key={book.id}>
                   <div className="flex justify-between text-sm mb-1">

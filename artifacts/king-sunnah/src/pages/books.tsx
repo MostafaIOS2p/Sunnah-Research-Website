@@ -1,11 +1,12 @@
 import React from 'react';
-import { MOCK_BOOKS } from '@/lib/mock-data';
 import { Book, ChevronLeft, LayoutGrid, List } from 'lucide-react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
+import { useListHadithBooks } from '@workspace/api-client-react';
 
 export default function Books() {
   const [view, setView] = React.useState<'grid' | 'list'>('grid');
+  const { data: books = [], isLoading } = useListHadithBooks();
 
   return (
     <div className="space-y-6 animate-in fade-in">
@@ -37,7 +38,7 @@ export default function Books() {
           ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
           : "space-y-4"
       }>
-        {MOCK_BOOKS.map((book) => (
+        {books.map((book) => (
           <Link key={book.id} href={`/search?q=${book.title}`}>
             <div className={`group bg-card border border-card-border hover:border-primary/50 hover:shadow-md transition-all cursor-pointer rounded-xl p-6 ${view === 'list' ? 'flex items-center gap-6' : 'flex flex-col h-full'}`}>
               <div className={`shrink-0 p-4 bg-primary/5 rounded-xl text-primary mb-4 ${view === 'list' ? 'mb-0' : ''}`}>
@@ -61,6 +62,11 @@ export default function Books() {
             </div>
           </Link>
         ))}
+        {!isLoading && books.length === 0 && (
+          <div className="col-span-full text-center py-12 text-muted-foreground bg-card border border-dashed border-border rounded-xl">
+            لا تتوفر كتب للعرض حاليًا.
+          </div>
+        )}
       </div>
     </div>
   );

@@ -16,9 +16,9 @@ import {
   Share2,
   Newspaper
 } from 'lucide-react';
-import { MOCK_HADITHS } from '@/lib/mock-data';
 import { useStore } from '@/lib/store';
 import './golden-home.css';
+import { useListHadiths, type Hadith } from '@workspace/api-client-react';
 
 function StarDivider({ className = '' }: { className?: string }) {
   return (
@@ -27,18 +27,12 @@ function StarDivider({ className = '' }: { className?: string }) {
     </svg>
   );
 }
-
-const FEATURED_LABELS: Record<string, string> = {
-  h1: 'الأعمال والنيات',
-  h2: 'أصول الإسلام',
-  h3: 'الآداب',
-};
-
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isSaved, saveItem, removeItem } = useStore();
   const [query, setQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: featuredData } = useListHadiths({ page: 1, pageSize: 3 });
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,7 +46,7 @@ export default function Home() {
 
   const closeMenu = () => setIsMobileMenuOpen(false);
 
-  const featuredHadiths = MOCK_HADITHS.slice(0, 3);
+  const featuredHadiths = featuredData?.items ?? [];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +56,7 @@ export default function Home() {
     }
   };
 
-  const handleToggleSave = (e: React.MouseEvent, hadith: (typeof MOCK_HADITHS)[0]) => {
+  const handleToggleSave = (e: React.MouseEvent, hadith: Hadith) => {
     e.preventDefault();
     if (isSaved(hadith.id)) {
       removeItem(hadith.id);

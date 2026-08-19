@@ -3,13 +3,15 @@ import { Microscope, Filter, Download, Plus, Settings2, Trash2 } from 'lucide-re
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { MOCK_HADITHS } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
+import { useListHadiths } from '@workspace/api-client-react';
 
 export default function Research() {
   const [activeTab, setActiveTab] = useState<'search' | 'compare'>('search');
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([]);
   const { toast } = useToast();
+  const { data: hadithData } = useListHadiths({ page: 1, pageSize: 12 });
+  const hadiths = hadithData?.items ?? [];
 
   const handleToggleCompare = (id: string) => {
     setSelectedForCompare(prev => {
@@ -107,14 +109,14 @@ export default function Research() {
           {activeTab === 'search' ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                <span>نتائج مطابقة ({MOCK_HADITHS.length})</span>
+                <span>نتائج مطابقة ({hadithData?.total ?? 0})</span>
                 <Button variant="ghost" size="sm">
                   <Settings2 className="h-4 w-4 ml-2" />
                   خيارات العرض
                 </Button>
               </div>
               
-              {MOCK_HADITHS.map(hadith => {
+              {hadiths.map(hadith => {
                 const isSelected = selectedForCompare.includes(hadith.id);
                 return (
                   <div key={hadith.id} className={`bg-card border p-5 rounded-lg transition-colors ${isSelected ? 'border-primary shadow-sm ring-1 ring-primary/20' : 'border-border'}`}>
@@ -159,7 +161,7 @@ export default function Research() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {selectedForCompare.map(id => {
-                    const hadith = MOCK_HADITHS.find(h => h.id === id);
+                    const hadith = hadiths.find(h => h.id === id);
                     if (!hadith) return null;
                     return (
                       <div key={id} className="bg-card border border-primary/30 rounded-xl flex flex-col shadow-sm">
@@ -179,8 +181,8 @@ export default function Research() {
                             <Badge>{hadith.grade}</Badge>
                           </div>
                           <div>
-                            <div className="text-xs text-muted-foreground mb-1">عدد الرواة في السند</div>
-                            <span className="font-mono bg-muted px-2 py-1 rounded text-sm">{hadith.narratorsChain.length} رواة</span>
+                              <div className="text-xs text-muted-foreground mb-1">الرواة المذكورون في المصدر</div>
+                              <span className="font-mono bg-muted px-2 py-1 rounded text-sm">{hadith.sourceNarrators.length} راوٍ</span>
                           </div>
                         </div>
                       </div>

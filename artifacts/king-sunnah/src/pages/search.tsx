@@ -1,26 +1,29 @@
 import React from 'react';
-import { useLocation } from 'wouter';
-import { searchHadiths } from '@/lib/mock-data';
 import { Search as SearchIcon, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
+import { useListHadiths } from '@workspace/api-client-react';
 
 export default function Search() {
-  const [location] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
   const initialQuery = searchParams.get('q') || '';
-  
   const [query, setQuery] = React.useState(initialQuery);
   const [activeQuery, setActiveQuery] = React.useState(initialQuery);
+  const [page, setPage] = React.useState(1);
+  const { data, isLoading, isError } = useListHadiths({
+    query: activeQuery.trim() || undefined,
+    page,
+    pageSize: 12,
+  });
+  const results = data?.items ?? [];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setActiveQuery(query);
+    setPage(1);
   };
-
-  const results = React.useMemo(() => searchHadiths(activeQuery), [activeQuery]);
 
   return (
     <div className="space-y-6 animate-in fade-in">
@@ -46,10 +49,22 @@ export default function Search() {
 
       <div className="py-4">
         <div className="text-muted-foreground mb-4">
-          {activeQuery ? `نتائج البحث عن "${activeQuery}" (${results.length})` : `جميع الأحاديث (${results.length})`}
+          {activeQuery
+            ? `نتائج البحث عن "${activeQuery}" (${data?.total ?? 0})`
+            : `جميع الأحاديث (${data?.total ?? 0})`}
         </div>
 
         <div className="space-y-4">
+          {isLoading && (
+            <div className="text-center py-12 bg-card border border-dashed border-border rounded-xl text-muted-foreground">
+              جارٍ البحث في corpus الحديثي...
+            </div>
+          )}
+          {isError && (
+            <div className="text-center py-12 bg-card border border-dashed border-border rounded-xl text-muted-foreground">
+              تعذر تحميل نتائج البحث. حاول مرة أخرى.
+            </div>
+          )}
           {results.map((hadith) => (
             <Link key={hadith.id} href={`/hadith/${hadith.id}`}>
               <div className="bg-card border border-card-border p-6 rounded-xl hover:shadow-sm transition-all cursor-pointer group">
@@ -77,12 +92,33 @@ export default function Search() {
             </Link>
           ))}
           
-          {results.length === 0 && (
+          {!isLoading && !isError && results.length === 0 && (
             <div className="text-center py-12 bg-card border border-dashed border-border rounded-xl">
               <p className="text-muted-foreground text-lg">لم يتم العثور على نتائج مطابقة.</p>
             </div>
           )}
         </div>
+        {data && data.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-3 pt-6">
+            <Button
+              variant="outline"
+              disabled={page <= 1}
+              onClick={() => setPage((current) => current - 1)}
+            >
+              السابق
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              صفحة {data.page} من {data.totalPages}
+            </span>
+            <Button
+              variant="outline"
+              disabled={page >= data.totalPages}
+              onClick={() => setPage((current) => current + 1)}
+            >
+              التالي
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

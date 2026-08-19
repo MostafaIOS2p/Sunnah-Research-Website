@@ -1,19 +1,23 @@
 import React from 'react';
 import { useParams, Link } from 'wouter';
-import { getHadithById, MOCK_NARRATORS } from '@/lib/mock-data';
 import { useStore } from '@/lib/store';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Bookmark, Share2, Quote, BookOpen, ChevronLeft, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useGetHadith } from '@workspace/api-client-react';
 
 export default function HadithDetail() {
   const { id } = useParams<{ id: string }>();
-  const hadith = getHadithById(id || '');
+  const { data: hadith, isLoading, isError } = useGetHadith(id || '');
   const { saveItem, removeItem, isSaved } = useStore();
   const { toast } = useToast();
 
-  if (!hadith) {
+  if (isLoading) {
+    return <div className="text-center py-20 text-muted-foreground">جارٍ تحميل الحديث...</div>;
+  }
+
+  if (!hadith || isError) {
     return <div className="text-center py-20 text-muted-foreground">الحديث غير موجود</div>;
   }
 
@@ -34,7 +38,7 @@ export default function HadithDetail() {
     toast({ title: 'تم نسخ النص' });
   };
 
-  const chain = hadith.narratorsChain.map(nId => MOCK_NARRATORS.find(n => n.id === nId));
+  const sourceNarrators = hadith.sourceNarrators;
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto animate-in fade-in">
@@ -108,7 +112,7 @@ export default function HadithDetail() {
           </h3>
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
             <p className="text-muted-foreground leading-relaxed">
-              {hadith.explanation}
+              لا يتوفر شرح مستقل لهذا الحديث في مصدر corpus الحالي.
             </p>
           </div>
         </div>
@@ -117,11 +121,11 @@ export default function HadithDetail() {
         <div className="space-y-4">
           <h3 className="text-xl font-bold flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            إسناد الحديث
+            الراوي المذكور في المصدر
           </h3>
           <div className="bg-card border border-border rounded-xl p-4 shadow-sm relative before:absolute before:right-[31px] before:top-8 before:bottom-8 before:w-px before:bg-border">
             <div className="space-y-0">
-              {chain.map((narrator, idx) => narrator && (
+              {sourceNarrators.map((narrator, idx) => (
                 <div key={narrator.id} className="flex gap-4 p-3 hover:bg-muted/50 rounded-lg transition-colors relative z-10 group">
                   <div className="mt-1 h-10 w-10 shrink-0 rounded-full bg-background border border-border flex items-center justify-center shadow-sm text-sm font-bold text-primary">
                     {idx + 1}
@@ -132,10 +136,6 @@ export default function HadithDetail() {
                         {narrator.name}
                       </h4>
                     </Link>
-                    <div className="flex gap-2 text-xs text-muted-foreground mt-1">
-                      <Badge variant="outline" className="text-[10px] py-0">{narrator.generation}</Badge>
-                      <span>• {narrator.reliability}</span>
-                    </div>
                   </div>
                 </div>
               ))}

@@ -1,17 +1,14 @@
 import React from 'react';
-import { MOCK_NARRATORS } from '@/lib/mock-data';
 import { Users, Search } from 'lucide-react';
 import { Link } from 'wouter';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { useListNarrators } from '@workspace/api-client-react';
 
 export default function Narrators() {
   const [query, setQuery] = React.useState('');
-
-  const filtered = React.useMemo(() => 
-    MOCK_NARRATORS.filter(n => n.name.includes(query) || n.generation.includes(query)),
-    [query]
-  );
+  const { data, isLoading } = useListNarrators({ query: query.trim() || undefined, page: 1, pageSize: 50 });
+  const filtered = data?.items ?? [];
 
   return (
     <div className="space-y-6 animate-in fade-in">
@@ -42,18 +39,18 @@ export default function Narrators() {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{narrator.name}</h3>
-                    <div className="text-sm text-muted-foreground mt-0.5">{narrator.generation}</div>
+                    <div className="text-sm text-muted-foreground mt-0.5">الاسم كما ورد في المصدر</div>
                   </div>
                 </div>
               </div>
               
               <p className="text-sm text-foreground/80 mb-4 line-clamp-2">
-                {narrator.bio}
+                لا تتوفر ترجمة موثقة لهذا الراوي ضمن مصدر corpus الحالي.
               </p>
               
               <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-border">
                 <Badge variant="outline" className="bg-secondary/10 text-secondary-foreground border-secondary/20">
-                  {narrator.reliability}
+                  بيانات ترجمة غير متاحة
                 </Badge>
                 <Badge variant="secondary" className="mr-auto">
                   {narrator.hadithCount} حديث
@@ -62,7 +59,7 @@ export default function Narrators() {
             </div>
           </Link>
         ))}
-        {filtered.length === 0 && (
+        {!isLoading && filtered.length === 0 && (
           <div className="col-span-full text-center py-12 text-muted-foreground bg-card border border-dashed rounded-xl">
             لا توجد نتائج مطابقة للبحث.
           </div>
