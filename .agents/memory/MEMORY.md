@@ -1,0 +1,1 @@
+- [Alifta brand alignment](alifta-brand-alignment.md) — This is an Alifta.gov.sa product; preserve its official green, gold, government-service visual language.

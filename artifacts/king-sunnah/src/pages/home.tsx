@@ -60,7 +60,7 @@ function CourtyardDrawing() {
         <path d="M267 102h46M290 54v38M72 124h96M434 124h68M25 242v-18h537v18" />
         <path d="M264 150h52M256 170h68M251 190h78M246 210h88" />
       </g>
-      <g fill="currentColor" opacity=".8">
+      <g fill="currentColor" opacity=".9">
         <path d="M290 35 296 48 310 54 296 60 290 74 284 60 270 54 284 48Z" />
         <circle cx="120" cy="120" r="4" />
         <circle cx="467" cy="120" r="4" />
@@ -109,12 +109,52 @@ export default function Home() {
     <main className="sunnah-root golden-home" dir="rtl">
       <div className="golden-grain" aria-hidden="true" />
 
-      {/* ── Header ────────────────────────────────────────────────── */}
+      {/* ── Government utility strip ─────────────────────────── */}
+      <div className="gov-strip" role="banner" aria-label="شريط الحكومة">
+        <div className="golden-container gov-strip-inner">
+          <div className="gov-strip-right">
+            <span>بوابة المملكة العربية السعودية الرسمية</span>
+            <a
+              href="#"
+              className="gov-strip-verify"
+              aria-label="التحقق من الموقع الرسمي"
+            >
+              <ShieldCheck size={11} strokeWidth={2} />
+              موقع رسمي موثوق
+            </a>
+          </div>
+          <div className="gov-strip-left">
+            <a href="#">سياسة الخصوصية</a>
+            <a href="#">إمكانية الوصول</a>
+            <a href="#">اتصل بنا</a>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Date / utility band ───────────────────────────────── */}
+      <div className="date-band" aria-label="شريط التاريخ والأدوات">
+        <div className="golden-container date-band-inner">
+          <div className="date-band-right">
+            <time dateTime="2025">١٤٤٦ هـ / ٢٠٢٥ م</time>
+            <span className="date-band-sep" aria-hidden="true" />
+            <span>الأحد ٢٧ ذو القعدة</span>
+          </div>
+          <div className="date-band-left">
+            <button type="button" className="lang-btn active" aria-label="العربية">عربي</button>
+            <button type="button" className="lang-btn" aria-label="English">EN</button>
+            <span className="date-band-sep" aria-hidden="true" />
+            <a href="#" className="util-btn" aria-label="خريطة الموقع">خريطة الموقع</a>
+            <a href="#" className="util-btn" aria-label="أدوات الباحث">أدوات الباحث</a>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Header ────────────────────────────────────────────── */}
       <header className="golden-header">
         <div className="golden-container header-inner">
           <Link href="/" className="brand-lockup" aria-label="الصفحة الرئيسية">
-            <span className="brand-mark">
-              <ShieldCheck size={21} strokeWidth={1.5} />
+            <span className="brand-mark" aria-hidden="true">
+              <ShieldCheck size={20} strokeWidth={1.5} />
             </span>
             <span>
               <strong>مجموعة الملك عبدالعزيز</strong>
@@ -125,51 +165,52 @@ export default function Home() {
           <nav className="main-nav" aria-label="التنقل الرئيسي">
             <Link href="/books">المكتبة</Link>
             <Link href="/search">حديث اليوم</Link>
+            <Link href="/narrators">الرواة</Link>
             <Link href="/research">للباحثين</Link>
           </nav>
 
           <Link href="/research" className="header-action">
-            دخول الباحث <ArrowLeft size={15} />
+            دخول الباحث <ArrowLeft size={14} />
           </Link>
         </div>
       </header>
 
-      {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="hero-section">
+      {/* ── Hero ──────────────────────────────────────────────── */}
+      <section className="hero-section" aria-label="بوابة البحث في السنة النبوية">
         <StarLattice className="lattice-left" />
         <StarLattice className="lattice-right" />
         <div className="golden-container hero-grid">
           <div className="hero-copy">
             <div className="eyebrow">
-              <span /> أمانة العلم · منذ ١٤٤١ هـ
+              <span aria-hidden="true" /> أمانة العلم · منذ ١٤٤١ هـ
             </div>
             <h1>
-              حيثُ يُصانُ الأثر
+              بوابة الحديث النبوي
               <br />
-              <em>ويُفتحُ المعنى</em>
+              <em>الموثوق والمفهرس</em>
             </h1>
             <p className="hero-lede">
-              مكتبة حديثية موثوقة، تجمع أمهات الكتب وتراجم الرواة في فضاء
-              واحد؛ للقراءة المتأنية، والبحث الدقيق.
+              مكتبة حديثية رسمية، تجمع أمهات الكتب وتراجم الرواة في فضاء
+              واحد؛ للقراءة المتأنية، والبحث الدقيق الموثق.
             </p>
-            <form className="hero-search" onSubmit={handleSearch}>
-              <Search size={20} aria-hidden="true" />
+            <form className="hero-search" onSubmit={handleSearch} role="search" aria-label="البحث في السنة">
+              <Search size={19} aria-hidden="true" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="ابحث في المتن، الراوي، أو الكتاب..."
-                aria-label="البحث في السنة"
+                aria-label="نص البحث"
               />
-              <kbd>
-                <Command size={13} /> K
+              <kbd aria-hidden="true">
+                <Command size={12} /> K
               </kbd>
               <button type="submit" className="hero-search-btn">
-                ابحث <ArrowLeft size={16} />
+                ابحث <ArrowLeft size={15} />
               </button>
             </form>
             <div className="hero-links">
               <Link href="/books">
-                <Library size={16} /> تصفح المجموعات
+                <Library size={15} /> تصفح المجموعات
               </Link>
               <span>أكثر من ٦٠,٠٠٠ حديث موثق</span>
             </div>
@@ -189,24 +230,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Quote band ────────────────────────────────────────────── */}
-      <section className="quote-band">
+      {/* ── Quote band ────────────────────────────────────────── */}
+      <section className="quote-band" aria-label="حديث شريف">
         <div className="golden-container quote-inner">
-          <span className="quote-mark">۞</span>
+          <span className="quote-mark" aria-hidden="true">۞</span>
           <p>«من يرد الله به خيراً يفقهه في الدين»</p>
           <span className="quote-source">— صحيح البخاري · كتاب العلم</span>
         </div>
       </section>
 
-      {/* ── Collections ───────────────────────────────────────────── */}
+      {/* ── Collections ───────────────────────────────────────── */}
       <section
         className="golden-container collections-section"
         id="collections"
+        aria-labelledby="collections-heading"
       >
         <div className="section-heading">
           <div>
             <span className="section-kicker">أبواب المعرفة</span>
-            <h2>تجوّل في خزانتنا</h2>
+            <h2 id="collections-heading">تجوّل في خزانتنا</h2>
           </div>
           <p>
             أدوات واضحة، ومصادر أصلية، ومساحة تليق بوقت الباحث والقارئ.
@@ -214,64 +256,79 @@ export default function Home() {
         </div>
         <div className="collection-grid">
           <Link href="/books" className="collection-card primary-card">
-            <span className="card-number">٠١</span>
-            <BookOpen size={29} strokeWidth={1.4} />
-            <h3>الكتب الحديثية</h3>
-            <p>الصحاح، السنن، المسانيد، والمعاجم مرتبة بين يديك.</p>
+            <div className="collection-card-inner">
+              <span className="card-number" aria-hidden="true">٠١</span>
+              <BookOpen size={28} strokeWidth={1.4} />
+              <h3>الكتب الحديثية</h3>
+              <p>الصحاح، السنن، المسانيد، والمعاجم مرتبة بين يديك.</p>
+            </div>
             <span className="card-link">
-              استكشف الكتب <ArrowLeft size={16} />
+              استكشف الكتب <ArrowLeft size={15} />
             </span>
           </Link>
           <Link href="/narrators" className="collection-card">
-            <span className="card-number">٠٢</span>
-            <Users size={29} strokeWidth={1.4} />
-            <h3>تراجم الرواة</h3>
-            <p>طبقات الرواة، الجرح والتعديل، وصلات الإسناد.</p>
+            <div className="collection-card-inner">
+              <span className="card-number" aria-hidden="true">٠٢</span>
+              <Users size={28} strokeWidth={1.4} />
+              <h3>تراجم الرواة</h3>
+              <p>طبقات الرواة، الجرح والتعديل، وصلات الإسناد.</p>
+            </div>
             <span className="card-link">
-              افتح علم الرجال <ArrowLeft size={16} />
+              افتح علم الرجال <ArrowLeft size={15} />
             </span>
           </Link>
           <Link href="/research" className="collection-card">
-            <span className="card-number">٠٣</span>
-            <Database size={29} strokeWidth={1.4} />
-            <h3>البحث المتقدم</h3>
-            <p>صفِّ نتائجك بالراوي، والدرجة، والكتاب، والموضوع.</p>
+            <div className="collection-card-inner">
+              <span className="card-number" aria-hidden="true">٠٣</span>
+              <Database size={28} strokeWidth={1.4} />
+              <h3>البحث المتقدم</h3>
+              <p>صفِّ نتائجك بالراوي، والدرجة، والكتاب، والموضوع.</p>
+            </div>
             <span className="card-link">
-              ابدأ بحثاً دقيقاً <ArrowLeft size={16} />
+              ابدأ بحثاً دقيقاً <ArrowLeft size={15} />
             </span>
           </Link>
         </div>
       </section>
 
-      {/* ── Featured hadiths ──────────────────────────────────────── */}
+      {/* ── Featured hadiths ──────────────────────────────────── */}
       <section
         className="golden-container featured-section"
         id="featured"
+        aria-labelledby="featured-heading"
       >
         <div className="section-heading featured-heading">
           <div>
             <span className="section-kicker">من رفوف اليوم</span>
-            <h2>مختارات موثقة</h2>
+            <h2 id="featured-heading">مختارات موثقة</h2>
           </div>
           <Link href="/search" className="text-link">
-            عرض جميع المختارات <ChevronLeft size={16} />
+            عرض جميع المختارات <ChevronLeft size={15} />
           </Link>
         </div>
         <div className="hadith-grid">
           {featuredHadiths.map((hadith) => (
             <article className="hadith-card" key={hadith.id}>
-              <Link href={`/hadith/${hadith.id}`} style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}>
-                <div className="hadith-meta">
-                  <span>{hadith.bookName}</span>
-                  <b>{hadith.grade}</b>
+              <Link
+                href={`/hadith/${hadith.id}`}
+                style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
+              >
+                <div className="hadith-card-body">
+                  <div className="hadith-meta">
+                    <span>{hadith.bookName}</span>
+                    <b>{hadith.grade}</b>
+                  </div>
+                  <span className="hadith-label">
+                    {FEATURED_LABELS[hadith.id] ?? hadith.chapter}
+                  </span>
+                  <p>«{hadith.textAr}»</p>
                 </div>
-                <span className="hadith-label">
-                  {FEATURED_LABELS[hadith.id] ?? hadith.chapter}
-                </span>
-                <p>«{hadith.textAr}»</p>
               </Link>
               <div className="hadith-footer">
-                <Link href={`/hadith/${hadith.id}`} style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontSize: '11px' }}>
+                <Link
+                  href={`/hadith/${hadith.id}`}
+                  style={{ color: 'var(--ink-xsoft)', textDecoration: 'none', fontSize: '11px' }}
+                >
                   حديث رقم {hadith.number}
                 </Link>
                 <button
@@ -289,25 +346,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Research panel ────────────────────────────────────────── */}
-      <section className="research-panel golden-container" id="research">
-        <div className="research-icon">
-          <Sparkles size={22} />
+      {/* ── Research panel ────────────────────────────────────── */}
+      <section className="research-panel golden-container" id="research" aria-labelledby="research-heading">
+        <div className="research-icon" aria-hidden="true">
+          <Sparkles size={21} />
         </div>
         <div className="research-content">
           <span className="section-kicker">مساحة الباحث</span>
-          <h2>لستَ تبحث عن كلمة فقط.</h2>
+          <h2 id="research-heading">لستَ تبحث عن كلمة فقط.</h2>
           <p>
             ابنِ استعلامك على أكثر من معيار، وتتبع الحديث في مصادره، وافتح
             خريطة الإسناد من موضعها.
           </p>
         </div>
         <Link href="/research" className="research-cta">
-          اكتشف البحث المتقدم <ArrowLeft size={17} />
+          اكتشف البحث المتقدم <ArrowLeft size={16} />
         </Link>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────────── */}
+      {/* ── Footer ────────────────────────────────────────────── */}
       <footer className="golden-footer">
         <div className="golden-container footer-inner">
           <span>مجموعة الملك عبدالعزيز للسنة النبوية</span>

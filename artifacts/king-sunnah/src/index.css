@@ -61,65 +61,67 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* LIGHT MODE: Stone & Ink Aesthetic */
+/* LIGHT MODE: Alifta Official Green / White / Gold */
 :root {
   --button-outline: rgba(0, 0, 0, 0.1);
   --badge-outline: rgba(0, 0, 0, 0.05);
   --opaque-button-border-intensity: -8;
   --elevate-1: rgba(0, 0, 0, 0.03);
-  --elevate-2: rgba(0, 0, 0, 0.08);
+  --elevate-2: rgba(0, 0, 0, 0.07);
 
-  /* Stone / Parchment background */
-  --background: 43 28% 96%;
-  --foreground: 133 15% 15%;
+  /* Clean off-white background – not parchment */
+  --background: 40 14% 97%;       /* #f7f6f2 */
+  --foreground: 200 20% 17%;      /* #263238 */
 
-  --border: 43 15% 85%;
-  --input: 43 15% 85%;
-  --ring: 155 43% 18%;
+  --border: 147 26% 88%;          /* soft green-tinted border */
+  --input: 147 26% 88%;
+  --ring: 147 73% 22%;            /* #0f6038 */
 
-  --card: 43 35% 98%;
-  --card-foreground: 133 15% 15%;
-  --card-border: 43 15% 88%;
+  --card: 0 0% 100%;              /* white cards */
+  --card-foreground: 200 20% 17%;
+  --card-border: 147 26% 90%;
 
-  --popover: 43 35% 98%;
-  --popover-foreground: 133 15% 15%;
-  --popover-border: 43 15% 88%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 200 20% 17%;
+  --popover-border: 147 26% 90%;
 
-  /* Deep Green Primary */
-  --primary: 155 43% 18%;
-  --primary-foreground: 43 28% 98%;
+  /* Deep Official Green – #0f6038 → hsl(147 73% 22%) */
+  --primary: 147 73% 22%;
+  --primary-foreground: 0 0% 100%;
 
-  /* Accent/Gold */
-  --secondary: 36 34% 52%;
-  --secondary-foreground: 43 35% 98%;
+  /* Saudi Gold – #d4af37 → hsl(45 65% 52%) */
+  --secondary: 45 65% 52%;
+  --secondary-foreground: 200 20% 17%;
 
-  --muted: 43 15% 90%;
-  --muted-foreground: 133 10% 40%;
+  --muted: 147 15% 93%;
+  --muted-foreground: 200 14% 43%;  /* #546e7a */
 
-  --accent: 155 20% 90%;
-  --accent-foreground: 155 43% 18%;
+  /* Light green accent surface */
+  --accent: 147 30% 91%;           /* #e8f3ed */
+  --accent-foreground: 147 73% 22%;
 
   --destructive: 0 65% 45%;
   --destructive-foreground: 0 0% 100%;
 
-  --sidebar: 43 35% 98%;
-  --sidebar-foreground: 133 15% 15%;
-  --sidebar-border: 43 15% 85%;
-  --sidebar-primary: 155 43% 18%;
-  --sidebar-primary-foreground: 43 28% 98%;
-  --sidebar-accent: 155 20% 90%;
-  --sidebar-accent-foreground: 155 43% 18%;
-  --sidebar-ring: 155 43% 18%;
+  /* Sidebar – deep green */
+  --sidebar: 147 63% 18%;          /* #0b4f2e */
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-border: 147 40% 24%;
+  --sidebar-primary: 45 65% 52%;   /* gold highlight */
+  --sidebar-primary-foreground: 200 20% 17%;
+  --sidebar-accent: 147 40% 24%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 45 65% 52%;
 
   --app-font-sans: 'IBM Plex Sans Arabic', sans-serif;
   --app-font-serif: 'IBM Plex Sans Arabic', serif;
   --app-font-mono: Menlo, monospace;
-  
+
   --radius: 0.5rem;
-  
+
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.09), 0 1px 2px -1px rgb(0 0 0 / 0.09);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
 }
 
 .dark {
@@ -153,14 +155,14 @@
   --destructive: 0 50% 40%;
   --destructive-foreground: 0 0% 100%;
 
-  --sidebar: 133 15% 14%;
-  --sidebar-foreground: 43 28% 90%;
-  --sidebar-border: 133 15% 22%;
-  --sidebar-primary: 155 40% 35%;
-  --sidebar-primary-foreground: 43 28% 98%;
-  --sidebar-accent: 133 20% 25%;
-  --sidebar-accent-foreground: 43 28% 90%;
-  --sidebar-ring: 155 40% 35%;
+  --sidebar: 147 50% 10%;
+  --sidebar-foreground: 0 0% 92%;
+  --sidebar-border: 147 30% 18%;
+  --sidebar-primary: 45 60% 50%;
+  --sidebar-primary-foreground: 200 20% 12%;
+  --sidebar-accent: 147 30% 18%;
+  --sidebar-accent-foreground: 0 0% 92%;
+  --sidebar-ring: 45 60% 50%;
 }
 
 @layer base {
