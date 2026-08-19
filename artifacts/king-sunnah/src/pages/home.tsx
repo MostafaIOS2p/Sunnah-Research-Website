@@ -59,6 +59,7 @@ export default function Home() {
   const { isSaved, saveItem, removeItem } = useStore();
   const [query, setQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { data: featuredData } = useListHadiths({ page: 1, pageSize: 3 });
   const { data: newsData } = useListNews();
 
@@ -203,7 +204,18 @@ export default function Home() {
                 <span className="search-block-label">البحث في المجموعة</span>
                 <span className="search-block-helper">في المتن، الراوي، أو الكتاب</span>
               </div>
-              <form className="hero-search" onSubmit={handleSearch} role="search" aria-label="البحث في السنة">
+              <form
+                className={`hero-search ${isSearchFocused ? 'is-focused' : ''}`}
+                onSubmit={handleSearch}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                    setIsSearchFocused(false);
+                  }
+                }}
+                role="search"
+                aria-label="البحث في السنة"
+              >
                 <Search className="search-icon" size={24} aria-hidden="true" />
                 <input
                   value={query}
