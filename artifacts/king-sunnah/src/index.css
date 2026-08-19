@@ -69,8 +69,8 @@
   --elevate-1: rgba(0, 0, 0, 0.03);
   --elevate-2: rgba(0, 0, 0, 0.07);
 
-  /* Clean off-white background – not parchment */
-  --background: 40 14% 97%;       /* #f7f6f2 */
+  /* Clean white/near-white background */
+  --background: 0 0% 99%;         /* #fcfcfc */
   --foreground: 200 20% 17%;      /* #263238 */
 
   --border: 147 26% 88%;          /* soft green-tinted border */

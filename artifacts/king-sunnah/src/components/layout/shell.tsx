@@ -15,30 +15,35 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
-/* ── Shell palette (Alifta green / white / gold) ───────────────────────────
+/* ── Shell palette (Alifta green / white / light surface) ───────────────────
    These CSS variables override the global theme tokens for the shell surface,
    aligning non-home routes with the official Alifta.gov.sa visual identity.
-   Scoped to .ks-shell so they don't bleed into the Golden Age home page.
 ────────────────────────────────────────────────────────────────────────── */
 const SHELL_VARS = `
   .ks-shell {
     --shell-green:       #0f6038;
-    --shell-green-deep:  #0b4f2e;
     --shell-green-light: #e8f3ed;
-    --shell-gold:        #d4af37;
-    --shell-gold-mid:    #b88947;
-    --shell-white:       #ffffff;
-    --shell-offwhite:    #f7f6f2;
-    --shell-ink:         #263238;
-    --shell-ink-soft:    #546e7a;
-    --shell-line:        rgba(15,96,56,0.13);
-    --shell-line-gold:   rgba(212,175,55,0.35);
+    --shell-surface:     #ffffff;
+    --shell-bg:          #fdfdfc;
+    --shell-ink:         #11181c;
+    --shell-ink-soft:    #525f68;
+    --shell-border:      rgba(0, 0, 0, 0.06);
   }
 `;
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen]);
 
   const navItems = [
     { name: 'الرئيسية', path: '/', icon: Library },
@@ -56,7 +61,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <div
         className="ks-shell min-h-screen flex flex-col md:flex-row rtl"
         style={{
-          background: 'var(--shell-offwhite)',
+          background: 'var(--shell-bg)',
           color: 'var(--shell-ink)',
         }}
       >
@@ -64,21 +69,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <header
           className="md:hidden sticky top-0 z-40 p-4 flex items-center justify-between"
           style={{
-            background: 'var(--shell-green-deep)',
-            borderBottom: '2px solid var(--shell-line-gold)',
+            background: 'var(--shell-surface)',
+            borderBottom: '1px solid var(--shell-border)',
           }}
         >
           <Link href="/">
             <span
               className="font-bold text-base flex items-center gap-2"
-              style={{ color: '#fff' }}
+              style={{ color: 'var(--shell-ink)' }}
             >
               <span
-                className="inline-grid place-items-center w-7 h-7 rounded-full border-2 flex-shrink-0"
+                className="inline-grid place-items-center w-7 h-7 rounded-md flex-shrink-0"
                 style={{
-                  borderColor: 'var(--shell-gold-mid)',
-                  color: 'var(--shell-gold)',
-                  background: 'rgba(212,175,55,0.12)',
+                  background: 'var(--shell-green)',
+                  color: '#fff',
                 }}
               >
                 <ShieldCheck size={14} strokeWidth={1.5} />
@@ -90,7 +94,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            style={{ color: 'rgba(255,255,255,0.85)' }}
+            style={{ color: 'var(--shell-ink)' }}
             aria-label={isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
           >
             {isMobileMenuOpen ? (
@@ -109,50 +113,44 @@ export function Shell({ children }: { children: React.ReactNode }) {
             'right-0',
           )}
           style={{
-            background: 'var(--shell-green-deep)',
-            borderLeft: '1px solid rgba(255,255,255,0.07)',
+            background: 'var(--shell-surface)',
+            borderLeft: '1px solid var(--shell-border)',
           }}
           aria-label="القائمة الجانبية"
         >
           {/* Brand */}
           <div
             className="p-6 hidden md:block"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ borderBottom: '1px solid var(--shell-border)' }}
           >
             <Link href="/">
-              <div className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity">
+              <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
                 <span
-                  className="inline-grid place-items-center w-10 h-10 rounded-full border-2 flex-shrink-0"
+                  className="inline-grid place-items-center w-8 h-8 rounded-lg flex-shrink-0"
                   style={{
-                    borderColor: 'var(--shell-gold-mid)',
-                    color: 'var(--shell-gold)',
-                    background: 'rgba(212,175,55,0.1)',
+                    background: 'var(--shell-green)',
+                    color: '#fff',
                   }}
                 >
-                  <ShieldCheck size={18} strokeWidth={1.5} />
+                  <ShieldCheck size={16} strokeWidth={1.5} />
                 </span>
-                <h1 className="font-bold text-base leading-tight" style={{ color: '#fff' }}>
+                <h1 className="font-bold text-sm leading-tight" style={{ color: 'var(--shell-ink)' }}>
                   مجموعة الملك عبدالعزيز
                   <br />
                   <span
-                    className="font-normal text-xs"
-                    style={{ color: 'rgba(255,255,255,0.55)' }}
+                    className="font-medium text-xs mt-0.5 block"
+                    style={{ color: 'var(--shell-ink-soft)' }}
                   >
                     للسنة النبوية
                   </span>
                 </h1>
               </div>
             </Link>
-            {/* Gold accent line */}
-            <div
-              className="mt-5 h-px"
-              style={{ background: 'linear-gradient(90deg, var(--shell-gold-mid), transparent)' }}
-            />
           </div>
 
           {/* Nav */}
           <nav
-            className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto"
+            className="flex-1 px-3 py-4 space-y-1 overflow-y-auto"
             aria-label="التنقل الرئيسي"
           >
             {navItems.map((item) => {
@@ -163,24 +161,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors cursor-pointer rounded-md',
+                      isActive ? '' : 'hover:bg-black/[0.03] hover:text-[#11181c]'
                     )}
                     style={{
-                      color: isActive ? '#fff' : 'rgba(255,255,255,0.65)',
-                      background: isActive
-                        ? 'rgba(212,175,55,0.18)'
-                        : 'transparent',
-                      borderRight: isActive
-                        ? '3px solid var(--shell-gold)'
-                        : '3px solid transparent',
+                      color: isActive ? 'var(--shell-green)' : 'var(--shell-ink-soft)',
+                      background: isActive ? 'var(--shell-green-light)' : 'transparent',
                     }}
                     aria-current={isActive ? 'page' : undefined}
                   >
                     <item.icon
-                      className="h-4 w-4 flex-shrink-0"
+                      className="h-4 w-4 flex-shrink-0 transition-colors"
                       style={{
-                        color: isActive
-                          ? 'var(--shell-gold)'
-                          : 'rgba(255,255,255,0.5)',
+                        color: isActive ? 'var(--shell-green)' : 'currentColor',
                       }}
                     />
                     {item.name}
@@ -194,8 +186,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <div
             className="p-4 text-center text-xs"
             style={{
-              borderTop: '1px solid rgba(255,255,255,0.08)',
-              color: 'rgba(255,255,255,0.35)',
+              borderTop: '1px solid var(--shell-border)',
+              color: 'var(--shell-ink-soft)',
             }}
           >
             إصدار تجريبي · ١.٠
@@ -205,7 +197,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         {/* ── Main content ───────────────────────────────────────── */}
         <main
           className="flex-1 min-w-0 flex flex-col relative pb-10"
-          style={{ background: 'var(--shell-offwhite)' }}
+          style={{ background: 'var(--shell-bg)' }}
         >
           <div className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-8">
             {children}
@@ -215,7 +207,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         {/* ── Mobile overlay ─────────────────────────────────────── */}
         {isMobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-black/30 z-20 md:hidden"
+            className="fixed inset-0 bg-black/10 z-20 md:hidden backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />

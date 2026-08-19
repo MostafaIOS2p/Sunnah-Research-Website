@@ -1,77 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import {
   ArrowLeft,
   BookOpen,
   ChevronLeft,
-  Command,
-  Database,
-  Library,
   Search,
   ShieldCheck,
-  Sparkles,
   Users,
+  Database,
+  Bookmark,
+  BookmarkCheck,
+  ArrowUpLeft,
+  Menu,
+  X
 } from 'lucide-react';
 import { MOCK_HADITHS } from '@/lib/mock-data';
 import { useStore } from '@/lib/store';
 import './golden-home.css';
 
-// ── Inline SVG components ────────────────────────────────────────────────────
-
-function StarLattice({ className = '' }: { className?: string }) {
+function StarDivider({ className = '' }: { className?: string }) {
   return (
-    <svg
-      className={`star-lattice ${className}`}
-      viewBox="0 0 180 180"
-      aria-hidden="true"
-    >
-      <defs>
-        <pattern
-          id="golden-lattice"
-          width="60"
-          height="60"
-          patternUnits="userSpaceOnUse"
-        >
-          <path
-            d="M30 2 58 30 30 58 2 30Z M30 12 48 30 30 48 12 30Z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-          <circle cx="30" cy="30" r="2" fill="currentColor" />
-        </pattern>
-      </defs>
-      <rect width="180" height="180" fill="url(#golden-lattice)" />
+    <svg className={className} width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M160 20L185.355 134.645L300 160L185.355 185.355L160 300L134.645 185.355L20 160L134.645 134.645L160 20Z" fill="currentColor" opacity="0.1"/>
     </svg>
   );
 }
 
-function CourtyardDrawing() {
-  return (
-    <div className="alifta-building-photo">
-      <img
-        className="alifta-building-image"
-        src="/images/alifta-mufti.jpg"
-        alt="صورة فوتوغرافية للمفتي العام للمملكة في لقاء رسمي"
-      />
-      <span className="building-photo-overlay" aria-hidden="true" />
-    </div>
-  );
-}
-
-// ── Featured hadiths (first 3 from real mock data) ───────────────────────────
 const FEATURED_LABELS: Record<string, string> = {
   h1: 'الأعمال والنيات',
   h2: 'أصول الإسلام',
   h3: 'الآداب',
 };
 
-// ── Component ────────────────────────────────────────────────────────────────
-
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isSaved, saveItem, removeItem } = useStore();
-  const [query, setQuery] = React.useState('');
+  const [query, setQuery] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen]);
+
+  const closeMenu = () => setIsMobileMenuOpen(false);
 
   const featuredHadiths = MOCK_HADITHS.slice(0, 3);
 
@@ -83,7 +60,8 @@ export default function Home() {
     }
   };
 
-  const handleToggleSave = (hadith: (typeof MOCK_HADITHS)[0]) => {
+  const handleToggleSave = (e: React.MouseEvent, hadith: (typeof MOCK_HADITHS)[0]) => {
+    e.preventDefault();
     if (isSaved(hadith.id)) {
       removeItem(hadith.id);
     } else {
@@ -96,364 +74,278 @@ export default function Home() {
   };
 
   return (
-    <main className="sunnah-root golden-home" dir="rtl">
-      <div className="golden-grain" aria-hidden="true" />
-
-      {/* ── Government utility strip ─────────────────────────── */}
-      <div className="gov-strip" role="banner" aria-label="شريط الحكومة">
-        <div className="golden-container gov-strip-inner">
-          <div className="gov-strip-right">
-            <span>بوابة المملكة العربية السعودية الرسمية</span>
-            <a
-              href="#"
-              className="gov-strip-verify"
-              aria-label="التحقق من الموقع الرسمي"
-            >
-              <ShieldCheck size={11} strokeWidth={2} />
-              موقع رسمي موثوق
-            </a>
+    <main className="alifta-home">
+      {/* 1. Top Utility Bar */}
+      <div className="utility-bar" role="banner" aria-label="شريط الحكومة">
+        <div className="alifta-container">
+          <div className="utility-right">
+            <span>بوابة رسمية سعودية</span>
+            <span className="verified-pill">
+              <ShieldCheck size={12} strokeWidth={2.5} />
+              موقع موثوق
+            </span>
           </div>
-          <div className="gov-strip-left">
+          <div className="utility-left">
+            <button aria-label="العربية">عربي</button>
+            <div className="utility-divider" aria-hidden="true" />
+            <button aria-label="English">EN</button>
+            <div className="utility-divider" aria-hidden="true" />
             <a href="#">سياسة الخصوصية</a>
-            <a href="#">إمكانية الوصول</a>
             <a href="#">اتصل بنا</a>
           </div>
         </div>
       </div>
 
-      {/* ── Date / utility band ───────────────────────────────── */}
-      <div className="date-band" aria-label="شريط التاريخ والأدوات">
-        <div className="golden-container date-band-inner">
-          <div className="date-band-right">
-            <time dateTime="2025">١٤٤٦ هـ / ٢٠٢٥ م</time>
-            <span className="date-band-sep" aria-hidden="true" />
-            <span>الأحد ٢٧ ذو القعدة</span>
-          </div>
-          <div className="date-band-left">
-            <button type="button" className="lang-btn active" aria-label="العربية">عربي</button>
-            <button type="button" className="lang-btn" aria-label="English">EN</button>
-            <span className="date-band-sep" aria-hidden="true" />
-            <a href="#" className="util-btn" aria-label="خريطة الموقع">خريطة الموقع</a>
-            <a href="#" className="util-btn" aria-label="أدوات الباحث">أدوات الباحث</a>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Header ────────────────────────────────────────────── */}
-      <header className="golden-header">
-        <div className="golden-container header-inner">
+      {/* 2. Sticky Header */}
+      <header className="site-header">
+        <div className="alifta-container">
           <Link href="/" className="brand-lockup" aria-label="الصفحة الرئيسية">
-            <span className="brand-mark" aria-hidden="true">
-              <ShieldCheck size={20} strokeWidth={1.5} />
-            </span>
-            <span>
+            <div className="brand-mark" aria-hidden="true">
+              <ShieldCheck size={18} strokeWidth={2} />
+            </div>
+            <div className="brand-text">
               <strong>مجموعة الملك عبدالعزيز</strong>
-              <small>للسنة النبوية</small>
-            </span>
+              <span>للسنة النبوية</span>
+            </div>
           </Link>
 
-          <nav className="main-nav" aria-label="التنقل الرئيسي">
+          <nav className="site-nav" aria-label="التنقل الرئيسي">
             <Link href="/books">المكتبة</Link>
             <Link href="/search">حديث اليوم</Link>
             <Link href="/narrators">الرواة</Link>
             <Link href="/research">للباحثين</Link>
           </nav>
 
-          <Link href="/research" className="header-action">
-            دخول الباحث <ArrowLeft size={14} />
-          </Link>
+          <div className="header-actions">
+            <Link href="/research" className="btn-primary desktop-btn">
+              دخول الباحث <ArrowLeft size={16} />
+            </Link>
+            <button
+              className="mobile-menu-btn"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-nav"
+              aria-label={isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Nav Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="mobile-nav-overlay" onClick={closeMenu}>
+            <div
+              id="mobile-nav"
+              className="mobile-nav-menu"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="قائمة التنقل للجوال"
+            >
+              <nav className="mobile-nav-links">
+                <Link href="/books" onClick={closeMenu}>المكتبة</Link>
+                <Link href="/search" onClick={closeMenu}>حديث اليوم</Link>
+                <Link href="/narrators" onClick={closeMenu}>الرواة</Link>
+                <Link href="/research" onClick={closeMenu}>للباحثين</Link>
+                <div className="mobile-nav-divider" aria-hidden="true" />
+                <Link href="/research" onClick={closeMenu} className="btn-primary">
+                  دخول الباحث <ArrowLeft size={16} />
+                </Link>
+              </nav>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className="hero-section" aria-label="بوابة البحث في السنة النبوية">
-        <StarLattice className="lattice-left" />
-        <StarLattice className="lattice-right" />
-        <div className="golden-container hero-grid">
-          <div className="hero-copy">
-            <div className="eyebrow">
-              <span aria-hidden="true" /> أمانة العلم · منذ ١٤٤١ هـ
-            </div>
-            <h1>
-              بوابة الحديث النبوي
-              <br />
-              <em>الموثوق والمفهرس</em>
+      {/* 3. Hero Section */}
+      <section className="hero-section">
+        <div className="alifta-container hero-grid">
+          <div className="hero-content">
+            <div className="hero-eyebrow">أمانة العلم · منذ ١٤٤١ هـ</div>
+            <h1 className="hero-title">
+              بوابة الحديث النبوي <span className="text-accent">الموثوق</span>
             </h1>
             <p className="hero-lede">
-              مكتبة حديثية رسمية، تجمع أمهات الكتب وتراجم الرواة في فضاء
-              واحد؛ للقراءة المتأنية، والبحث الدقيق الموثق.
+              مكتبة حديثية رسمية، تجمع أمهات الكتب وتراجم الرواة في فضاء واحد؛ للقراءة المتأنية، والبحث الدقيق الموثق.
             </p>
+
             <form className="hero-search" onSubmit={handleSearch} role="search" aria-label="البحث في السنة">
-              <Search size={19} aria-hidden="true" />
+              <Search className="search-icon" size={24} aria-hidden="true" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="ابحث في المتن، الراوي، أو الكتاب..."
                 aria-label="نص البحث"
               />
-              <kbd aria-hidden="true">
-                <Command size={12} /> K
-              </kbd>
-              <button type="submit" className="hero-search-btn">
-                ابحث <ArrowLeft size={15} />
+              <button type="submit" className="btn-submit">
+                ابحث
               </button>
             </form>
-            <div className="hero-links">
-              <Link href="/books">
-                <Library size={15} /> تصفح المجموعات
-              </Link>
-              <span>أكثر من ٦٠,٠٠٠ حديث موثق</span>
+            
+            <div className="search-meta">
+              <span>٦٠٬٠٠٠+ حديث موثق</span>
+              <span className="dot" aria-hidden="true">·</span>
+              <span>مصادر أصلية</span>
             </div>
           </div>
 
-          <div className="hero-art">
-            <div className="architrave">
-              <span>من منارات العلم الشرعي في المملكة</span>
-            </div>
-            <CourtyardDrawing />
-            <div className="art-caption">
-              <span>لقاء علمي رسمي</span>
-              <i />
-              <span>علم · إفتاء · توثيق</span>
+          <div className="hero-visual">
+            <div className="editorial-card">
+              <img
+                src="/images/alifta-mufti.jpg"
+                alt="المفتي العام للمملكة في لقاء رسمي"
+              />
+              <div className="editorial-caption">
+                <span>لقاء علمي رسمي برئاسة سماحة المفتي العام</span>
+                <span>واس</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Quote band ────────────────────────────────────────── */}
-      <section className="quote-band" aria-label="حديث شريف">
-        <div className="golden-container quote-inner">
-          <span className="quote-mark" aria-hidden="true">۞</span>
-          <p>«من يرد الله به خيراً يفقهه في الدين»</p>
-          <span className="quote-source">— صحيح البخاري · كتاب العلم</span>
-        </div>
-      </section>
-
-      {/* ── Collections ───────────────────────────────────────── */}
-      <section
-        className="golden-container collections-section"
-        id="collections"
-        aria-labelledby="collections-heading"
-      >
-        <div className="section-heading">
-          <div>
-            <span className="section-kicker">أبواب المعرفة</span>
-            <h2 id="collections-heading">تجوّل في خزانتنا</h2>
+      {/* 4. Collections */}
+      <section className="alifta-section">
+        <div className="alifta-container">
+          <div className="section-header">
+            <h2 className="section-title">أبواب المعرفة</h2>
           </div>
-          <p>
-            أدوات واضحة، ومصادر أصلية، ومساحة تليق بوقت الباحث والقارئ.
-          </p>
-        </div>
-        <div className="collection-grid">
-          <Link href="/books" className="collection-card primary-card">
-            <div className="collection-card-inner">
-              <span className="card-number" aria-hidden="true">٠١</span>
-              <BookOpen size={28} strokeWidth={1.4} />
+          <div className="grid-3">
+            <Link href="/books" className="collection-card">
+              <div className="icon-box">
+                <BookOpen size={24} strokeWidth={1.5} />
+              </div>
               <h3>الكتب الحديثية</h3>
               <p>الصحاح، السنن، المسانيد، والمعاجم مرتبة بين يديك.</p>
-            </div>
-            <span className="card-link">
-              استكشف الكتب <ArrowLeft size={15} />
-            </span>
-          </Link>
-          <Link href="/narrators" className="collection-card">
-            <div className="collection-card-inner">
-              <span className="card-number" aria-hidden="true">٠٢</span>
-              <Users size={28} strokeWidth={1.4} />
+              <div className="hover-arrow"><ArrowLeft size={20} /></div>
+            </Link>
+            <Link href="/narrators" className="collection-card">
+              <div className="icon-box">
+                <Users size={24} strokeWidth={1.5} />
+              </div>
               <h3>تراجم الرواة</h3>
               <p>طبقات الرواة، الجرح والتعديل، وصلات الإسناد.</p>
-            </div>
-            <span className="card-link">
-              افتح علم الرجال <ArrowLeft size={15} />
-            </span>
-          </Link>
-          <Link href="/research" className="collection-card">
-            <div className="collection-card-inner">
-              <span className="card-number" aria-hidden="true">٠٣</span>
-              <Database size={28} strokeWidth={1.4} />
+              <div className="hover-arrow"><ArrowLeft size={20} /></div>
+            </Link>
+            <Link href="/research" className="collection-card">
+              <div className="icon-box">
+                <Database size={24} strokeWidth={1.5} />
+              </div>
               <h3>البحث المتقدم</h3>
               <p>صفِّ نتائجك بالراوي، والدرجة، والكتاب، والموضوع.</p>
-            </div>
-            <span className="card-link">
-              ابدأ بحثاً دقيقاً <ArrowLeft size={15} />
-            </span>
-          </Link>
+              <div className="hover-arrow"><ArrowLeft size={20} /></div>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ── News section ──────────────────────────────────────── */}
-      <section
-        className="golden-container news-section"
-        id="news"
-        aria-labelledby="news-heading"
-      >
-        <div className="section-heading">
-          <div>
-            <span className="section-kicker">الأخبار والمستجدات</span>
-            <h2 id="news-heading">آخر الأخبار</h2>
+      {/* 5. Featured Hadiths */}
+      <section className="alifta-section">
+        <div className="alifta-container">
+          <div className="section-header">
+            <h2 className="section-title">مختارات موثقة</h2>
+            <Link href="/search" className="view-all">
+              عرض جميع المختارات <ChevronLeft size={16} />
+            </Link>
           </div>
-          <p>
-            تابع آخر أخبار الرئاسة العامة للبحوث العلمية والإفتاء وبياناتها
-            العلمية الرسمية.
-          </p>
-        </div>
-        <div className="news-grid">
-          <a
-            href="https://alifta.gov.sa/news/1111"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="news-card"
-          >
-            <div className="news-card-top">
-              <span className="news-category">خبر عام</span>
-              <span className="news-external-icon" aria-hidden="true">↗</span>
-            </div>
-            <h3 className="news-card-title">
-              مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق
-            </h3>
-            <p className="news-card-excerpt">
-              استقبل صاحب الفضيلة المفتي العام مفوضي الإفتاء في مناطق المملكة
-              في لقاء علمي رسمي لمتابعة سير العمل الإفتائي.
-            </p>
-            <div className="news-card-footer">
-              <time className="news-date">١٧ أغسطس ٢٠٢٦</time>
-            </div>
-          </a>
-          <a
-            href="https://alifta.gov.sa/news/1110"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="news-card"
-          >
-            <div className="news-card-top">
-              <span className="news-category">خبر عام</span>
-              <span className="news-external-icon" aria-hidden="true">↗</span>
-            </div>
-            <h3 className="news-card-title">
-              برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة
-              والتسعين
-            </h3>
-            <p className="news-card-excerpt">
-              عقدت هيئة كبار العلماء دورتها التاسعة والتسعين برئاسة فضيلة
-              المفتي العام، وتناولت عدداً من الموضوعات الشرعية ذات الأثر العام.
-            </p>
-            <div className="news-card-footer">
-              <time className="news-date">١٦ أغسطس ٢٠٢٦</time>
-            </div>
-          </a>
-          <a
-            href="https://alifta.gov.sa/news/1112"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="news-card"
-          >
-            <div className="news-card-top">
-              <span className="news-category">خبر عام</span>
-              <span className="news-external-icon" aria-hidden="true">↗</span>
-            </div>
-            <h3 className="news-card-title">
-              (54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً
-            </h3>
-            <p className="news-card-excerpt">
-              تستعرض الرئاسة مسيرتها العلمية الممتدة عبر أربعة وخمسين عاماً من
-              البحث والإفتاء، مع إصدار أكثر من ألف ومئة قرار علمي موثق.
-            </p>
-            <div className="news-card-footer">
-              <time className="news-date">١٥ أغسطس ٢٠٢٦</time>
-            </div>
-          </a>
-        </div>
-        <div className="news-section-footer">
-          <a
-            href="https://alifta.gov.sa/news"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-link news-all-link"
-          >
-            عرض جميع الأخبار <ChevronLeft size={15} />
-          </a>
-        </div>
-      </section>
-
-      {/* ── Featured hadiths ──────────────────────────────────── */}
-      <section
-        className="golden-container featured-section"
-        id="featured"
-        aria-labelledby="featured-heading"
-      >
-        <div className="section-heading featured-heading">
-          <div>
-            <span className="section-kicker">من رفوف اليوم</span>
-            <h2 id="featured-heading">مختارات موثقة</h2>
-          </div>
-          <Link href="/search" className="text-link">
-            عرض جميع المختارات <ChevronLeft size={15} />
-          </Link>
-        </div>
-        <div className="hadith-grid">
-          {featuredHadiths.map((hadith) => (
-            <article className="hadith-card" key={hadith.id}>
-              <Link
-                href={`/hadith/${hadith.id}`}
-                style={{ display: 'contents', textDecoration: 'none', color: 'inherit' }}
-              >
-                <div className="hadith-card-body">
+          <div className="grid-3">
+            {featuredHadiths.map((hadith) => (
+              <article className="hadith-card" key={hadith.id}>
+                <Link href={`/hadith/${hadith.id}`} className="hadith-content">
                   <div className="hadith-meta">
-                    <span>{hadith.bookName}</span>
-                    <b>{hadith.grade}</b>
+                    <span className="book-name">{hadith.bookName}</span>
+                    <span className="grade-chip">{hadith.grade}</span>
                   </div>
-                  <span className="hadith-label">
-                    {FEATURED_LABELS[hadith.id] ?? hadith.chapter}
-                  </span>
-                  <p>«{hadith.textAr}»</p>
-                </div>
-              </Link>
-              <div className="hadith-footer">
-                <Link
-                  href={`/hadith/${hadith.id}`}
-                  style={{ color: 'var(--ink-xsoft)', textDecoration: 'none', fontSize: '11px' }}
-                >
-                  حديث رقم {hadith.number}
+                  <p className="hadith-text">«{hadith.textAr}»</p>
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => handleToggleSave(hadith)}
-                  aria-label={
-                    isSaved(hadith.id) ? 'إلغاء حفظ الحديث' : 'حفظ الحديث'
-                  }
-                >
-                  {isSaved(hadith.id) ? 'محفوظ ✓' : 'حفظ الحديث'}
-                </button>
+                <div className="hadith-footer">
+                  <Link href={`/hadith/${hadith.id}`} className="hadith-link">
+                    حديث رقم {hadith.number}
+                  </Link>
+                  <button
+                    type="button"
+                    className={`save-btn ${isSaved(hadith.id) ? 'is-saved' : ''}`}
+                    onClick={(e) => handleToggleSave(e, hadith)}
+                    aria-label={isSaved(hadith.id) ? 'إلغاء حفظ الحديث' : 'حفظ الحديث'}
+                  >
+                    {isSaved(hadith.id) ? (
+                      <><BookmarkCheck size={16} /> محفوظ</>
+                    ) : (
+                      <><Bookmark size={16} /> حفظ</>
+                    )}
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. News Section */}
+      <section className="alifta-section">
+        <div className="alifta-container">
+          <div className="section-header">
+            <h2 className="section-title">آخر الأخبار</h2>
+            <a href="https://alifta.gov.sa/news" target="_blank" rel="noopener noreferrer" className="view-all">
+              عرض جميع الأخبار <ChevronLeft size={16} />
+            </a>
+          </div>
+          <div className="grid-3">
+            <a href="https://alifta.gov.sa/news/1111" target="_blank" rel="noopener noreferrer" className="news-card">
+              <div className="news-meta">
+                <span className="chip">خبر عام</span>
+                <time>١٧ أغسطس ٢٠٢٦</time>
               </div>
-            </article>
-          ))}
+              <h3>مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق</h3>
+              <div className="news-arrow"><ArrowUpLeft size={18} /></div>
+            </a>
+            <a href="https://alifta.gov.sa/news/1110" target="_blank" rel="noopener noreferrer" className="news-card">
+              <div className="news-meta">
+                <span className="chip">خبر عام</span>
+                <time>١٦ أغسطس ٢٠٢٦</time>
+              </div>
+              <h3>برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين</h3>
+              <div className="news-arrow"><ArrowUpLeft size={18} /></div>
+            </a>
+            <a href="https://alifta.gov.sa/news/1112" target="_blank" rel="noopener noreferrer" className="news-card">
+              <div className="news-meta">
+                <span className="chip">خبر عام</span>
+                <time>١٥ أغسطس ٢٠٢٦</time>
+              </div>
+              <h3>(54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً</h3>
+              <div className="news-arrow"><ArrowUpLeft size={18} /></div>
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* ── Research panel ────────────────────────────────────── */}
-      <section className="research-panel golden-container" id="research" aria-labelledby="research-heading">
-        <div className="research-icon" aria-hidden="true">
-          <Sparkles size={21} />
+      {/* 7. Research CTA */}
+      <section className="research-cta-section">
+        <div className="alifta-container">
+          <div className="cta-band">
+            <StarDivider className="cta-pattern" />
+            <div className="cta-content">
+              <h2>لستَ تبحث عن كلمة فقط.</h2>
+              <p>
+                ابنِ استعلامك على أكثر من معيار، وتتبع الحديث في مصادره، وافتح خريطة الإسناد من موضعها.
+              </p>
+            </div>
+            <Link href="/research" className="btn-inverted">
+              اكتشف البحث المتقدم
+            </Link>
+          </div>
         </div>
-        <div className="research-content">
-          <span className="section-kicker">مساحة الباحث</span>
-          <h2 id="research-heading">لستَ تبحث عن كلمة فقط.</h2>
-          <p>
-            ابنِ استعلامك على أكثر من معيار، وتتبع الحديث في مصادره، وافتح
-            خريطة الإسناد من موضعها.
-          </p>
-        </div>
-        <Link href="/research" className="research-cta">
-          اكتشف البحث المتقدم <ArrowLeft size={16} />
-        </Link>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────── */}
-      <footer className="golden-footer">
-        <div className="golden-container footer-inner">
-          <span>مجموعة الملك عبدالعزيز للسنة النبوية</span>
-          <span>وَقُلْ رَبِّ زِدْنِي عِلْماً</span>
-          <span>نسخة الباحث · ١.٠</span>
+      {/* 8. Footer */}
+      <footer className="site-footer">
+        <div className="alifta-container">
+          <div className="footer-content">
+            <span>مجموعة الملك عبدالعزيز للسنة النبوية</span>
+            <span className="footer-quote">وَقُلْ رَبِّ زِدْنِي عِلْماً</span>
+            <span>نسخة الباحث · ١.٠</span>
+          </div>
         </div>
       </footer>
     </main>
