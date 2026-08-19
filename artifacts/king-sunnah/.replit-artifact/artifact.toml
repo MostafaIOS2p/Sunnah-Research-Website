@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "King Abdulaziz Sunnah Collection"
+description = "A responsive RTL Arabic hadith library for readers, students, and researchers to discover, read, verify, compare, and save hadith sources."
+version = "1.0.0"
+id = "artifacts/king-sunnah"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25096
+
+[services.development]
+run = "pnpm --filter @workspace/king-sunnah run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/king-sunnah", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/king-sunnah/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25096"
+BASE_PATH = "/"
