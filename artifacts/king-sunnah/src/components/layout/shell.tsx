@@ -10,7 +10,6 @@ import {
   Menu,
   X,
   Library,
-  ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -78,14 +77,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
               className="font-bold text-base flex items-center gap-2"
               style={{ color: 'var(--shell-ink)' }}
             >
-              <span
-                className="inline-grid place-items-center w-7 h-7 rounded-md flex-shrink-0"
-                style={{
-                  background: 'var(--shell-green)',
-                  color: '#fff',
-                }}
-              >
-                <ShieldCheck size={14} strokeWidth={1.5} />
+              <span className="inline-grid place-items-center w-7 h-7 flex-shrink-0">
+                <img
+                  src="/images/king-sunnah-mark.svg"
+                  alt=""
+                  className="w-full h-full"
+                />
               </span>
               مجموعة الملك عبدالعزيز
             </span>
@@ -125,14 +122,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
           >
             <Link href="/">
               <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-                <span
-                  className="inline-grid place-items-center w-8 h-8 rounded-lg flex-shrink-0"
-                  style={{
-                    background: 'var(--shell-green)',
-                    color: '#fff',
-                  }}
-                >
-                  <ShieldCheck size={16} strokeWidth={1.5} />
+                <span className="inline-grid place-items-center w-8 h-8 flex-shrink-0">
+                  <img
+                    src="/images/king-sunnah-mark.svg"
+                    alt=""
+                    className="w-full h-full"
+                  />
                 </span>
                 <h1 className="font-bold text-sm leading-tight" style={{ color: 'var(--shell-ink)' }}>
                   مجموعة الملك عبدالعزيز

@@ -127,7 +127,7 @@ export default function Home() {
         <div className="alifta-container">
           <Link href="/" className="brand-lockup" aria-label="الصفحة الرئيسية">
             <div className="brand-mark" aria-hidden="true">
-              <ShieldCheck size={18} strokeWidth={2} />
+              <img src="/images/king-sunnah-mark.svg" alt="" />
             </div>
             <div className="brand-text">
               <strong>مجموعة الملك عبدالعزيز</strong>
@@ -243,8 +243,8 @@ export default function Home() {
                 alt="المفتي العام للمملكة في لقاء رسمي"
               />
               <div className="editorial-caption">
-                <span>لقاء علمي رسمي برئاسة سماحة المفتي العام</span>
-                <span>مصدر الصورة: واس</span>
+                <span className="editorial-title">لقاء علمي رسمي برئاسة سماحة المفتي العام</span>
+                <span className="editorial-source">مصدر الصورة: واس</span>
               </div>
             </div>
           </div>
