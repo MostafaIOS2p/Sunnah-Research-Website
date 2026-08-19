@@ -25,11 +25,21 @@ import {
 const queryClient = new QueryClient();
 
 function Router() {
+  const [location] = useLocation();
+
+  // The home route renders its own full-width layout; all others use Shell
+  if (location === '/') {
+    return (
+      <RoutedErrorBoundary>
+        <Home />
+      </RoutedErrorBoundary>
+    );
+  }
+
   return (
     <Shell>
       <RoutedErrorBoundary>
         <Switch>
-          <Route path="/" component={Home} />
           <Route path="/search" component={Search} />
           <Route path="/hadith/:id" component={HadithDetail} />
           <Route path="/books" component={Books} />
