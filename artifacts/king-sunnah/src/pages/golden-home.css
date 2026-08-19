@@ -547,26 +547,19 @@
   transform: translateX(-4px);
 }
 
-/* ── 6. News Cards ────────────────────────────── */
-.news-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px;
-  border-radius: 16px;
-  transition: all var(--transition-fast);
-  border: 1px solid transparent;
+/* ── 6. News Showcase ────────────────────────────── */
+.news-showcase {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 32px;
 }
-.news-card:hover {
-  background: var(--color-surface);
-  border-color: var(--color-border);
-  box-shadow: var(--shadow-sm);
-}
+
+/* Shared Meta */
 .news-meta {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .news-meta .chip {
   background: var(--color-surface);
@@ -579,34 +572,202 @@
 .news-meta time {
   color: var(--color-ink-xsoft);
 }
-.news-card h3 {
-  font-size: 17px;
+
+/* Lead Card */
+.news-lead-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.news-lead-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.news-lead-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--color-gold);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+.news-lead-card:hover::before {
+  opacity: 1;
+}
+
+.news-lead-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.news-lead-mark {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-green-light);
+  padding: 6px 12px;
+  border-radius: 980px;
+}
+
+.news-lead-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.news-lead-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.news-lead-title {
+  font-size: 26px;
   font-weight: 700;
   line-height: 1.5;
   color: var(--color-ink);
 }
-.news-excerpt {
-  font-size: 14px;
+
+.news-lead-excerpt {
+  font-size: 16px;
   color: var(--color-ink-soft);
+  line-height: 1.8;
+  margin-bottom: auto;
+}
+
+.news-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-green);
+  margin-top: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 12px 24px;
+  border-radius: 980px;
+  align-self: flex-start;
+  transition: all var(--transition-fast);
+}
+
+.news-lead-card:hover .news-cta {
+  background: var(--color-green);
+  color: white;
+  border-color: var(--color-green);
+}
+
+/* Supporting Column */
+.news-supporting-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.news-support-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 32px;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+}
+
+.news-support-card:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.news-support-title {
+  font-size: 18px;
+  font-weight: 700;
   line-height: 1.6;
+  color: var(--color-ink);
+}
+
+.news-support-excerpt {
+  font-size: 14.5px;
+  color: var(--color-ink-soft);
+  line-height: 1.7;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.news-arrow {
-  margin-top: auto;
-  color: var(--color-ink-xsoft);
+
+.news-cta-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
-  opacity: 0;
-  transform: translateX(4px);
-  transition: all var(--transition-fast);
-  display: flex;
+  font-weight: 600;
+  color: var(--color-ink-xsoft);
+  margin-top: auto;
+  padding-top: 8px;
+  transition: color var(--transition-fast);
 }
-.news-card:hover .news-arrow {
-  opacity: 1;
-  transform: translateX(0);
+
+.news-support-card:hover .news-cta-text {
   color: var(--color-green);
+}
+
+/* Responsive updates for showcase */
+@media (max-width: 1024px) {
+  .news-showcase {
+    gap: 24px;
+  }
+  .news-lead-card {
+    padding: 32px;
+  }
+  .news-support-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .news-showcase {
+    grid-template-columns: 1fr;
+  }
+  .news-lead-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 400px) {
+  .news-lead-card {
+    padding: 24px;
+  }
+  .news-lead-eyebrow {
+    margin-bottom: 16px;
+  }
+  .news-support-card {
+    padding: 20px;
+  }
 }
 
 /* ── 7. Hadith Cards ────────────────────────────── */

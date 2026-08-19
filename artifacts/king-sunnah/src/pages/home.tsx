@@ -13,7 +13,8 @@ import {
   ArrowUpLeft,
   Menu,
   X,
-  Share2
+  Share2,
+  Newspaper
 } from 'lucide-react';
 import { MOCK_HADITHS } from '@/lib/mock-data';
 import { useStore } from '@/lib/store';
@@ -337,34 +338,54 @@ export default function Home() {
               عرض جميع الأخبار <ChevronLeft size={16} />
             </a>
           </div>
-          <div className="grid-3">
-            <a href="https://alifta.gov.sa/news/1111" target="_blank" rel="noopener noreferrer" className="news-card">
-              <div className="news-meta">
-                <span className="chip">خبر عام</span>
-                <time>١٧ أغسطس ٢٠٢٦</time>
+          <div className="news-showcase">
+            {/* Lead Card */}
+            <a href="https://alifta.gov.sa/news/1111" target="_blank" rel="noopener noreferrer" className="news-lead-card" aria-label="قراءة خبر: مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق" title="مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق">
+              <div className="news-lead-eyebrow">
+                <span className="news-lead-mark">
+                  <Newspaper size={16} strokeWidth={2.5} /> خبر رئيسي
+                </span>
+                <span className="news-lead-line" aria-hidden="true"></span>
               </div>
-              <h3>مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق</h3>
-              <p className="news-excerpt">استقبل سماحة المفتي العام للمملكة رئيس هيئة كبار العلماء والرئيس العام للبحوث العلمية والإفتاء، في مكتبه مفوضي الإفتاء بالمناطق واستعرض معهم أبرز المستجدات...</p>
-              <div className="news-arrow"><ArrowUpLeft size={18} /></div>
-            </a>
-            <a href="https://alifta.gov.sa/news/1110" target="_blank" rel="noopener noreferrer" className="news-card">
-              <div className="news-meta">
-                <span className="chip">خبر عام</span>
-                <time>١٦ أغسطس ٢٠٢٦</time>
+              <div className="news-lead-content">
+                <div className="news-meta">
+                  <span className="chip">خبر عام</span>
+                  <time>١٧ أغسطس ٢٠٢٦</time>
+                </div>
+                <h3 className="news-lead-title">مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق</h3>
+                <p className="news-lead-excerpt">استقبل سماحة المفتي العام للمملكة رئيس هيئة كبار العلماء والرئيس العام للبحوث العلمية والإفتاء، في مكتبه مفوضي الإفتاء بالمناطق واستعرض معهم أبرز المستجدات لتعزيز التعاون والعمل المشترك بين الإدارات المختلفة.</p>
+                <span className="news-cta" aria-hidden="true">
+                  قراءة الخبر <ArrowUpLeft size={16} strokeWidth={2.5} />
+                </span>
               </div>
-              <h3>برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين</h3>
-              <p className="news-excerpt">عقدت هيئة كبار العلماء دورتها التاسعة والتسعين برئاسة سماحة المفتي العام، لمناقشة عدد من الموضوعات المدرجة على جدول الأعمال واتخاذ القرارات اللازمة بشأنها...</p>
-              <div className="news-arrow"><ArrowUpLeft size={18} /></div>
             </a>
-            <a href="https://alifta.gov.sa/news/1112" target="_blank" rel="noopener noreferrer" className="news-card">
-              <div className="news-meta">
-                <span className="chip">خبر عام</span>
-                <time>١٥ أغسطس ٢٠٢٦</time>
-              </div>
-              <h3>(54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً</h3>
-              <p className="news-excerpt">أصدرت الأمانة العامة لهيئة كبار العلماء تقريراً إحصائياً بمناسبة مرور 54 عاماً على تأسيسها، يستعرض مسيرتها العلمية الحافلة وأبرز القرارات والموضوعات التي تمت دراستها...</p>
-              <div className="news-arrow"><ArrowUpLeft size={18} /></div>
-            </a>
+
+            {/* Supporting Column */}
+            <div className="news-supporting-col">
+              <a href="https://alifta.gov.sa/news/1110" target="_blank" rel="noopener noreferrer" className="news-support-card" aria-label="التفاصيل: برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين" title="برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين">
+                <div className="news-meta">
+                  <span className="chip">خبر عام</span>
+                  <time>١٦ أغسطس ٢٠٢٦</time>
+                </div>
+                <h3 className="news-support-title">برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين</h3>
+                <p className="news-support-excerpt">عقدت هيئة كبار العلماء دورتها التاسعة والتسعين برئاسة سماحة المفتي العام، لمناقشة عدد من الموضوعات المدرجة على جدول الأعمال واتخاذ القرارات اللازمة بشأنها...</p>
+                <span className="news-cta-text" aria-hidden="true">
+                  التفاصيل <ArrowUpLeft size={16} strokeWidth={2} />
+                </span>
+              </a>
+
+              <a href="https://alifta.gov.sa/news/1112" target="_blank" rel="noopener noreferrer" className="news-support-card" aria-label="التفاصيل: (54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً" title="(54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً">
+                <div className="news-meta">
+                  <span className="chip">خبر عام</span>
+                  <time>١٥ أغسطس ٢٠٢٦</time>
+                </div>
+                <h3 className="news-support-title">(54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً</h3>
+                <p className="news-support-excerpt">أصدرت الأمانة العامة لهيئة كبار العلماء تقريراً إحصائياً بمناسبة مرور 54 عاماً على تأسيسها، يستعرض مسيرتها العلمية الحافلة وأبرز القرارات والموضوعات التي تمت دراستها...</p>
+                <span className="news-cta-text" aria-hidden="true">
+                  التفاصيل <ArrowUpLeft size={16} strokeWidth={2} />
+                </span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
