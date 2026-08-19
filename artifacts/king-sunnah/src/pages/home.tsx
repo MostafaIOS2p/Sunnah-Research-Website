@@ -12,7 +12,8 @@ import {
   BookmarkCheck,
   ArrowUpLeft,
   Menu,
-  X
+  X,
+  Share2
 } from 'lucide-react';
 import { MOCK_HADITHS } from '@/lib/mock-data';
 import { useStore } from '@/lib/store';
@@ -86,12 +87,12 @@ export default function Home() {
             </span>
           </div>
           <div className="utility-left">
-            <button aria-label="العربية">عربي</button>
+            <button aria-label="العربية" title="العربية">عربي</button>
             <div className="utility-divider" aria-hidden="true" />
-            <button aria-label="English">EN</button>
+            <button aria-label="English" title="English">EN</button>
             <div className="utility-divider" aria-hidden="true" />
-            <a href="#">سياسة الخصوصية</a>
-            <a href="#">اتصل بنا</a>
+            <a href="https://alifta.gov.sa/PrivacyPolicy" target="_blank" rel="noopener noreferrer">سياسة الخصوصية</a>
+            <a href="https://alifta.gov.sa/ContactUs" target="_blank" rel="noopener noreferrer">اتصل بنا</a>
           </div>
         </div>
       </div>
@@ -126,6 +127,7 @@ export default function Home() {
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-nav"
               aria-label={isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+              title={isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -198,7 +200,7 @@ export default function Home() {
               />
               <div className="editorial-caption">
                 <span>لقاء علمي رسمي برئاسة سماحة المفتي العام</span>
-                <span>واس</span>
+                <span>مصدر الصورة: واس</span>
               </div>
             </div>
           </div>
@@ -209,7 +211,10 @@ export default function Home() {
       <section className="alifta-section">
         <div className="alifta-container">
           <div className="section-header">
-            <h2 className="section-title">أبواب المعرفة</h2>
+            <div className="header-content">
+              <h2 className="section-title">أبواب المعرفة</h2>
+              <p className="section-desc">ثلاثة مسارات رئيسية للوصول إلى أمهات الكتب وتراجم الرواة والبحث الدقيق.</p>
+            </div>
           </div>
           <div className="grid-3">
             <Link href="/books" className="collection-card">
@@ -240,11 +245,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 4.5 How to Start */}
+      <section className="alifta-section bg-tint">
+        <div className="alifta-container">
+          <div className="grid-3 steps-grid">
+            <div className="step-card">
+              <div className="step-icon">
+                <Search size={24} strokeWidth={1.5} />
+              </div>
+              <div className="step-content">
+                <h3>ابحث</h3>
+                <p>ابحث في نصوص الأحاديث النبوية، وتراجم الرواة للوصول الدقيق لمبتغاك.</p>
+              </div>
+            </div>
+            <div className="step-card">
+              <div className="step-icon">
+                <ShieldCheck size={24} strokeWidth={1.5} />
+              </div>
+              <div className="step-content">
+                <h3>تحقق</h3>
+                <p>اطلع على درجة الحديث، ومصادره، وسنده لضمان الموثوقية التامة.</p>
+              </div>
+            </div>
+            <div className="step-card">
+              <div className="step-icon">
+                <Share2 size={24} strokeWidth={1.5} />
+              </div>
+              <div className="step-content">
+                <h3>احفظ وشارك</h3>
+                <p>احتفظ بالأحاديث في مفضلتك للعودة إليها، أو شاركها بسهولة مع الآخرين.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5. Featured Hadiths */}
       <section className="alifta-section">
         <div className="alifta-container">
           <div className="section-header">
-            <h2 className="section-title">مختارات موثقة</h2>
+            <div className="header-content">
+              <h2 className="section-title">مختارات موثقة</h2>
+              <p className="section-desc">أحاديث نبوية منتقاة بعناية، مع بيان درجاتها ومصادرها الأصلية.</p>
+            </div>
             <Link href="/search" className="view-all">
               عرض جميع المختارات <ChevronLeft size={16} />
             </Link>
@@ -286,7 +329,10 @@ export default function Home() {
       <section className="alifta-section">
         <div className="alifta-container">
           <div className="section-header">
-            <h2 className="section-title">آخر الأخبار</h2>
+            <div className="header-content">
+              <h2 className="section-title">آخر الأخبار</h2>
+              <p className="section-desc">تحديثات وإعلانات رسمية من الرئاسة العامة للبحوث العلمية والإفتاء.</p>
+            </div>
             <a href="https://alifta.gov.sa/news" target="_blank" rel="noopener noreferrer" className="view-all">
               عرض جميع الأخبار <ChevronLeft size={16} />
             </a>
@@ -298,6 +344,7 @@ export default function Home() {
                 <time>١٧ أغسطس ٢٠٢٦</time>
               </div>
               <h3>مفتي عام المملكة يستقبل مفوضي الإفتاء في المناطق</h3>
+              <p className="news-excerpt">استقبل سماحة المفتي العام للمملكة رئيس هيئة كبار العلماء والرئيس العام للبحوث العلمية والإفتاء، في مكتبه مفوضي الإفتاء بالمناطق واستعرض معهم أبرز المستجدات...</p>
               <div className="news-arrow"><ArrowUpLeft size={18} /></div>
             </a>
             <a href="https://alifta.gov.sa/news/1110" target="_blank" rel="noopener noreferrer" className="news-card">
@@ -306,6 +353,7 @@ export default function Home() {
                 <time>١٦ أغسطس ٢٠٢٦</time>
               </div>
               <h3>برئاسة مفتي عام المملكة هيئة كبار العلماء تعقد دورتها التاسعة والتسعين</h3>
+              <p className="news-excerpt">عقدت هيئة كبار العلماء دورتها التاسعة والتسعين برئاسة سماحة المفتي العام، لمناقشة عدد من الموضوعات المدرجة على جدول الأعمال واتخاذ القرارات اللازمة بشأنها...</p>
               <div className="news-arrow"><ArrowUpLeft size={18} /></div>
             </a>
             <a href="https://alifta.gov.sa/news/1112" target="_blank" rel="noopener noreferrer" className="news-card">
@@ -314,6 +362,7 @@ export default function Home() {
                 <time>١٥ أغسطس ٢٠٢٦</time>
               </div>
               <h3>(54) عاماً من الريادة العلمية و(1127) موضوعاً و(251) قراراً</h3>
+              <p className="news-excerpt">أصدرت الأمانة العامة لهيئة كبار العلماء تقريراً إحصائياً بمناسبة مرور 54 عاماً على تأسيسها، يستعرض مسيرتها العلمية الحافلة وأبرز القرارات والموضوعات التي تمت دراستها...</p>
               <div className="news-arrow"><ArrowUpLeft size={18} /></div>
             </a>
           </div>
@@ -331,8 +380,8 @@ export default function Home() {
                 ابنِ استعلامك على أكثر من معيار، وتتبع الحديث في مصادره، وافتح خريطة الإسناد من موضعها.
               </p>
             </div>
-            <Link href="/research" className="btn-inverted">
-              اكتشف البحث المتقدم
+            <Link href="/research" className="btn-inverted" aria-label="اكتشف البحث المتقدم">
+              اكتشف البحث المتقدم <ArrowLeft size={18} />
             </Link>
           </div>
         </div>
