@@ -16,21 +16,70 @@ type StoreContextType = {
   isSaved: (id: string) => boolean;
 };
 
+const SAVED_ITEMS_STORAGE_KEY = 'ks-saved';
+
+function isSavedItem(value: unknown): value is SavedItem {
+  if (!value || typeof value !== 'object') return false;
+
+  const item = value as Partial<SavedItem>;
+  return (
+    typeof item.id === 'string' &&
+    item.id.length > 0 &&
+    (item.type === 'hadith' || item.type === 'narrator') &&
+    typeof item.title === 'string' &&
+    typeof item.addedAt === 'string'
+  );
+}
+
+function parseSavedItems(stored: string): SavedItem[] {
+  try {
+    const parsed: unknown = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed.filter(isSavedItem) : [];
+  } catch {
+    return [];
+  }
+}
+
+function readSavedItems(): SavedItem[] {
+  if (typeof window === 'undefined') return [];
+
+  try {
+    const stored = window.localStorage.getItem(SAVED_ITEMS_STORAGE_KEY);
+    if (!stored) return [];
+
+    return parseSavedItems(stored);
+  } catch {
+    // localStorage can be unavailable (for example, in private browsing or
+    // after its data has been cleared while the app is open).
+    return [];
+  }
+}
+
 const StoreContext = createContext<StoreContextType | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [savedItems, setSavedItems] = useState<SavedItem[]>(() => {
-    try {
-      const stored = localStorage.getItem('ks-saved');
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
+    return readSavedItems();
   });
 
   useEffect(() => {
-    localStorage.setItem('ks-saved', JSON.stringify(savedItems));
+    try {
+      window.localStorage.setItem(SAVED_ITEMS_STORAGE_KEY, JSON.stringify(savedItems));
+    } catch {
+      // Saving is best effort. The in-memory list remains usable if the
+      // browser blocks storage or its quota is exhausted.
+    }
   }, [savedItems]);
+
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== SAVED_ITEMS_STORAGE_KEY) return;
+      setSavedItems(event.newValue ? parseSavedItems(event.newValue) : []);
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
 
   const saveItem = (item: Omit<SavedItem, 'addedAt'>) => {
     setSavedItems((prev) => {
