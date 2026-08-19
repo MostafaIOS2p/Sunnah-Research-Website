@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import './golden-home.css';
-import { useListHadiths, type Hadith } from '@workspace/api-client-react';
+import { useListHadiths } from '@workspace/api-client-react';
 
 function StarDivider({ className = '' }: { className?: string }) {
   return (
@@ -56,7 +56,7 @@ export default function Home() {
     }
   };
 
-  const handleToggleSave = (e: React.MouseEvent, hadith: Hadith) => {
+  const handleToggleSave = (e: React.MouseEvent, hadith: any) => {
     e.preventDefault();
     if (isSaved(hadith.id)) {
       removeItem(hadith.id);
@@ -159,31 +159,39 @@ export default function Home() {
       <section className="hero-section">
         <div className="alifta-container hero-grid">
           <div className="hero-content">
-            <div className="hero-eyebrow">أمانة العلم · منذ ١٤٤١ هـ</div>
-            <h1 className="hero-title">
-              بوابة الحديث النبوي <span className="text-accent">الموثوق</span>
-            </h1>
-            <p className="hero-lede">
-              مكتبة حديثية رسمية، تجمع أمهات الكتب وتراجم الرواة في فضاء واحد؛ للقراءة المتأنية، والبحث الدقيق الموثق.
-            </p>
+            <div className="hero-intro">
+              <div className="hero-eyebrow">أمانة العلم · منذ ١٤٤١ هـ</div>
+              <h1 className="hero-title">
+                بوابة الحديث النبوي <span className="text-accent">الموثوق</span>
+              </h1>
+              <p className="hero-lede">
+                مكتبة حديثية رسمية، تجمع أمهات الكتب وتراجم الرواة في فضاء واحد؛ للقراءة المتأنية، والبحث الدقيق الموثق.
+              </p>
+            </div>
 
-            <form className="hero-search" onSubmit={handleSearch} role="search" aria-label="البحث في السنة">
-              <Search className="search-icon" size={24} aria-hidden="true" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="ابحث في المتن، الراوي، أو الكتاب..."
-                aria-label="نص البحث"
-              />
-              <button type="submit" className="btn-submit">
-                ابحث
-              </button>
-            </form>
-            
-            <div className="search-meta">
-              <span>٦٠٬٠٠٠+ حديث موثق</span>
-              <span className="dot" aria-hidden="true">·</span>
-              <span>مصادر أصلية</span>
+            <div className="hero-search-block">
+              <div className="search-block-header">
+                <span className="search-block-label">البحث في المجموعة</span>
+                <span className="search-block-helper">في المتن، الراوي، أو الكتاب</span>
+              </div>
+              <form className="hero-search" onSubmit={handleSearch} role="search" aria-label="البحث في السنة">
+                <Search className="search-icon" size={24} aria-hidden="true" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="أدخل نص البحث هنا..."
+                  aria-label="نص البحث"
+                />
+                <button type="submit" className="btn-submit">
+                  ابحث
+                </button>
+              </form>
+              
+              <div className="search-meta">
+                <span>٦٠٬٠٠٠+ حديث موثق</span>
+                <span className="dot" aria-hidden="true">·</span>
+                <span>مصادر أصلية</span>
+              </div>
             </div>
           </div>
 
@@ -288,7 +296,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid-3">
-            {featuredHadiths.map((hadith) => (
+            {featuredHadiths.map((hadith: any) => (
               <article className="hadith-card" key={hadith.id}>
                 <Link href={`/hadith/${hadith.id}`} className="hadith-content">
                   <div className="hadith-meta">

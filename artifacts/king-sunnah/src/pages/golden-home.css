@@ -276,13 +276,18 @@
 }
 .hero-content {
   max-width: 580px;
+  display: flex;
+  flex-direction: column;
+}
+.hero-intro {
+  margin-bottom: 48px;
 }
 .hero-eyebrow {
   font-size: 12px;
   font-weight: 700;
   color: var(--color-gold);
   letter-spacing: 0.04em;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -296,9 +301,9 @@
 .hero-title {
   font-size: clamp(40px, 5vw, 56px);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
   letter-spacing: -0.02em;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   color: var(--color-ink);
 }
 .hero-title .text-accent {
@@ -306,15 +311,40 @@
 }
 .hero-lede {
   font-size: 18px;
-  line-height: 1.7;
+  line-height: 1.9;
   color: var(--color-ink-soft);
-  margin-bottom: 48px;
+  max-width: 540px;
+}
+
+.hero-search-block {
+  background: transparent;
+  border-top: 1px solid var(--color-border);
+  padding-top: 32px;
+  margin-top: 8px;
+}
+
+.search-block-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-block-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.search-block-helper {
+  font-size: 13px;
+  color: var(--color-ink-xsoft);
 }
 
 .hero-search {
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-lg);
@@ -961,8 +991,11 @@
   .grid-3 { grid-template-columns: 1fr; }
   .steps-grid { gap: 24px; }
   .hero-section { padding: 48px 0; }
-  .hero-title { font-size: 36px; }
-  .hero-search { flex-direction: column; padding: 12px; gap: 12px; }
+  .hero-title { font-size: 36px; margin-bottom: 20px; }
+  .hero-intro { margin-bottom: 32px; }
+  .hero-search-block { padding-top: 24px; margin-top: 0; border-top-color: var(--color-border-hover); }
+  .search-block-header { flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .hero-search { flex-direction: column; padding: 12px; gap: 12px; margin-bottom: 16px; }
   .hero-search .search-icon { display: none; }
   .hero-search input { width: 100%; padding: 8px; text-align: center; }
   .hero-search .btn-submit { width: 100%; }
