@@ -1,0 +1,124 @@
+/* ─── King Abdulaziz Sunnah Collection — group baseline ─── */
+
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+/* ── CSS custom-property tokens (light) ── */
+:root {
+  --button-outline: rgba(0, 0, 0, 0.1);
+  --badge-outline: rgba(0, 0, 0, 0.05);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0, 0, 0, 0.03);
+  --elevate-2: rgba(0, 0, 0, 0.08);
+
+  /* Stone / Parchment background */
+  --background: 43 28% 96%;
+  --foreground: 133 15% 15%;
+
+  --border: 43 15% 85%;
+  --input: 43 15% 85%;
+  --ring: 155 43% 18%;
+
+  --card: 43 35% 98%;
+  --card-foreground: 133 15% 15%;
+  --card-border: 43 15% 88%;
+
+  --popover: 43 35% 98%;
+  --popover-foreground: 133 15% 15%;
+  --popover-border: 43 15% 88%;
+
+  /* Deep Green Primary */
+  --primary: 155 43% 18%;
+  --primary-foreground: 43 28% 98%;
+
+  /* Accent/Gold */
+  --secondary: 36 34% 52%;
+  --secondary-foreground: 43 35% 98%;
+
+  --muted: 43 15% 90%;
+  --muted-foreground: 133 10% 40%;
+
+  --accent: 155 20% 90%;
+  --accent-foreground: 155 43% 18%;
+
+  --destructive: 0 65% 45%;
+  --destructive-foreground: 0 0% 100%;
+
+  --sidebar: 43 35% 98%;
+  --sidebar-foreground: 133 15% 15%;
+  --sidebar-border: 43 15% 85%;
+  --sidebar-primary: 155 43% 18%;
+  --sidebar-primary-foreground: 43 28% 98%;
+  --sidebar-accent: 155 20% 90%;
+  --sidebar-accent-foreground: 155 43% 18%;
+  --sidebar-ring: 155 43% 18%;
+
+  --app-font-sans: 'IBM Plex Sans Arabic', sans-serif;
+  --app-font-serif: 'IBM Plex Sans Arabic', serif;
+  --app-font-mono: Menlo, monospace;
+
+  --radius: 0.5rem;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* ── dark-mode tokens ── */
+.dark {
+  --background: 133 15% 12%;
+  --foreground: 43 28% 90%;
+
+  --border: 133 15% 20%;
+  --input: 133 15% 20%;
+  --ring: 155 43% 40%;
+
+  --card: 133 15% 14%;
+  --card-foreground: 43 28% 90%;
+  --card-border: 133 15% 22%;
+
+  --popover: 133 15% 14%;
+  --popover-foreground: 43 28% 90%;
+  --popover-border: 133 15% 22%;
+
+  --primary: 155 40% 35%;
+  --primary-foreground: 43 28% 98%;
+
+  --secondary: 36 34% 45%;
+  --secondary-foreground: 43 35% 98%;
+
+  --muted: 133 15% 18%;
+  --muted-foreground: 43 15% 60%;
+
+  --accent: 133 20% 25%;
+  --accent-foreground: 43 28% 90%;
+
+  --destructive: 0 50% 40%;
+  --destructive-foreground: 0 0% 100%;
+
+  --sidebar: 133 15% 14%;
+  --sidebar-foreground: 43 28% 90%;
+  --sidebar-border: 133 15% 22%;
+  --sidebar-primary: 155 40% 35%;
+  --sidebar-primary-foreground: 43 28% 98%;
+  --sidebar-accent: 133 20% 25%;
+  --sidebar-accent-foreground: 43 28% 90%;
+  --sidebar-ring: 155 40% 35%;
+}
+
+/* ── base resets scoped to this group ── */
+.sunnah-root {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  direction: rtl;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sunnah-root *,
+.sunnah-root *::before,
+.sunnah-root *::after {
+  border-color: hsl(var(--border));
+  box-sizing: border-box;
+}
