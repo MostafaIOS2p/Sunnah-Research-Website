@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Impeccable design-skill local review artifacts (screenshots, not source)
+artifacts/king-sunnah/.impeccable/review/
