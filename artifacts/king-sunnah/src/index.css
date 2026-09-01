@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -51,118 +51,154 @@
   --color-sidebar-accent-border: var(--sidebar-accent-border);
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  /* Complex Wayfinding world tokens — engraved stone, brass, amber signal */
+  --color-brass: hsl(var(--brass));
+  --color-brass-bright: hsl(var(--brass-bright));
+  --color-stone: hsl(var(--stone));
+  --color-stone-deep: hsl(var(--stone-deep));
+  --color-signal: hsl(var(--signal));
+  --color-signal-foreground: hsl(var(--signal-foreground));
+  --color-seal: hsl(var(--seal));
+  --color-seal-foreground: hsl(var(--seal-foreground));
+
   --font-sans: var(--app-font-sans);
+  --font-display: var(--app-font-display);
   --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+  --radius-sm: calc(var(--radius) - 1px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* LIGHT MODE: Alifta Official Green / White / Gold */
+/* LIGHT MODE — Complex Wayfinding: travertine stone, brass, mosque green, amber signal */
 :root {
-  --button-outline: rgba(0, 0, 0, 0.1);
-  --badge-outline: rgba(0, 0, 0, 0.05);
+  --button-outline: rgba(43, 43, 40, 0.14);
+  --badge-outline: rgba(43, 43, 40, 0.08);
   --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(0, 0, 0, 0.03);
-  --elevate-2: rgba(0, 0, 0, 0.07);
+  --elevate-1: rgba(43, 43, 40, 0.035);
+  --elevate-2: rgba(43, 43, 40, 0.07);
 
-  /* Clean white/near-white background */
-  --background: 0 0% 99%;         /* #fcfcfc */
-  --foreground: 200 20% 17%;      /* #263238 */
+  /* Travertine stone ground */
+  --background: 42 26% 93%;         /* #F1EBDD */
+  --foreground: 60 6% 15%;          /* #262521 engraved charcoal ink */
 
-  --border: 147 26% 88%;          /* soft green-tinted border */
-  --input: 147 26% 88%;
-  --ring: 147 73% 22%;            /* #0f6038 */
+  --border: 38 22% 78%;             /* worn brass hairline */
+  --input: 38 22% 78%;
+  --ring: 168 68% 17%;              /* mosque green */
 
-  --card: 0 0% 100%;              /* white cards */
-  --card-foreground: 200 20% 17%;
-  --card-border: 147 26% 90%;
+  --card: 42 30% 97%;               /* pale stone plaque */
+  --card-foreground: 60 6% 15%;
+  --card-border: 38 26% 80%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 200 20% 17%;
-  --popover-border: 147 26% 90%;
+  --popover: 42 30% 97%;
+  --popover-foreground: 60 6% 15%;
+  --popover-border: 38 26% 80%;
 
-  /* Deep Official Green – #0f6038 → hsl(147 73% 22%) */
-  --primary: 147 73% 22%;
-  --primary-foreground: 0 0% 100%;
+  /* Deep mosque green */
+  --primary: 168 68% 17%;           /* #0E4F44 */
+  --primary-foreground: 42 30% 97%;
 
-  /* Saudi Gold – #d4af37 → hsl(45 65% 52%) */
-  --secondary: 45 65% 52%;
-  --secondary-foreground: 200 20% 17%;
+  /* Brass */
+  --secondary: 38 45% 42%;          /* #9C7A3C */
+  --secondary-foreground: 42 30% 97%;
 
-  --muted: 147 15% 93%;
-  --muted-foreground: 200 14% 43%;  /* #546e7a */
+  --muted: 40 20% 89%;
+  --muted-foreground: 45 8% 38%;
 
-  /* Light green accent surface */
-  --accent: 147 30% 91%;           /* #e8f3ed */
-  --accent-foreground: 147 73% 22%;
+  --accent: 168 30% 90%;
+  --accent-foreground: 168 68% 15%;
 
-  --destructive: 0 65% 45%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive: 4 48% 36%;         /* brick-seal red */
+  --destructive-foreground: 42 30% 97%;
 
-  /* Sidebar – deep green */
-  --sidebar: 147 63% 18%;          /* #0b4f2e */
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-border: 147 40% 24%;
-  --sidebar-primary: 45 65% 52%;   /* gold highlight */
-  --sidebar-primary-foreground: 200 20% 17%;
-  --sidebar-accent: 147 40% 24%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 45 65% 52%;
+  /* Brass + stone raw tokens */
+  --brass: 38 45% 42%;              /* #9C7A3C */
+  --brass-bright: 40 55% 58%;       /* #C9A566 hover/active brass */
+  --stone: 42 26% 93%;
+  --stone-deep: 40 18% 84%;
+
+  /* Amber signal — reserved exclusively for live/kinetic readouts */
+  --signal: 37 91% 55%;             /* #F5A623 */
+  --signal-foreground: 60 20% 10%;
+
+  /* Verification seal (صحيح) */
+  --seal: 168 55% 22%;
+  --seal-foreground: 42 30% 97%;
+
+  /* Hall directory panel — deep mosque green */
+  --sidebar: 168 62% 14%;           /* #0B3A32 */
+  --sidebar-foreground: 42 30% 95%;
+  --sidebar-border: 168 40% 22%;
+  --sidebar-primary: 38 45% 52%;    /* brass highlight */
+  --sidebar-primary-foreground: 60 6% 12%;
+  --sidebar-accent: 168 40% 20%;
+  --sidebar-accent-foreground: 42 30% 96%;
+  --sidebar-ring: 38 45% 52%;
 
   --app-font-sans: 'IBM Plex Sans Arabic', sans-serif;
+  --app-font-display: 'Reem Kufi', 'IBM Plex Sans Arabic', sans-serif;
   --app-font-serif: 'IBM Plex Sans Arabic', serif;
-  --app-font-mono: Menlo, monospace;
+  --app-font-mono: 'IBM Plex Sans Arabic', Menlo, monospace;
 
-  --radius: 0.5rem;
+  --radius: 0.1875rem;
 
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.09), 0 1px 2px -1px rgb(0 0 0 / 0.09);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --shadow-sm: 0 1px 0 0 rgb(43 43 40 / 0.06);
+  --shadow: 0 1px 2px 0 rgb(43 43 40 / 0.08), 0 3px 6px -2px rgb(43 43 40 / 0.06);
+  --shadow-md: 0 6px 16px -4px rgb(43 43 40 / 0.16), 0 2px 4px -1px rgb(43 43 40 / 0.08);
 }
 
 .dark {
-  --background: 133 15% 12%;
-  --foreground: 43 28% 90%;
+  --background: 60 8% 10%;
+  --foreground: 42 22% 90%;
 
-  --border: 133 15% 20%;
-  --input: 133 15% 20%;
-  --ring: 155 43% 40%;
+  --border: 40 12% 22%;
+  --input: 40 12% 22%;
+  --ring: 168 45% 38%;
 
-  --card: 133 15% 14%;
-  --card-foreground: 43 28% 90%;
-  --card-border: 133 15% 22%;
+  --card: 60 8% 13%;
+  --card-foreground: 42 22% 90%;
+  --card-border: 40 12% 24%;
 
-  --popover: 133 15% 14%;
-  --popover-foreground: 43 28% 90%;
-  --popover-border: 133 15% 22%;
+  --popover: 60 8% 13%;
+  --popover-foreground: 42 22% 90%;
+  --popover-border: 40 12% 24%;
 
-  --primary: 155 40% 35%;
-  --primary-foreground: 43 28% 98%;
+  --primary: 168 45% 32%;
+  --primary-foreground: 42 25% 96%;
 
-  --secondary: 36 34% 45%;
-  --secondary-foreground: 43 35% 98%;
+  --secondary: 38 40% 48%;
+  --secondary-foreground: 42 25% 96%;
 
-  --muted: 133 15% 18%;
-  --muted-foreground: 43 15% 60%;
+  --muted: 60 8% 17%;
+  --muted-foreground: 42 12% 62%;
 
-  --accent: 133 20% 25%;
-  --accent-foreground: 43 28% 90%;
+  --accent: 168 22% 22%;
+  --accent-foreground: 42 22% 90%;
 
-  --destructive: 0 50% 40%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive: 4 40% 42%;
+  --destructive-foreground: 42 25% 96%;
 
-  --sidebar: 147 50% 10%;
-  --sidebar-foreground: 0 0% 92%;
-  --sidebar-border: 147 30% 18%;
-  --sidebar-primary: 45 60% 50%;
-  --sidebar-primary-foreground: 200 20% 12%;
-  --sidebar-accent: 147 30% 18%;
-  --sidebar-accent-foreground: 0 0% 92%;
-  --sidebar-ring: 45 60% 50%;
+  --brass: 38 40% 52%;
+  --brass-bright: 40 55% 64%;
+  --stone: 60 8% 13%;
+  --stone-deep: 60 8% 9%;
+
+  --signal: 37 88% 58%;
+  --signal-foreground: 60 20% 10%;
+
+  --seal: 168 40% 40%;
+  --seal-foreground: 42 25% 97%;
+
+  --sidebar: 168 40% 8%;
+  --sidebar-foreground: 42 22% 92%;
+  --sidebar-border: 168 25% 16%;
+  --sidebar-primary: 38 40% 55%;
+  --sidebar-primary-foreground: 60 8% 10%;
+  --sidebar-accent: 168 25% 15%;
+  --sidebar-accent-foreground: 42 22% 92%;
+  --sidebar-ring: 38 40% 55%;
 }
 
 @layer base {
@@ -173,5 +209,73 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
     direction: rtl;
+  }
+
+  ::selection {
+    background-color: hsl(var(--signal) / 0.35);
+    color: hsl(var(--foreground));
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--signal));
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--stone-deep));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--brass) / 0.55);
+    border: 2px solid hsl(var(--stone-deep));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--brass));
+  }
+}
+
+@layer utilities {
+  /* Engraved plaque: the base surface unit of the whole system — never a
+     rounded SaaS card. Flat, hairline brass border, faint carved inset. */
+  .plaque {
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--card-border));
+    border-radius: var(--radius-sm);
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.5),
+      var(--shadow-sm);
+  }
+
+  /* Carved brass rule — used as the signature divider under plaque headings */
+  .brass-rule {
+    position: relative;
+  }
+  .brass-rule::after {
+    content: '';
+    display: block;
+    height: 2px;
+    margin-top: 0.5rem;
+    background: linear-gradient(
+      to left,
+      transparent,
+      hsl(var(--brass)) 15%,
+      hsl(var(--brass)) 85%,
+      transparent
+    );
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  /* Amber LED numeral — the one live/kinetic accent in the system */
+  .signal-numeral {
+    font-variant-numeric: tabular-nums;
+    color: hsl(var(--signal));
+    text-shadow: 0 0 12px hsl(var(--signal) / 0.35);
   }
 }

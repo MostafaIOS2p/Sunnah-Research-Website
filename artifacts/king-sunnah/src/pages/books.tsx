@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book, ChevronLeft, LayoutGrid, List } from 'lucide-react';
+import { ChevronLeft, LayoutGrid, List } from 'lucide-react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useListHadithBooks } from '@workspace/api-client-react';
@@ -12,58 +12,56 @@ export default function Books() {
     <div className="space-y-6 animate-in fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2">الكتب والمراجع</h1>
-          <p className="text-muted-foreground">تصفح دواوين السنة المعتمدة والمصادر الأصلية.</p>
+          <h1 className="font-display text-3xl font-semibold">الكتب والمراجع</h1>
+          <p className="mt-1 text-muted-foreground">تصفح دواوين السنة المعتمدة والمصادر الأصلية.</p>
         </div>
-        <div className="flex items-center border rounded-md p-1 bg-card">
-          <Button 
-            variant={view === 'grid' ? 'secondary' : 'ghost'} 
-            size="icon"
-            onClick={() => setView('grid')}
-          >
+        <div className="flex items-center border border-border bg-card p-1">
+          <Button variant={view === 'grid' ? 'secondary' : 'ghost'} size="icon" className="rounded-sm" onClick={() => setView('grid')}>
             <LayoutGrid className="h-4 w-4" />
           </Button>
-          <Button 
-            variant={view === 'list' ? 'secondary' : 'ghost'} 
-            size="icon"
-            onClick={() => setView('list')}
-          >
+          <Button variant={view === 'list' ? 'secondary' : 'ghost'} size="icon" className="rounded-sm" onClick={() => setView('list')}>
             <List className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <div className={
-        view === 'grid' 
-          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-          : "space-y-4"
-      }>
-        {books.map((book) => (
+      <div
+        className={
+          view === 'grid'
+            ? 'grid grid-cols-1 divide-y divide-border border border-border bg-card sm:grid-cols-2 sm:divide-x sm:divide-y-0 sm:divide-x-reverse lg:grid-cols-3'
+            : 'divide-y divide-border border border-border bg-card'
+        }
+      >
+        {books.map((book, i) => (
           <Link key={book.id} href={`/search?q=${book.title}`}>
-            <div className={`group bg-card border border-card-border hover:border-primary/50 hover:shadow-md transition-all cursor-pointer rounded-xl p-6 ${view === 'list' ? 'flex items-center gap-6' : 'flex flex-col h-full'}`}>
-              <div className={`shrink-0 p-4 bg-primary/5 rounded-xl text-primary mb-4 ${view === 'list' ? 'mb-0' : ''}`}>
-                <Book className="h-8 w-8" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-bold mb-1 group-hover:text-primary transition-colors">{book.title}</h3>
-                <p className="text-sm font-medium text-muted-foreground mb-3">{book.author}</p>
-                <p className="text-sm text-foreground/80 line-clamp-2">
-                  {book.description}
-                </p>
-              </div>
-              <div className={`mt-4 flex items-center justify-between text-sm ${view === 'list' ? 'mt-0 shrink-0 ml-4 flex-col items-end gap-2' : 'pt-4 border-t border-border'}`}>
-                <span className="bg-secondary/20 text-secondary-foreground px-2 py-1 rounded-md font-medium">
-                  {book.hadithCount} حديث
-                </span>
-                {view === 'grid' && (
-                  <ChevronLeft className="h-4 w-4 text-muted-foreground group-hover:-translate-x-1 transition-transform" />
+            <div
+              className={
+                view === 'list'
+                  ? 'group flex cursor-pointer items-center gap-5 p-5 transition-colors hover:bg-accent/40'
+                  : 'group flex h-full cursor-pointer flex-col justify-between gap-6 p-6 transition-colors hover:bg-accent/40'
+              }
+            >
+              <span className="font-display text-2xl text-brass/60 tabular-nums">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div className={view === 'list' ? 'min-w-0 flex-1' : 'flex-1'}>
+                <h3 className="font-display text-lg font-semibold transition-colors group-hover:text-primary">{book.title}</h3>
+                <p className="mb-2 text-sm font-medium text-muted-foreground">{book.author}</p>
+                {book.description && (
+                  <p className="line-clamp-2 text-sm text-foreground/70">{book.description}</p>
                 )}
+              </div>
+              <div className={view === 'list' ? 'flex flex-shrink-0 items-center gap-4' : 'flex items-center justify-between border-t border-border/70 pt-4'}>
+                <span className="border border-secondary/30 px-2 py-1 text-sm font-medium text-secondary">
+                  {book.hadithCount.toLocaleString('ar-SA')} حديث
+                </span>
+                <ChevronLeft className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-x-1" />
               </div>
             </div>
           </Link>
         ))}
         {!isLoading && books.length === 0 && (
-          <div className="col-span-full text-center py-12 text-muted-foreground bg-card border border-dashed border-border rounded-xl">
+          <div className="col-span-full py-12 text-center text-muted-foreground">
             لا تتوفر كتب للعرض حاليًا.
           </div>
         )}
