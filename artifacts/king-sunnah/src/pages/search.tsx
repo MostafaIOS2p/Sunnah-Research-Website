@@ -30,7 +30,7 @@ export default function Search() {
         <h1 className="font-display text-4xl font-thin tracking-tight md:text-5xl">بحث الأحاديث</h1>
         <form onSubmit={handleSearch} className="surface-card flex w-full max-w-2xl gap-2 p-2">
           <div className="relative flex-1">
-            <SearchIcon className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-foreground/35" />
+            <SearchIcon className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-foreground/70" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -66,17 +66,17 @@ export default function Search() {
               <Link key={hadith.id} href={`/hadith/${hadith.id}`}>
                 <div className="surface-card group cursor-pointer p-7 transition-transform duration-300 hover:-translate-y-0.5">
                   <div className="mb-4 flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs font-medium text-foreground/65">
+                    <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs font-medium text-foreground/70">
                       {hadith.bookName}
                     </span>
-                    <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs text-foreground/50">
+                    <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs text-foreground/70">
                       {hadith.chapter}
                     </span>
                     <span
                       className={
                         isVerified
                           ? 'mr-auto rounded-full bg-seal/10 px-3 py-1 text-xs font-medium text-seal'
-                          : 'mr-auto rounded-full bg-foreground/[0.05] px-3 py-1 text-xs font-medium text-foreground/50'
+                          : 'mr-auto rounded-full bg-foreground/[0.05] px-3 py-1 text-xs font-medium text-foreground/70'
                       }
                     >
                       {hadith.grade}

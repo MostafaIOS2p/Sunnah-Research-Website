@@ -36,7 +36,7 @@ export default function Stats() {
             >
               {stat.value}
             </div>
-            <p className="mt-2 text-sm font-medium text-foreground/55">{stat.label}</p>
+            <p className="mt-2 text-sm font-medium text-foreground/70">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -69,7 +69,7 @@ export default function Stats() {
           <h3 className="mb-4 font-display text-lg font-medium">نشاط الباحثين</h3>
           <div className="flex h-64 items-center justify-center rounded-2xl bg-foreground/[0.02] text-muted-foreground">
             <div className="text-center">
-              <Activity className="mx-auto mb-2 h-10 w-10 opacity-40" />
+              <Activity className="mx-auto mb-2 h-10 w-10 opacity-50" />
               <p>رسم بياني لنشاط البحث (قيد التطوير)</p>
             </div>
           </div>

@@ -56,7 +56,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                       'cursor-pointer rounded-full px-4 py-2 text-[0.8rem] font-normal transition-colors',
                       isActive
                         ? 'text-foreground bg-foreground/[0.06]'
-                        : 'text-foreground/55 hover:text-foreground hover:bg-foreground/[0.04]',
+                        : 'text-foreground/70 hover:text-foreground hover:bg-foreground/[0.04]',
                     )}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -96,7 +96,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 <span
                   className={cn(
                     'block cursor-pointer rounded-2xl px-4 py-3 text-[0.95rem] font-normal transition-colors',
-                    isActive ? 'bg-foreground/[0.06] text-foreground' : 'text-foreground/60',
+                    isActive ? 'bg-foreground/[0.06] text-foreground' : 'text-foreground/70',
                   )}
                 >
                   {item.name}
@@ -110,7 +110,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       {/* ── Main content ───────────────────────────────────────── */}
       <main className="relative">{children}</main>
 
-      <footer className="border-t border-border/40 py-10 text-center text-[0.8rem] text-foreground/40">
+      <footer className="border-t border-border/40 py-10 text-center text-[0.8rem] text-foreground/70">
         مجموعة الملك عبدالعزيز للسنة النبوية · دار الإفتاء · إصدار تجريبي ١.٠
       </footer>
     </div>

@@ -44,15 +44,15 @@ export default function Narrators() {
                 </div>
               </div>
 
-              <p className="mb-4 flex-1 text-sm text-foreground/60">
+              <p className="mb-4 flex-1 text-sm text-foreground/70">
                 لا تتوفر ترجمة موثقة لهذا الراوي ضمن المصدر الحالي.
               </p>
 
               <div className="flex flex-wrap items-center gap-2 pt-2">
-                <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs text-foreground/45">
+                <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs text-foreground/70">
                   بيانات ترجمة غير متاحة
                 </span>
-                <span className="mr-auto rounded-full bg-foreground/[0.06] px-3 py-1 text-xs font-medium text-foreground/60">
+                <span className="mr-auto rounded-full bg-foreground/[0.06] px-3 py-1 text-xs font-medium text-foreground/70">
                   {narrator.hadithCount.toLocaleString('ar-SA')} حديث
                 </span>
               </div>

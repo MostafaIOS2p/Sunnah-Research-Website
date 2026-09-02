@@ -128,8 +128,8 @@ export default function Research() {
                   >
                     <div className="mb-3 flex items-start justify-between">
                       <div className="flex gap-2 text-sm">
-                        <span className="rounded-full bg-foreground/[0.06] px-2.5 py-0.5 text-xs font-medium text-foreground/65">{hadith.bookName}</span>
-                        <span className="rounded-full bg-foreground/[0.06] px-2.5 py-0.5 text-xs text-foreground/50">{hadith.grade}</span>
+                        <span className="rounded-full bg-foreground/[0.06] px-2.5 py-0.5 text-xs font-medium text-foreground/70">{hadith.bookName}</span>
+                        <span className="rounded-full bg-foreground/[0.06] px-2.5 py-0.5 text-xs text-foreground/70">{hadith.grade}</span>
                       </div>
                       <Button
                         size="sm"
@@ -153,7 +153,7 @@ export default function Research() {
             <div className="h-full space-y-6">
               {selectedForCompare.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center py-20 text-center text-muted-foreground">
-                  <Microscope className="mb-4 h-16 w-16 opacity-20" />
+                  <Microscope className="mb-4 h-16 w-16 opacity-40" />
                   <p className="mb-2 text-xl font-medium">منصة المقارنة فارغة</p>
                   <p>الرجاء إضافة أحاديث من نافذة البحث للمقارنة بين متونها وأسانيدها.</p>
                   <Button variant="outline" className="mt-6 rounded-full" onClick={() => setActiveTab('search')}>

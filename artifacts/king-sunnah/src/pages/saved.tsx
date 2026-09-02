@@ -34,7 +34,7 @@ export default function Saved() {
 
       {savedItems.length === 0 ? (
         <div className="flex flex-col items-center py-24 text-center">
-          <Bookmark className="mb-4 h-12 w-12 text-muted-foreground/25" />
+          <Bookmark className="mb-4 h-12 w-12 text-muted-foreground/50" />
           <h3 className="mb-1 text-lg font-medium text-foreground">لا توجد محفوظات</h3>
           <p className="mb-6 text-muted-foreground">قم بحفظ الأحاديث والرواة أثناء التصفح لتجدها هنا.</p>
           <Link href="/search" className="inline-flex h-11 items-center justify-center whitespace-nowrap rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03]">
