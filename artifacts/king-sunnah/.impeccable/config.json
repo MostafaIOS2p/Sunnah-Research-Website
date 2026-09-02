@@ -9,6 +9,24 @@
         "value": "999px",
         "createdAt": "2026-09-01T10:55:03.367Z",
         "reason": "Scrollbar thumb pill shape (src/index.css ::-webkit-scrollbar-thumb) is themed browser chrome, not a UI component on the DESIGN.md radius scale — pill-shaped scrollbar thumbs are the standard convention this system intentionally follows per the craft floor's 'theme browser surfaces' guidance."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "0.95rem",
+        "createdAt": "2026-09-02T05:52:53.780Z",
+        "reason": "Nav pill label / mobile menu item text (shell.tsx) — deliberately a step below the documented ramp for compact chrome (nav links, footer caption), pre-existing since the original Apple-editorial build and unrelated to the WCAG contrast fix (only the opacity on these lines changed)."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "0.8rem",
+        "createdAt": "2026-09-02T05:52:53.892Z",
+        "reason": "Desktop nav pill label / footer caption text (shell.tsx) — same compact-chrome exception as 0.95rem above; pre-existing, not touched by the contrast fix beyond its opacity."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "0.7rem",
+        "createdAt": "2026-09-02T05:52:53.980Z",
+        "reason": "Small metadata caption sizes in home.tsx (process-step / card timestamps) — same compact-chrome exception, pre-existing from the original build."
       }
     ]
   }
