@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T00:00:00Z",
+  "title": "Design System: King Sunnah",
+  "extensions": {
+    "colorMeta": {
+      "mosque-green": { "role": "primary", "displayName": "Mosque Green", "canonical": "hsl(168 68% 17%)", "tonalRamp": ["hsl(168 68% 10%)", "hsl(168 68% 14%)", "hsl(168 68% 17%)", "hsl(168 55% 28%)", "hsl(168 45% 42%)", "hsl(168 40% 58%)", "hsl(168 35% 75%)", "hsl(168 30% 92%)"] },
+      "brass": { "role": "secondary", "displayName": "Brass", "canonical": "hsl(38 45% 42%)", "tonalRamp": ["hsl(38 45% 15%)", "hsl(38 45% 25%)", "hsl(38 45% 35%)", "hsl(38 45% 42%)", "hsl(40 55% 58%)", "hsl(40 50% 70%)", "hsl(40 45% 84%)", "hsl(40 40% 95%)"] },
+      "amber-signal": { "role": "tertiary", "displayName": "Amber Signal", "canonical": "hsl(37 91% 55%)", "tonalRamp": ["hsl(37 91% 20%)", "hsl(37 91% 32%)", "hsl(37 91% 44%)", "hsl(37 91% 55%)", "hsl(37 91% 66%)", "hsl(37 91% 76%)", "hsl(37 85% 87%)", "hsl(37 80% 95%)"] },
+      "verification-seal": { "role": "state", "displayName": "Verification Seal", "canonical": "hsl(168 55% 22%)", "tonalRamp": ["hsl(168 55% 12%)", "hsl(168 55% 17%)", "hsl(168 55% 22%)", "hsl(168 50% 32%)", "hsl(168 45% 45%)", "hsl(168 40% 60%)", "hsl(168 35% 78%)", "hsl(168 30% 93%)"] },
+      "brick-seal-red": { "role": "destructive", "displayName": "Brick Seal Red", "canonical": "hsl(4 48% 36%)", "tonalRamp": ["hsl(4 48% 14%)", "hsl(4 48% 22%)", "hsl(4 48% 30%)", "hsl(4 48% 36%)", "hsl(4 48% 48%)", "hsl(4 48% 62%)", "hsl(4 45% 78%)", "hsl(4 40% 93%)"] },
+      "travertine-stone": { "role": "neutral-bg", "displayName": "Travertine Stone", "canonical": "hsl(42 26% 93%)", "tonalRamp": ["hsl(42 20% 20%)", "hsl(42 22% 40%)", "hsl(42 24% 60%)", "hsl(42 25% 78%)", "hsl(42 26% 88%)", "hsl(42 26% 93%)", "hsl(42 28% 96%)", "hsl(42 30% 99%)"] },
+      "stone-plaque": { "role": "surface", "displayName": "Stone Plaque", "canonical": "hsl(42 30% 97%)", "tonalRamp": ["hsl(42 20% 20%)", "hsl(42 22% 40%)", "hsl(42 24% 65%)", "hsl(42 26% 85%)", "hsl(42 28% 92%)", "hsl(42 30% 97%)", "hsl(42 30% 98%)", "hsl(42 30% 100%)"] },
+      "charcoal-ink": { "role": "text", "displayName": "Charcoal Ink", "canonical": "hsl(60 6% 15%)", "tonalRamp": ["hsl(60 6% 5%)", "hsl(60 6% 10%)", "hsl(60 6% 15%)", "hsl(60 6% 30%)", "hsl(60 6% 48%)", "hsl(60 6% 65%)", "hsl(60 6% 82%)", "hsl(60 6% 95%)"] },
+      "brass-hairline": { "role": "border", "displayName": "Brass Hairline", "canonical": "hsl(38 22% 78%)", "tonalRamp": ["hsl(38 22% 30%)", "hsl(38 22% 45%)", "hsl(38 22% 60%)", "hsl(38 22% 70%)", "hsl(38 22% 78%)", "hsl(38 22% 86%)", "hsl(38 24% 92%)", "hsl(38 26% 97%)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The one enormous per-viewport headline (homepage hero, page titles). Thin/100 weight." },
+      "heading": { "displayName": "Heading", "purpose": "Section titles within a page." },
+      "body": { "displayName": "Body", "purpose": "Descriptions, UI labels, metadata." },
+      "matn": { "displayName": "Hadith Matn", "purpose": "The Arabic hadith text itself; generous leading-loose line-height distinguishes scripture from chrome." }
+    },
+    "shadows": [
+      { "name": "shadow-sm", "value": "0 1px 2px 0 rgb(38 37 33 / 0.04), 0 1px 1px 0 rgb(38 37 33 / 0.03)", "purpose": "Lightest resting depth." },
+      { "name": "shadow", "value": "0 8px 24px -8px rgb(38 37 33 / 0.10), 0 2px 6px -2px rgb(38 37 33 / 0.05)", "purpose": "Default .surface-card shadow at rest." },
+      { "name": "shadow-md", "value": "0 24px 48px -16px rgb(38 37 33 / 0.16), 0 8px 16px -4px rgb(38 37 33 / 0.08)", "purpose": "Elevated / hover state." },
+      { "name": "shadow-lg", "value": "0 40px 80px -24px rgb(38 37 33 / 0.22), 0 12px 24px -8px rgb(38 37 33 / 0.10)", "purpose": "The single most prominent surface per view (homepage research CTA band)." }
+    ],
+    "motion": [
+      { "name": "card-lift", "value": "transform 300ms ease; hover: translateY(-4px) or translateY(-2px)", "purpose": "Cards lift slightly on hover, reinforcing the shadow as a liftable physical surface." },
+      { "name": "glass-nav-reveal", "value": "opacity/scale-y transition 300ms ease-out", "purpose": "Mobile nav panel slide-down/fade under the sticky glass header." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Mosque-green pill button, the system's default call to action.",
+      "html": "<button class=\"ds-btn-primary\">ابحث</button>",
+      "css": ".ds-btn-primary { background: hsl(168 68% 17%); color: hsl(42 30% 97%); border: none; border-radius: 9999px; padding: 0.75rem 1.5rem; font-family: 'IBM Plex Sans Arabic', sans-serif; font-weight: 500; font-size: 0.875rem; box-shadow: 0 1px 2px 0 rgb(38 37 33 / 0.04); transition: transform 0.15s ease; } .ds-btn-primary:hover { transform: scale(1.03); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid hsl(37 91% 55%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Brass-filled pill button for lower-frequency actions (export, save).",
+      "html": "<button class=\"ds-btn-secondary\">تصدير</button>",
+      "css": ".ds-btn-secondary { background: hsl(38 45% 42%); color: hsl(42 30% 97%); border: none; border-radius: 9999px; padding: 0.75rem 1.5rem; font-family: 'IBM Plex Sans Arabic', sans-serif; font-weight: 500; font-size: 0.875rem; transition: background 0.15s ease; } .ds-btn-secondary:hover { background: hsl(40 55% 58%); } .ds-btn-secondary:focus-visible { outline: 2px solid hsl(37 91% 55%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Surface Card",
+      "kind": "card",
+      "refersTo": "surface-card",
+      "description": "Borderless, soft-shadow default container for list items, results, and panels.",
+      "html": "<div class=\"ds-surface-card\"><h3 class=\"ds-card-title\">اسم الراوي</h3><p class=\"ds-card-body\">وصف مختصر.</p></div>",
+      "css": ".ds-surface-card { background: hsl(42 30% 97%); border-radius: 1.3125rem; box-shadow: 0 8px 24px -8px rgb(38 37 33 / 0.10), 0 2px 6px -2px rgb(38 37 33 / 0.05); padding: 1.5rem; transition: transform 0.3s ease; } .ds-surface-card:hover { transform: translateY(-4px); } .ds-card-title { font-family: 'IBM Plex Sans Arabic', sans-serif; font-weight: 500; font-size: 1.125rem; color: hsl(60 6% 15%); margin: 0 0 0.25rem; } .ds-card-body { font-weight: 300; font-size: 0.875rem; color: hsl(60 6% 15% / 0.6); margin: 0; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "surface-card",
+      "description": "Pill-radius search input embedded in a soft-elevation shell with icon and submit button.",
+      "html": "<form class=\"ds-search-field\"><svg class=\"ds-search-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/></svg><input class=\"ds-search-input\" placeholder=\"ابحث في المتن، الراوي، أو الكتاب...\" /><button class=\"ds-search-submit\" type=\"submit\">ابحث</button></form>",
+      "css": ".ds-search-field { display: flex; align-items: center; gap: 0.5rem; background: hsl(42 30% 97%); border-radius: 1.3125rem; box-shadow: 0 8px 24px -8px rgb(38 37 33 / 0.10); padding: 0.5rem; max-width: 36rem; } .ds-search-icon { color: hsl(60 6% 15% / 0.35); margin: 0 0.75rem; flex-shrink: 0; } .ds-search-input { flex: 1; min-width: 0; background: transparent; border: none; outline: none; font-size: 1rem; color: hsl(60 6% 15%); } .ds-search-input::placeholder { color: hsl(60 6% 15% / 0.35); } .ds-search-input:focus-visible { outline: 2px solid hsl(37 91% 55%); outline-offset: 2px; } .ds-search-submit { flex-shrink: 0; border: none; border-radius: 9999px; background: hsl(168 68% 17%); color: hsl(42 30% 97%); padding: 0.75rem 1.5rem; font-weight: 500; font-size: 0.875rem; }"
+    },
+    {
+      "name": "Metadata Badge",
+      "kind": "chip",
+      "refersTo": "badge-neutral",
+      "description": "Neutral-tint pill for ordinary metadata (book name, chapter, hadith count) — identical regardless of the item it labels.",
+      "html": "<span class=\"ds-badge-neutral\">صحيح البخاري</span>",
+      "css": ".ds-badge-neutral { display: inline-flex; align-items: center; border-radius: 9999px; background: hsl(60 6% 15% / 0.05); color: hsl(60 6% 15% / 0.65); font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; }"
+    },
+    {
+      "name": "Verified Grade Badge",
+      "kind": "chip",
+      "refersTo": "badge-verified",
+      "description": "The system's one filled/colored badge state — reserved exclusively for the 'صحيح' authenticity grade.",
+      "html": "<span class=\"ds-badge-verified\"><svg width=\"11\" height=\"11\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"M9 12l2 2 4-4\"/></svg>صحيح</span>",
+      "css": ".ds-badge-verified { display: inline-flex; align-items: center; gap: 0.25rem; border-radius: 9999px; background: hsl(168 55% 22% / 0.1); color: hsl(168 55% 22%); font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; }"
+    },
+    {
+      "name": "Sticky Glass Navigation",
+      "kind": "nav",
+      "refersTo": "surface-card",
+      "description": "Translucent, blurred sticky header replacing the prior fixed dark sidebar.",
+      "html": "<header class=\"ds-glass-nav\"><span class=\"ds-nav-brand\">مجموعة الملك عبدالعزيز</span><nav class=\"ds-nav-links\"><a class=\"ds-nav-link ds-nav-link-active\">الرئيسية</a><a class=\"ds-nav-link\">البحث</a><a class=\"ds-nav-link\">الكتب</a></nav></header>",
+      "css": ".ds-glass-nav { display: flex; align-items: center; justify-content: space-between; height: 4rem; padding: 0 2rem; background: hsl(42 26% 93% / 0.72); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid hsl(38 22% 78% / 0.4); } .ds-nav-brand { font-family: 'IBM Plex Sans Arabic', sans-serif; font-weight: 500; font-size: 0.95rem; } .ds-nav-links { display: flex; gap: 0.25rem; } .ds-nav-link { border-radius: 9999px; padding: 0.5rem 1rem; font-size: 0.8rem; color: hsl(60 6% 15% / 0.55); text-decoration: none; } .ds-nav-link:hover { color: hsl(60 6% 15%); background: hsl(60 6% 15% / 0.04); } .ds-nav-link-active { color: hsl(60 6% 15%); background: hsl(60 6% 15% / 0.06); }"
+    },
+    {
+      "name": "Neutral Avatar Tile",
+      "kind": "custom",
+      "refersTo": "surface-card",
+      "description": "Circular, neutrally-tinted initial tile used identically for every narrator — no per-item color coding.",
+      "html": "<div class=\"ds-avatar\">ع</div>",
+      "css": ".ds-avatar { display: flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 9999px; background: hsl(60 6% 15% / 0.06); color: hsl(60 6% 15% / 0.7); font-family: 'IBM Plex Sans Arabic', sans-serif; font-weight: 500; font-size: 1.125rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Restrained Editorial",
+    "overview": "King Sunnah is built as a single confident editorial product: one idea per viewport, huge quiet typography, and generous whitespace, in the register the user named directly (\"modern, elegant, like Apple website\"). It replaces two things explicitly rejected in this project's history: the original generic shadcn dashboard, and this project's own first redesign — the \"Complex Wayfinding\" world of stone-and-brass hall signage, carved Reem Kufi display type, square brass avatar tiles, and a fixed dark hall-directory sidebar. The shipped system keeps the project's original HSL color tokens verbatim but recasts their role entirely: stone and charcoal carry nearly every screen, and mosque-green, brass, and amber each get exactly one deliberate, non-repeating job rather than being sprinkled as decoration. Depth comes from real soft shadows on borderless cards, not from hairline borders. Corners are generous and soft everywhere, with full-pill radius on every interactive control. A sticky, blurred, translucent glass header replaces the old fixed sidebar entirely.",
+    "keyCharacteristics": [
+      "One enormous, Thin-weight headline per key viewport; type carries the drama, not color or ornament",
+      "Amber (--signal) reserved for exactly one live/aggregate numeral per view — never decorative, never repeated",
+      "Soft-elevation, borderless cards (real offset+blur shadow) as the default container, replacing the old flat hairline plaque",
+      "Full-pill radius on every interactive control; generous ~21px radius on static containers",
+      "Sticky translucent/blurred glass navigation, not a fixed sidebar",
+      "IBM Plex Sans Arabic exclusively, self-hosted Thin(100)-Bold(700), with large headlines running Thin/ExtraLight",
+      "Neutral, non-color-coded avatars and metadata badges — no per-item accent coding anywhere in a listing"
+    ],
+    "rules": [
+      { "name": "The One Signal Rule", "body": "Amber appears on exactly one live/aggregate numeral per view — never more than once, never on a static or per-item count.", "section": "colors" },
+      { "name": "The Neutral Item Rule", "body": "Individual items inside any listing never carry their own accent color; color marks state, never per-item identity.", "section": "colors" },
+      { "name": "The Stamped Grade Rule", "body": "\"صحيح\" alone gets the verification-seal green fill + check-shield glyph; every other grade renders as the same plain neutral badge as surrounding metadata.", "section": "colors" },
+      { "name": "The Thin Headline Rule", "body": "Large per-viewport headlines run Thin (100) or Light (300) weight, never Bold or SemiBold.", "section": "typography" },
+      { "name": "The Tabular Numeral Rule", "body": "Any live or comparative numeral uses tabular-nums so digits don't jitter or reflow.", "section": "typography" },
+      { "name": "The Borderless-By-Default Rule", "body": "A container's depth comes from shadow, not from a border; hairline borders are a minor exception, never the default.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use .surface-card (borderless, soft shadow, ~21px radius) as the default container for any new panel or list item.",
+      "Do reserve amber (--signal) for exactly one live/aggregate numeral per view; every other number is plain charcoal or the state color it already carries.",
+      "Do render every interactive control at full pill radius (rounded-full), even though the underlying shadcn Button defaults to rounded-md.",
+      "Do keep avatars, initials, and per-item metadata badges neutrally tinted and identical across every item in a listing.",
+      "Do render the \"صحيح\" grade as the one filled/colored badge; every other grade value uses the same plain neutral badge as surrounding metadata.",
+      "Do author top-level destination lists as a divided plain-text list with a sticky heading column, per the Editorial Link List pattern."
+    ],
+    "donts": [
+      "Don't reintroduce Reem Kufi or any separate carved/monumental display face — IBM Plex Sans Arabic (Thin-Bold) is the sole family.",
+      "Don't reintroduce the near-square 2-7px radius or square brass-bordered avatar tiles from the prior Complex Wayfinding world.",
+      "Don't use a hairline border as a container's primary depth device — shadow is the default.",
+      "Don't give individual listing items their own accent color or icon-in-colored-circle treatment — this shipped once and was corrected; it does not come back.",
+      "Don't repeat the amber signal treatment more than once per view, or apply it to a static/non-live number.",
+      "Don't add a kicker/eyebrow label above a heading; the Thin-weight headline carries its own weight."
+    ]
+  }
+}

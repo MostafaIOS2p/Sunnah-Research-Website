@@ -21,36 +21,36 @@ export default function Saved() {
   };
 
   return (
-    <div className="animate-in fade-in space-y-6">
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center border border-brass/50 text-brass">
+    <div className="mx-auto max-w-6xl animate-in fade-in px-5 py-14 duration-500 md:px-8 md:py-20">
+      <div className="mb-10 flex items-center gap-4">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Bookmark className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="font-display text-3xl font-semibold">المحفوظات</h1>
-          <p className="text-muted-foreground">أبحاثك، الأحاديث، والرواة المحفوظون للعودة إليها لاحقاً.</p>
+          <h1 className="font-display text-4xl font-thin tracking-tight md:text-5xl">المحفوظات</h1>
+          <p className="mt-1 text-lg font-light text-muted-foreground">أبحاثك، الأحاديث، والرواة المحفوظون للعودة إليها لاحقاً.</p>
         </div>
       </div>
 
       {savedItems.length === 0 ? (
-        <div className="plaque flex flex-col items-center border-dashed py-20 text-center">
-          <Bookmark className="mb-4 h-12 w-12 text-muted-foreground/30" />
+        <div className="flex flex-col items-center py-24 text-center">
+          <Bookmark className="mb-4 h-12 w-12 text-muted-foreground/25" />
           <h3 className="mb-1 text-lg font-medium text-foreground">لا توجد محفوظات</h3>
           <p className="mb-6 text-muted-foreground">قم بحفظ الأحاديث والرواة أثناء التصفح لتجدها هنا.</p>
-          <Link href="/search" className="inline-flex h-9 items-center justify-center whitespace-nowrap bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+          <Link href="/search" className="inline-flex h-11 items-center justify-center whitespace-nowrap rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03]">
             تصفح الأحاديث
           </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {savedItems.map((item) => (
-            <div key={item.id} className="plaque group flex flex-col p-5">
+            <div key={item.id} className="surface-card group flex flex-col p-6">
               <div className="mb-3 flex items-start justify-between">
                 <span
                   className={
                     item.type === 'hadith'
-                      ? 'inline-flex items-center gap-1.5 border border-primary/40 px-2 py-0.5 text-xs font-medium text-primary'
-                      : 'inline-flex items-center gap-1.5 border border-secondary/40 px-2 py-0.5 text-xs font-medium text-secondary'
+                      ? 'inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary'
+                      : 'inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-2.5 py-1 text-xs font-medium text-secondary'
                   }
                 >
                   {item.type === 'hadith' ? <FileText className="h-3 w-3" /> : <Users className="h-3 w-3" />}
@@ -59,7 +59,7 @@ export default function Saved() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                  className="h-8 w-8 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                   onClick={() => removeItem(item.id)}
                 >
                   <Trash2 className="h-4 w-4" />
@@ -67,7 +67,7 @@ export default function Saved() {
               </div>
 
               <Link href={item.type === 'hadith' ? `/hadith/${item.id}` : `/narrator/${item.id}`}>
-                <h3 className="mb-2 cursor-pointer font-display text-lg font-semibold transition-colors hover:text-primary">
+                <h3 className="mb-2 cursor-pointer font-display text-lg font-medium transition-colors hover:text-primary">
                   {item.title}
                 </h3>
               </Link>
@@ -76,18 +76,18 @@ export default function Saved() {
                 تم الحفظ في: {new Date(item.addedAt).toLocaleDateString('ar-SA')}
               </div>
 
-              <div className="mt-auto border-t border-border/70 pt-4">
+              <div className="mt-auto pt-2">
                 {editingId === item.id ? (
                   <div className="flex gap-2">
                     <Input
                       value={noteText}
                       onChange={(e) => setNoteText(e.target.value)}
                       placeholder="أضف ملاحظة..."
-                      className="h-8 text-sm"
+                      className="h-9 rounded-xl text-sm"
                       autoFocus
                       onKeyDown={(e) => e.key === 'Enter' && handleSaveNote(item.id)}
                     />
-                    <Button size="sm" className="rounded-sm" onClick={() => handleSaveNote(item.id)}>حفظ</Button>
+                    <Button size="sm" className="rounded-full" onClick={() => handleSaveNote(item.id)}>حفظ</Button>
                   </div>
                 ) : (
                   <div className="group/note flex items-center justify-between">
@@ -97,7 +97,7 @@ export default function Saved() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 opacity-0 transition-opacity group-hover/note:opacity-100"
+                      className="h-6 w-6 rounded-full opacity-0 transition-opacity group-hover/note:opacity-100"
                       onClick={() => handleEdit(item.id, item.notes)}
                     >
                       <Edit3 className="h-3 w-3" />

@@ -13,11 +13,11 @@ export default function HadithDetail() {
   const { toast } = useToast();
 
   if (isLoading) {
-    return <div className="py-20 text-center text-muted-foreground">جارٍ تحميل الحديث...</div>;
+    return <div className="py-24 text-center text-muted-foreground">جارٍ تحميل الحديث...</div>;
   }
 
   if (!hadith || isError) {
-    return <div className="py-20 text-center text-muted-foreground">الحديث غير موجود</div>;
+    return <div className="py-24 text-center text-muted-foreground">الحديث غير موجود</div>;
   }
 
   const saved = isSaved(hadith.id);
@@ -41,9 +41,9 @@ export default function HadithDetail() {
   const sourceNarrators = hadith.sourceNarrators;
 
   return (
-    <div className="mx-auto max-w-4xl animate-in fade-in space-y-8">
+    <div className="mx-auto max-w-4xl animate-in fade-in px-5 py-14 duration-500 md:px-8 md:py-20">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/books" className="transition-colors hover:text-foreground">الكتب</Link>
         <ChevronLeft className="h-4 w-4" />
         <Link href={`/books/${hadith.bookId}`} className="transition-colors hover:text-foreground">{hadith.bookName}</Link>
@@ -51,19 +51,19 @@ export default function HadithDetail() {
         <span className="text-foreground">{hadith.chapter}</span>
       </div>
 
-      {/* Main plaque */}
-      <div className="plaque overflow-hidden">
-        <div className="space-y-6 p-6 md:p-8">
+      {/* Main card */}
+      <div className="surface-card overflow-hidden">
+        <div className="space-y-7 p-8 md:p-12">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="border border-border px-3 py-1 text-sm font-medium text-foreground/70">
+              <span className="rounded-full bg-foreground/[0.05] px-3.5 py-1.5 text-sm font-medium text-foreground/65">
                 حديث رقم {hadith.number}
               </span>
               <span
                 className={
                   isVerified
-                    ? 'inline-flex items-center gap-1.5 border border-seal/40 px-3 py-1 text-sm font-medium text-seal'
-                    : 'inline-flex items-center gap-1.5 border border-border px-3 py-1 text-sm font-medium text-foreground/55'
+                    ? 'inline-flex items-center gap-1.5 rounded-full bg-seal/10 px-3.5 py-1.5 text-sm font-medium text-seal'
+                    : 'inline-flex items-center gap-1.5 rounded-full bg-foreground/[0.05] px-3.5 py-1.5 text-sm font-medium text-foreground/50'
                 }
               >
                 {isVerified && <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.5} />}
@@ -71,10 +71,10 @@ export default function HadithDetail() {
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" onClick={copyText} title="نسخ النص">
+              <Button variant="ghost" size="icon" className="rounded-full" onClick={copyText} title="نسخ النص">
                 <Quote className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => toast({ title: 'تم نسخ رابط المشاركة' })} title="مشاركة">
+              <Button variant="ghost" size="icon" className="rounded-full" onClick={() => toast({ title: 'تم نسخ رابط المشاركة' })} title="مشاركة">
                 <Share2 className="h-4 w-4" />
               </Button>
               <Button
@@ -82,20 +82,20 @@ export default function HadithDetail() {
                 size="icon"
                 onClick={toggleSave}
                 title={saved ? 'محفوظ' : 'حفظ'}
-                className="rounded-sm"
+                className="rounded-full"
               >
                 <Bookmark className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} />
               </Button>
             </div>
           </div>
 
-          <p className="text-center font-display text-2xl leading-loose text-foreground md:text-3xl">
+          <p className="text-center font-display text-2xl font-light leading-loose text-foreground md:text-[1.75rem]">
             {hadith.textAr}
           </p>
         </div>
 
         {/* Source footer */}
-        <div className="flex flex-wrap items-center gap-6 border-t border-border bg-stone-deep/30 px-6 py-4 text-sm">
+        <div className="flex flex-wrap items-center gap-6 bg-foreground/[0.02] px-8 py-5 text-sm md:px-12">
           <div className="flex items-center gap-2 text-muted-foreground">
             <BookOpen className="h-4 w-4" />
             <span>المصدر:</span>
@@ -108,43 +108,46 @@ export default function HadithDetail() {
         </div>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="mt-10 grid gap-10 md:grid-cols-2">
         {/* Explanation */}
         <div className="space-y-4">
-          <h3 className="flex items-center gap-2 font-display text-xl font-semibold">
+          <h3 className="flex items-center gap-2 font-display text-lg font-medium">
             <BookOpen className="h-5 w-5 text-primary" />
             الشرح والفوائد
           </h3>
-          <div className="plaque p-6">
+          <div className="surface-card p-6">
             <p className="leading-relaxed text-muted-foreground">
               لا يتوفر شرح مستقل لهذا الحديث في المصدر الحالي.
             </p>
           </div>
         </div>
 
-        {/* Isnad — the chain of transmission */}
+        {/* Isnad — the chain of transmission, as a clean vertical timeline */}
         <div className="space-y-4">
-          <h3 className="flex items-center gap-2 font-display text-xl font-semibold">
+          <h3 className="flex items-center gap-2 font-display text-lg font-medium">
             <Users className="h-5 w-5 text-primary" />
             سلسلة الإسناد
           </h3>
-          <div className="plaque relative p-4 before:absolute before:bottom-8 before:right-[31px] before:top-8 before:w-px before:bg-brass/30">
-            <div className="space-y-0">
+          <div className="surface-card p-6">
+            <ol className="relative">
               {sourceNarrators.map((narrator: { id: string; name: string }, idx: number) => (
-                <div key={narrator.id} className="group relative z-10 flex gap-4 rounded-sm p-3 transition-colors hover:bg-accent/50">
-                  <div className="mt-1 flex h-10 w-10 flex-shrink-0 items-center justify-center border border-brass/50 bg-card text-sm font-display font-semibold text-brass">
-                    {idx + 1}
-                  </div>
-                  <div>
-                    <Link href={`/narrator/${narrator.id}`}>
-                      <h4 className="cursor-pointer font-semibold text-foreground transition-colors group-hover:text-primary">
+                <li key={narrator.id} className="group relative pb-6 last:pb-0">
+                  {idx < sourceNarrators.length - 1 && (
+                    <span className="absolute right-[15px] top-8 h-full w-px bg-border/60" aria-hidden="true" />
+                  )}
+                  <Link href={`/narrator/${narrator.id}`}>
+                    <div className="relative flex cursor-pointer items-center gap-4 rounded-2xl p-2 transition-colors hover:bg-foreground/[0.03]">
+                      <span className="relative z-10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
+                        {idx + 1}
+                      </span>
+                      <h4 className="font-medium text-foreground transition-colors group-hover:text-primary">
                         {narrator.name}
                       </h4>
-                    </Link>
-                  </div>
-                </div>
+                    </div>
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </div>
       </div>

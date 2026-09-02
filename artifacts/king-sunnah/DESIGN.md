@@ -1,6 +1,6 @@
 ---
 name: King Sunnah
-description: An institutional hadith reference platform redesigned as a complex you are guided through, not a dashboard you scroll.
+description: A single confident editorial reference for the Prophetic Sunnah — one quiet idea per viewport, restrained restrained-until-earned color, and huge thin-weight Arabic type.
 colors:
   travertine-stone: "hsl(42 26% 93%)"
   charcoal-ink: "hsl(60 6% 15%)"
@@ -12,166 +12,215 @@ colors:
   amber-signal: "hsl(37 91% 55%)"
   verification-seal: "hsl(168 55% 22%)"
   brick-seal-red: "hsl(4 48% 36%)"
-  hall-directory-green: "hsl(168 62% 14%)"
 typography:
   display:
-    fontFamily: "Reem Kufi, IBM Plex Sans Arabic, sans-serif"
-    fontWeight: 600
-    lineHeight: 1.15
+    fontFamily: "IBM Plex Sans Arabic, sans-serif"
+    fontWeight: 100
+    fontSize: "clamp(2.75rem, 6vw, 4.75rem)"
+    lineHeight: 1.08
+    letterSpacing: "-0.01em"
+  heading:
+    fontFamily: "IBM Plex Sans Arabic, sans-serif"
+    fontWeight: 300
+    fontSize: "clamp(1.5rem, 3vw, 3rem)"
+    lineHeight: 1.2
   body:
     fontFamily: "IBM Plex Sans Arabic, sans-serif"
-    fontWeight: 400
+    fontWeight: 300
+    fontSize: "1rem"
     lineHeight: 1.6
+  matn:
+    fontFamily: "IBM Plex Sans Arabic, sans-serif"
+    fontWeight: 300
+    fontSize: "clamp(1.125rem, 2vw, 1.75rem)"
+    lineHeight: 2
 rounded:
-  sm: "2px"
-  md: "3px"
-  lg: "5px"
-  xl: "7px"
+  sm: "1.1875rem"
+  md: "1.25rem"
+  lg: "1.3125rem"
+  xl: "1.4375rem"
+  pill: "9999px"
 spacing:
   sm: "0.5rem"
-  md: "1rem"
-  lg: "1.5rem"
+  md: "1.25rem"
+  lg: "2.5rem"
+  xl: "5rem"
 components:
   button-primary:
     backgroundColor: "{colors.mosque-green}"
     textColor: "{colors.stone-plaque}"
-    rounded: "{rounded.sm}"
-    padding: "0.625rem 1.25rem"
+    rounded: "{rounded.pill}"
+    padding: "0.75rem 1.5rem"
   button-secondary:
     backgroundColor: "{colors.brass}"
     textColor: "{colors.stone-plaque}"
-    rounded: "{rounded.sm}"
-    padding: "0.625rem 1.25rem"
-  plaque:
+    rounded: "{rounded.pill}"
+    padding: "0.75rem 1.5rem"
+  surface-card:
     backgroundColor: "{colors.stone-plaque}"
-    rounded: "{rounded.sm}"
+    rounded: "{rounded.lg}"
+    padding: "1.5rem"
+  badge-neutral:
+    backgroundColor: "hsl(60 6% 15% / 0.05)"
+    textColor: "hsl(60 6% 15% / 0.65)"
+    rounded: "{rounded.pill}"
+    padding: "0.25rem 0.75rem"
+  badge-verified:
+    backgroundColor: "hsl(168 55% 22% / 0.1)"
+    textColor: "{colors.verification-seal}"
+    rounded: "{rounded.pill}"
+    padding: "0.25rem 0.75rem"
 ---
 
 # Design System: King Sunnah
 
 ## Overview
 
-**Creative North Star: "Complex Wayfinding"**
+**Creative North Star: "The Restrained Editorial"**
 
-King Sunnah is built as a real institutional complex you are guided through, not an app that lists content in cards. Every screen borrows from the language of stone and brass hall signage and the amber prayer-time board: a visitor reads directory plaques to find the right hall (Search, Books, Narrators, Research), sees a live amber counter proving the collection's scale, and moves through numbered wayfinding rather than a scrolling feed. This replaces two things explicitly rejected during the redesign: the previously shipped generic green/white/gold shadcn-default dashboard (rounded cards, icon-in-circle tiles), and a "Golden Age" cream-and-gold devotional direction that was explored but not chosen because it is the default rendition every AI-generated Islamic-subject interface converges on.
+King Sunnah is built as a single confident editorial product: one idea per viewport, huge quiet typography, and generous whitespace, in the register the user named directly ("modern, elegant, like Apple website"). It replaces two things explicitly rejected in this project's history: the original generic shadcn dashboard, and this project's own first redesign — the "Complex Wayfinding" world of stone-and-brass hall signage, carved Reem Kufi display type, square brass avatar tiles, and a fixed dark hall-directory sidebar. Those artifacts (hairline-bordered "plaques," near-square 3px radius, brass borders as the default depth device) are fully retired; nothing in this document should be read as continuing them.
 
-The system is deliberately flat and architectural rather than soft and bubbly: hairline brass borders instead of drop shadows, square-cornered plaques instead of rounded cards, carved numerals instead of icon-in-colored-circle badges. Verification (a hadith's authenticity grade) reads as a stamped seal, not a colored pill. The one animated/luminous element in the whole system is the amber "signal" numeral — reserved exclusively for live, countable data (the total verified hadith count, the stats ledger) — so its rarity keeps it meaningful.
+The shipped system keeps the project's original HSL color tokens verbatim (a deliberate constraint) but recasts their role entirely: stone and charcoal carry nearly every screen, and mosque-green, brass, and amber each get exactly one deliberate, non-repeating job rather than being sprinkled as decoration. Depth comes from real soft shadows (offset + blur) on borderless cards, not from hairline borders. Corners are generous and soft everywhere: ~21px on cards, full pill radius on every interactive control (buttons, inputs, search fields, filter chips, badges). A sticky, blurred, translucent glass header replaces the old fixed sidebar entirely on every route.
+
+An earlier pass of this build let color leak as a repeating per-item accent (colored narrator/book badges, a 4×-repeated amber stats numeral, and a same-size icon+card grid for the homepage's second section). That has since been corrected in the code this document describes: narrator/book accents are now neutral foreground tints, amber appears exactly once per view on the one true live/aggregate figure, and the homepage's second section is an asymmetric two-column editorial link list (sticky heading + a plain divided text list, no icons, no per-item color, no card boxes) rather than a grid of icon tiles.
 
 **Key Characteristics:**
-- Stone-and-brass architectural signage in place of card grids
-- One amber "signal" accent reserved for live/counted data only
-- Verification shown as a stamped seal (green, with a check glyph), never a plain colored badge
-- Flat, hairline-bordered plaques (2–3px radius) instead of rounded shadow cards
-- Reem Kufi (a Kufic-inscription-derived display face) for carved/engraved headings; IBM Plex Sans Arabic for body and UI text
-- RTL-first: every layout, icon position, and flex order is authored for Arabic reading order, not mirrored from an English default
+- One enormous, Thin-weight headline per key viewport; type carries the drama, not color or ornament
+- Amber (`--signal`) reserved for exactly one live/aggregate numeral per view — never decorative, never repeated
+- Soft-elevation, borderless cards (real offset+blur shadow) as the default container, replacing the old flat hairline "plaque"
+- Full-pill radius on every interactive control; generous ~21px radius on static containers
+- Sticky translucent/blurred glass navigation, not a fixed sidebar
+- IBM Plex Sans Arabic exclusively, self-hosted Thin(100)–Bold(700), with large headlines running Thin/ExtraLight
+- Neutral, non-color-coded avatars and metadata badges — no per-item accent coding anywhere in a listing
 
 ## Colors
 
-The palette reads as a real material world — quarried stone, cast brass, oxidized mosque-green, and one amber signal light — not a generic brand palette with a religious color cliché (avoid green+gold-as-decoration; here green and brass are structural materials, not accents sprinkled for flavor).
+The palette is the project's original HSL tokens, unchanged in value but recast: stone and charcoal are structural (the page itself), while mosque-green, brass, verification-green, and amber are each rationed to a specific, narrow job.
 
 ### Primary
-- **Mosque Green** (`hsl(168 68% 17%)` / `#0E4F44`): primary buttons, active nav state, the research CTA band, the hall-directory sidebar background (deeper variant).
+- **Mosque Green** (`hsl(168 68% 17%)` / `#0E4F44`): the system's interactive/action color — primary buttons, links (`text-primary`), active states, focus rings, the homepage research CTA band background, and the neutral-tinted isnad-chain index numerals (`bg-primary/10 text-primary`). It is the most-used color in the system precisely because it marks "interactive," not "decorative."
 
 ### Secondary
-- **Brass** (`hsl(38 45% 42%)` / `#9C7A3C`): secondary actions, index numerals on directory/book-register plaques, hairline dividers (`brass-rule`), narrator initial tiles.
-- **Brass Bright** (`hsl(40 55% 58%)` / `#C9A566`): hover state for brass-colored elements.
+- **Brass** (`hsl(38 45% 42%)` / `#9C7A3C`): used sparingly — the "saved" bookmark active-state color and the secondary button/badge fill (e.g. the research compare-count badge). Never a page-filling color.
 
 ### Tertiary
-- **Amber Signal** (`hsl(37 91% 55%)` / `#F5A623`): reserved exclusively for live/counted numerals — the homepage hadith-count counter and the stats ledger board. Never used decoratively.
+- **Amber Signal** (`hsl(37 91% 55%)` / `#F5A623`): reserved exclusively for one live/aggregate numeral per view — the homepage's total-hadith counter, and the single "total hadiths" tile on the Stats ledger (the other three Stats tiles are plain neutral charcoal numerals). It never appears as a badge, border, or icon tint.
 
 ### Neutral
 - **Travertine Stone** (`hsl(42 26% 93%)` / `#F1EBDD`): page background.
-- **Stone Plaque** (`hsl(42 30% 97%)` / near-white): card/plaque surface, one step lighter than the page ground.
-- **Charcoal Ink** (`hsl(60 6% 15%)` / `#262521`): primary text, reads as engraved ink on stone.
-- **Brass Hairline** (`hsl(38 22% 78%)`): all borders — plaques, dividers, inputs.
-- **Verification Seal** (`hsl(168 55% 22%)`): the "صحيح" (authentic) grade stamp only.
-- **Brick Seal Red** (`hsl(4 48% 36%)`): destructive actions only.
+- **Stone Plaque** (`hsl(42 30% 97%)`): card/surface background, one step lighter than the page.
+- **Charcoal Ink** (`hsl(60 6% 15%)` / `#262521`): primary text; also the source of nearly all neutral tints (`foreground/[0.02–0.08]`) used for badges, dividers, icon-tile backgrounds, and section-band backgrounds.
+- **Brass Hairline** (`hsl(38 22% 78%)`): the system's one remaining border color, used only faintly (`border/40`–`border/50`) for breadcrumbs, footer rule, and the isnad connecting line — never as a card's primary depth device anymore.
+- **Verification Seal** (`hsl(168 55% 22%)`): the "صحيح" (authentic) grade badge only.
+- **Brick Seal Red** (`hsl(4 48% 36%)`): destructive actions only (e.g. delete-from-compare hover state).
 
 ### Named Rules
-**The One Signal Rule.** Amber is the system's only "alive" color. It appears solely on live, countable readouts (the homepage hadith counter, the stats ledger). If a number isn't real-time/aggregate data, it doesn't get amber.
+**The One Signal Rule.** Amber appears on exactly one live/aggregate numeral per view — never more than once, never on a static or per-item count. If a second number on the same screen needs emphasis, it gets plain charcoal, not amber.
 
-**The Stamped Grade Rule.** A hadith's authenticity grade never renders as a generic colored pill. "صحيح" (authentic) gets a green outline with a check glyph, like a seal; anything else gets a plain neutral outline — never a red/orange "danger" color, because "unclassified" is not the same claim as "weak."
+**The Neutral Item Rule.** Individual items inside any listing (narrator cards, book cards, hadith results, saved items) never carry their own accent color. Avatars, initials, and metadata badges are all the same neutral charcoal tint (`foreground/[0.05–0.06]`) regardless of which item they belong to; color is reserved for state (verified / active / live), never for per-item identity.
+
+**The Stamped Grade Rule.** A hadith's authenticity grade never renders as a generic colored pill. "صحيح" (authentic) alone gets the verification-seal green fill + a small check-shield glyph; every other grade value renders as the same plain neutral badge as surrounding metadata (book name, chapter) — never a red/orange "danger" tone, since "unclassified" is not the same claim as "weak."
 
 ## Typography
 
-**Display Font:** Reem Kufi (with IBM Plex Sans Arabic, sans-serif fallback)
-**Body Font:** IBM Plex Sans Arabic (with generic sans-serif fallback)
+**Display & Body Font:** IBM Plex Sans Arabic (self-hosted, the exact family shipped in the King Sunnah iOS app), with generic sans-serif fallback — one family for everything, display and body alike, distinguished only by weight and size.
 
-**Character:** Reem Kufi is derived from Kufic monumental inscription lettering — the same lettering tradition carved into mosque facades and brass plaques — so headings genuinely read as "carved," not merely bold. IBM Plex Sans Arabic stays the workhorse for body copy, UI labels, and dense data, keeping long-form reading and interface chrome calm and legible.
+**Character:** A single, quiet workhorse family carrying the full Thin(100)–Bold(700) range lets huge headlines run Thin/ExtraLight (the same move Apple's own site makes with SF Pro Display) while the same face stays legible and calm at body sizes. Reem Kufi and any "carved"/monumental display styling from the prior world are fully retired — there is no separate display face.
 
 ### Hierarchy
-- **Display** (font-display, 600, 2.25–3.75rem, 1.15 line-height): page/section titles, the hero headline, plaque titles (book names, narrator names).
-- **Body** (font-sans, 400, 0.875–1rem, 1.6 line-height): paragraph copy, descriptions, UI labels.
-- **Hadith matn** (font-display, 400–600, 1.125–1.5rem, ~2 line-height "leading-loose"): the Arabic hadith text itself gets the display face at a generous line-height, distinguishing scriptural text from interface chrome.
-- **Signal numeral** (font-display, tabular-nums, amber, with a soft text-shadow glow): the one place numerals get special treatment, styled via the `.signal-numeral` utility.
+- **Display** (font-thin/100, `2.75rem`→`4.75rem` clamp, 1.08 line-height, tight tracking): the one enormous per-viewport headline (homepage hero, page titles like "بحث الأحاديث", "إحصائيات المجموعة").
+- **Heading** (font-thin/font-light, `1.5rem`–`3rem`): section titles within a page ("كل ما تحتاجه، في مكان واحد", "مختارات موثقة").
+- **Title** (font-medium, `1.125rem`–`1.5rem`): card/component titles — narrator names, book titles, directory-list item titles.
+- **Body** (font-light/400, `0.875rem`–`1.125rem`, 1.6 line-height): descriptions, UI labels, metadata.
+- **Hadith matn** (font-light, `1.125rem`–`1.75rem`, ~2 line-height "leading-loose"): the Arabic hadith text itself — the one place body copy gets a generous, scripture-appropriate line-height distinct from ordinary paragraph text.
+- **Signal numeral** (font-thin, tabular-nums, `2.25rem`–`4.75rem`, amber with a soft glow): styled via `.signal-numeral`; reserved per the One Signal Rule.
 
 ### Named Rules
-**The Tabular Numeral Rule.** Any live or comparative numeral (the hadith counter, stats figures) uses `tabular-nums` so digits don't jitter or reflow as they update.
+**The Thin Headline Rule.** Large per-viewport headlines run Thin (100) or Light (300) weight, never Bold or SemiBold — weight climbs only as text gets smaller (card titles at Medium/500, badges at Medium/500 for legibility at small size).
+
+**The Tabular Numeral Rule.** Any live or comparative numeral (hero counter, stats figures, book index numbers) uses `tabular-nums` so digits don't jitter or reflow.
 
 ## Layout
 
-Content sits in a `max-w-5xl`–`max-w-6xl` centered column inside the hall-directory shell (a fixed 288px/`w-72` sidebar on desktop, collapsing to a slide-in drawer on mobile). The homepage is the one full-bleed exception — its hero, directory board, and news sections run edge-to-edge inside their own `max-w-4xl`/`max-w-6xl` sections rather than the shell's column, since it renders outside `Shell` entirely.
+Two container widths carry almost everything: `max-w-4xl` for single-document reading views (Hadith Detail, Narrator Profile, Search) and `max-w-6xl` for list/browse views (Home sections, Books, Narrators, Research, Stats), both centered with `px-5 md:px-8` gutters. Section rhythm is generous and consistent: `py-14`–`py-24` between major sections, with alternating plain and `bg-foreground/[0.02]` tinted bands to separate sections without borders.
 
-Directory-style listings (the homepage hall board, the Books register) use a single bordered container with internal `divide-x`/`divide-y` hairlines rather than a gap-separated grid of individual cards — one continuous plaque with dividers reads as a register or signage board, not a stack of app cards. Responsive behavior: `sm:divide-x` becomes stacked `divide-y` below the sm breakpoint, so the board degrades to a simple vertical list on mobile rather than trying to preserve columns.
+The homepage is the one full-bleed exception, composed of stacked single-focus sections rather than the shell's single column: a centered `max-w-3xl` hero, a `max-w-6xl` two-column editorial section, a `max-w-4xl` process strip, and `max-w-6xl` featured/news sections.
 
-Spacing rhythm favors generous section padding (`py-10`–`py-24` for full sections) with tighter internal plaque padding (`p-5`–`p-8`), and consistently more space above a heading than below it.
+**The homepage's second section (signature layout)** is an asymmetric two-column editorial grid (`minmax(0,0.9fr)_minmax(0,1.4fr)`): a sticky heading column on one side, and on the other a single bordered list of plain-text links divided by hairlines (`border-t`/`border-b`), each row showing only a title, one-line description, and an arrow that appears on hover — no icons, no per-item color, no card boxes. This replaced an earlier same-size icon+card grid and is the model for any future "list of top-level destinations" surface.
+
+Responsive behavior: the two-column editorial grid, process strip, and card grids all collapse to a single column below `md`; the sticky glass header remains fixed while its desktop inline nav is replaced by a slide-down full-width panel.
 
 ## Elevation & Depth
 
-Flat-by-default. There is no floating-card shadow system; depth comes from the hairline brass border plus a very faint inset highlight (`inset 0 1px 0 0 rgb(255 255 255 / 0.5)`) that reads as a beveled stone edge, not a drop shadow. The `--shadow-sm/--shadow/--shadow-md` tokens exist and are used sparingly (hero search bar, a couple of interactive states) but are not the primary depth device.
+Soft and shadow-based, not flat. The default container (`.surface-card`) is borderless: depth comes entirely from a real offset+blur `box-shadow`, replacing the prior world's hairline-border-as-depth. A `.surface-card-flat` variant (thin `card-border` at 50% opacity, no shadow) exists for lower-emphasis contexts. Cards lift further on hover via `-translate-y-1`/`-translate-y-0.5`, reinforcing the shadow as a physical, liftable surface rather than a printed outline.
+
+### Shadow Vocabulary
+- **`--shadow-sm`** (`0 1px 2px 0 rgb(38 37 33/0.04), 0 1px 1px 0 rgb(38 37 33/0.03)`): the lightest resting depth.
+- **`--shadow`** (`0 8px 24px -8px rgb(38 37 33/0.10), 0 2px 6px -2px rgb(38 37 33/0.05)`): the default `.surface-card` shadow — used everywhere a card sits at rest.
+- **`--shadow-md`** (`0 24px 48px -16px rgb(38 37 33/0.16), 0 8px 16px -4px rgb(38 37 33/0.08)`): elevated/hover states.
+- **`--shadow-lg`** (`0 40px 80px -24px rgb(38 37 33/0.22), 0 12px 24px -8px rgb(38 37 33/0.10)`): reserved for the single most prominent surface per view (the homepage research CTA band).
 
 ### Named Rules
-**The Flat Plaque Rule.** Surfaces are flat, bordered rectangles at rest (the `.plaque` utility). A shadow is a minor accent on one or two interactive elements, never the default way a container reads as "raised."
+**The Borderless-By-Default Rule.** A container's depth comes from shadow, not from a border. Reach for `.surface-card` (shadow, no border) before `.surface-card-flat` (border, no shadow); the hairline border is a minor exception, never the default depth device it was in the prior world.
 
 ## Shapes
 
-Radius is deliberately small and near-architectural: the base `--radius` is `0.1875rem` (3px), with `sm`/`md`/`lg`/`xl` steps built from it (2px–7px). Nothing in the system uses the old `rounded-xl`/`rounded-2xl`/`rounded-full` bubble language — corners read as chamfered stone edges, not soft app bubbles. Circular "icon in a colored circle" avatars were replaced system-wide with square, brass-bordered tiles (narrator initials, isnad chain numerals, saved-item type marks).
+Corners are generous and soft, inverting the prior world's near-square 2–7px language entirely. The base `--radius` is `1.25rem` (20px); `.surface-card` renders at `--radius-lg` (~21px), with a few static container variants stepping up to `rounded-2xl` (stat tiles, filter inputs) and `rounded-[2rem]` (the homepage CTA band, the system's largest single radius).
+
+Every interactive control — primary/secondary/outline/ghost buttons, the search field, filter chips, pagination controls, tab toggles — is overridden to full pill radius (`rounded-full`), regardless of the shadcn `Button` base's default `rounded-md`. This is a consistent, deliberate two-tier form language: **static containers get a large, soft rounded-rect radius; anything you can click or type into is a full pill.** Avatars and initial tiles are perfect circles (`rounded-full`, neutral charcoal tint) — the prior world's square brass-bordered tiles are fully retired.
 
 ## Components
 
 ### Buttons
-- **Shape:** flat rectangle, 2px radius (`rounded-sm` override on the shadcn `Button`, which otherwise defaults to the shrunk global radius).
-- **Primary:** mosque green background, stone-plaque text, no shadow.
-- **Secondary:** brass background, brightens to `brass-bright` on hover.
-- **Ghost/Outline:** unchanged shadcn behavior, inherits the shrunk radius automatically from the token change.
+- **Shape:** full pill (`rounded-full`) on every variant in practice, overriding the shadcn default `rounded-md`.
+- **Primary:** mosque-green background, stone-plaque text, subtle shadow, no border.
+- **Secondary:** brass background, stone-plaque text — reserved for lower-frequency actions (export, saved-state toggle).
+- **Ghost / Outline:** transparent or bordered per shadcn defaults, with the pill-radius override; used for icon-only actions (copy, share, pagination) and toggles (grid/list view, search filters).
 
-### Plaques (the system's card replacement)
-- **Corner style:** 2–3px radius, effectively square.
-- **Background:** stone-plaque (`--card`), one step lighter than the page ground.
-- **Border:** 1px brass-hairline (`--card-border`).
-- **Depth:** faint inset highlight + `--shadow-sm`, never a floating shadow.
-- **Internal padding:** `p-5`–`p-8` depending on density.
-- Used for: featured hadith cards, search results, narrator cards, saved items, research compare panels.
+### Cards / Containers
+- **Corner Style:** ~21px (`--radius-lg`) via `.surface-card`.
+- **Background:** stone-plaque (`--card`).
+- **Shadow Strategy:** `--shadow` at rest, `-translate-y` + implicit shadow growth on hover (see Elevation & Depth).
+- **Border:** none by default (borderless is the norm); `.surface-card-flat` is the explicit bordered exception.
+- **Internal Padding:** `p-5`–`p-8` (list items lighter, detail-page hero cards heavier).
 
-### Directory boards (signature component)
-A single bordered container divided by internal hairlines (`divide-x`/`divide-y`) rather than a gapped grid of separate cards. Each cell carries a large brass index numeral (Arabic-Indic, e.g. `٠١`) top-aligned opposite a small line icon, then a display-font title and one-line description, with an arrow affordance that fades in on hover. Used for the homepage hall directory and the Books register. This is the system's clearest departure from the "same-size icon+heading+text card" pattern the rest of the industry defaults to.
+### Inputs / Search Fields
+- **Style:** pill-radius, usually borderless and set inside a `.surface-card` shell (icon + input + submit button sharing one soft-elevation container) rather than each having its own border.
+- **Focus:** system-wide 2px amber (`--signal`) focus ring with 2px offset — the one place amber appears outside the One Signal Rule, since it is a state indicator (focus), not decoration.
 
-### Signal counters (signature component)
-A bordered stone-deep box containing a large, tabular-numeral, amber-colored figure with a soft glow (`.signal-numeral`), paired with a short label. Used for the homepage live hadith count and, as a four-up ledger board (`divide-x`/`divide-y`, no individual card borders), on the Stats page. This is the one place the system allows a "glowing" treatment, and it is reserved for genuinely live/aggregate data.
+### Badges / Metadata Pills
+- **Style:** full pill, neutral charcoal tint (`bg-foreground/[0.05–0.06]`, text at 45–65% opacity) for ordinary metadata (book name, chapter, hadith count, "unclassified" grade).
+- **Verified exception:** "صحيح" alone gets `bg-seal/10 text-seal` plus a small check-shield glyph — the system's only filled-and-colored badge state.
 
-### Isnad chain (signature component)
-A vertical list where each narrator is a square brass-numbered tile linked by a thin vertical brass rule running behind the tiles (`before:` pseudo-element), evoking a manuscript margin genealogy rather than a generic numbered list. Used on the Hadith Detail page.
+### Navigation
+- **Style:** a sticky, translucent, blurred header (`.glass-nav`: `background/72%` + `saturate(180%) blur(20px)`) replacing the prior fixed dark sidebar on every route. Desktop nav items are pill-shaped text links with a subtle neutral tint for hover/active state (`foreground/[0.04–0.06]`) — no color-coded active indicator.
+- **Mobile:** a full-width slide-down panel beneath the sticky header (not a side drawer), with the same pill-shaped, neutrally-tinted items stacked vertically.
 
-### Grade/verification tags
-- **Style:** thin outline, no fill. "صحيح" (authentic) gets `verification-seal` green with a small check-shield glyph; any other grade gets a neutral gray outline with no icon.
-- Never a filled colored pill; never a red/orange tone for "unclassified," since the source data does not support a weak/authentic spectrum beyond these two states.
+### Avatars / Initial Tiles
+- **Style:** perfect circle, neutral charcoal tint (`bg-foreground/[0.06]`, `text-foreground/70`), first-letter initial in display font — identical treatment on the narrator directory and narrator profile header, with no per-narrator color variation (see The Neutral Item Rule).
 
-### Navigation (hall directory / sidebar)
-- **Style:** deep mosque-green panel, brass-highlighted active state via a left border-accent + numbered tile (`٠٠`–`٠٦`) rather than a filled rounded pill.
-- **Mobile:** slides in from the right (matching RTL) as a full-height drawer with a scrim.
+### Isnad Chain (signature component)
+A vertical list where each narrator is a circular, neutrally-primary-tinted numbered badge (`bg-primary/10 text-primary`) connected by a thin vertical rule (`border/60`) running behind the badges — a plain, restrained numbered timeline. This replaced the prior world's square brass-numbered-tile "manuscript margin" device; the chain now reads as calm sequence, not carved genealogy.
+
+### Editorial Link List (signature component)
+See Layout: a divided, plain-text list of destination links (title + one-line description + hover-revealed arrow), paired with a sticky heading column. No icons, no per-item color, no card boxes. This is the corrected replacement for a same-size icon+card grid and is the reference pattern for any future top-level destination list.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** use the `.plaque` utility (flat, brass-bordered, 2–3px radius) as the default container for any new list item or panel — never reach for a rounded shadow card.
-- **Do** reserve amber (`--signal`) strictly for live/counted numerals; everything else uses mosque-green, brass, or neutral ink.
-- **Do** render authenticity grading as a stamped outline tag (seal-green + check glyph for "صحيح," neutral outline otherwise), never a filled badge.
-- **Do** use square, brass-bordered initial/numeral tiles in place of circular icon avatars.
-- **Do** author directory-style listings (Books, homepage halls) as one bordered container with internal dividers, not a gapped grid of separate cards.
+- **Do** use `.surface-card` (borderless, soft shadow, ~21px radius) as the default container for any new panel or list item.
+- **Do** reserve amber (`--signal`) for exactly one live/aggregate numeral per view; every other number is plain charcoal or the state color it already carries (verified-green, primary).
+- **Do** render every interactive control — button, input, chip, pagination — at full pill radius (`rounded-full`), even though the underlying shadcn `Button` defaults to `rounded-md`.
+- **Do** keep avatars, initials, and per-item metadata badges neutrally tinted and identical across every item in a listing; color marks state, never identity.
+- **Do** render the "صحيح" grade as the one filled/colored badge (seal-green + check glyph); every other grade value uses the same plain neutral badge as surrounding metadata.
+- **Do** author top-level destination lists (homepage hall links, any future "explore" list) as a divided plain-text list with a sticky heading column, per the Editorial Link List pattern — not a grid of same-size icon cards.
 
 ### Don't:
-- **Don't** reintroduce `rounded-xl`/`rounded-2xl`/`rounded-full` — the shrunk global radius (2–7px) is the system's form language; large radii read as the rejected incumbent look.
-- **Don't** put an icon inside a filled, rounded colored circle/box as a stand-in for content (the banned "icon-box" card pattern the redesign explicitly moved away from).
-- **Don't** add a kicker/eyebrow label above a heading; let the heading (usually in Reem Kufi) carry its own weight.
-- **Don't** invent narrator grading/generation data for display — the current hadith corpus leaves `reliability`/`generation` fields unpopulated for essentially all narrators, and the grade field only has two real values ("صحيح" and "غير مصنف"). Design for what the data actually supports; don't fabricate a richer grading UI than the source can back up.
-- **Don't** use the amber signal color decoratively — its rarity is what makes it read as "live."
+- **Don't** reintroduce Reem Kufi or any separate "carved"/monumental display face — IBM Plex Sans Arabic (Thin–Bold) is the sole family, for display and body alike.
+- **Don't** reintroduce the near-square 2–7px radius or square brass-bordered avatar tiles from the prior "Complex Wayfinding" world; corners are generous and soft, and avatars are circles.
+- **Don't** use a hairline border as a container's primary depth device — shadow is the default; a border is the flat, minor exception (`.surface-card-flat`), not the norm.
+- **Don't** give individual listing items (narrators, books, hadith results) their own accent color or icon-in-colored-circle treatment — this repeating per-item-color pattern shipped once and was corrected; it does not come back.
+- **Don't** repeat the amber signal treatment more than once per view, or apply it to a static/non-live number — its rarity is what makes it legible as "live."
+- **Don't** add a kicker/eyebrow label above a heading; the Thin-weight headline carries its own weight.
+
+<!-- Not canonized: an earlier pass of this build shipped invented per-item accent colors (narrator/book badges), a 4×-repeated amber stats numeral, and a same-size icon+card grid on the homepage. All three were craft-floor defects, not system decisions, and were corrected in the code this document describes — they are recorded above only as explicit Don'ts, never as inheritable rules. -->
