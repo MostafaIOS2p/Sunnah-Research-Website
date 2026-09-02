@@ -14,7 +14,11 @@ import NarratorProfile from '@/pages/narrator-profile';
 import Research from '@/pages/research';
 import Saved from '@/pages/saved';
 import Stats from '@/pages/stats';
+import Login from '@/pages/login';
+import Register from '@/pages/register';
+import ForgotPassword from '@/pages/forgot-password';
 import { StoreProvider } from '@/lib/store';
+import { AuthProvider } from '@/lib/auth';
 import {
   Route,
   Switch,
@@ -24,25 +28,36 @@ import {
 
 const queryClient = new QueryClient();
 
+// Auth screens are a full-bleed takeover with their own header (no site
+// nav/footer), matching the mobile app's auth flow — same special-casing
+// Home used before it was folded back into Shell.
+const AUTH_ROUTES = new Set(['/login', '/register', '/forgot-password']);
+
 function Router() {
-  return (
-    <Shell>
-      <RoutedErrorBoundary>
-        <Switch>
-          <Route path="/" component={Home} />
-          <Route path="/search" component={Search} />
-          <Route path="/hadith/:id" component={HadithDetail} />
-          <Route path="/books" component={Books} />
-          <Route path="/narrators" component={Narrators} />
-          <Route path="/narrator/:id" component={NarratorProfile} />
-          <Route path="/research" component={Research} />
-          <Route path="/saved" component={Saved} />
-          <Route path="/stats" component={Stats} />
-          <Route component={NotFound} />
-        </Switch>
-      </RoutedErrorBoundary>
-    </Shell>
+  const [location] = useLocation();
+  const isAuthRoute = AUTH_ROUTES.has(location);
+
+  const routes = (
+    <RoutedErrorBoundary>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/search" component={Search} />
+        <Route path="/hadith/:id" component={HadithDetail} />
+        <Route path="/books" component={Books} />
+        <Route path="/narrators" component={Narrators} />
+        <Route path="/narrator/:id" component={NarratorProfile} />
+        <Route path="/research" component={Research} />
+        <Route path="/saved" component={Saved} />
+        <Route path="/stats" component={Stats} />
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/forgot-password" component={ForgotPassword} />
+        <Route component={NotFound} />
+      </Switch>
+    </RoutedErrorBoundary>
   );
+
+  return isAuthRoute ? routes : <Shell>{routes}</Shell>;
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) {
@@ -58,14 +73,16 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StoreProvider>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
-      </StoreProvider>
+      <AuthProvider>
+        <StoreProvider>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+          </TooltipProvider>
+        </StoreProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
