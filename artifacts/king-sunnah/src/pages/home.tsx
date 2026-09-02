@@ -109,7 +109,7 @@ export default function Home() {
             <span className="font-normal text-primary">ويُتحقَّق السند.</span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-balance text-lg font-light leading-relaxed text-foreground/60 md:text-xl">
+          <p className="mt-7 max-w-xl text-balance text-lg font-light leading-relaxed text-foreground/70 md:text-xl">
             مكتبة حديثية رسمية تجمع أمهات الكتب وتراجم الرواة في مكان واحد، للقراءة المتأنية والبحث الموثّق.
           </p>
 
@@ -120,7 +120,7 @@ export default function Home() {
             >
               {totalHadiths === null ? '—' : totalHadiths.toLocaleString('ar-SA')}
             </span>
-            <span className="mt-3 text-sm text-foreground/50">حديثاً موثّقاً في المجموعة</span>
+            <span className="mt-3 text-sm text-foreground/70">حديثاً موثّقاً في المجموعة</span>
           </div>
 
           <form
@@ -129,13 +129,13 @@ export default function Home() {
             aria-label="البحث في السنة"
             className="surface-card mt-12 flex w-full max-w-xl items-center gap-2 p-2"
           >
-            <Search className="mx-3 h-5 w-5 flex-shrink-0 text-foreground/35" aria-hidden="true" />
+            <Search className="mx-3 h-5 w-5 flex-shrink-0 text-foreground/70" aria-hidden="true" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="ابحث في المتن، الراوي، أو الكتاب..."
               aria-label="نص البحث"
-              className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-foreground/35"
+              className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-foreground/70"
             />
             <button
               type="submit"
@@ -156,7 +156,7 @@ export default function Home() {
               <br />
               في مكان واحد.
             </h2>
-            <p className="mt-4 max-w-sm text-base font-light leading-relaxed text-foreground/55">
+            <p className="mt-4 max-w-sm text-base font-light leading-relaxed text-foreground/70">
               من البحث السريع إلى دراسة الإسناد المتخصصة، بُنيت المنصة على أربع ركائز.
             </p>
           </div>
@@ -167,9 +167,9 @@ export default function Home() {
                 <div className="group flex cursor-pointer items-center justify-between gap-6 border-b border-border/50 py-7 transition-colors hover:bg-foreground/[0.02]">
                   <div>
                     <h3 className="font-display text-xl font-medium md:text-2xl">{hall.title}</h3>
-                    <p className="mt-1 text-sm leading-snug text-foreground/55 md:text-base">{hall.desc}</p>
+                    <p className="mt-1 text-sm leading-snug text-foreground/70 md:text-base">{hall.desc}</p>
                   </div>
-                  <ArrowLeft className="h-5 w-5 flex-shrink-0 text-foreground/30 transition-transform group-hover:-translate-x-1 group-hover:text-foreground/60" />
+                  <ArrowLeft className="h-5 w-5 flex-shrink-0 text-foreground/60 transition-transform group-hover:-translate-x-1 group-hover:text-foreground" />
                 </div>
               </Link>
             ))}
@@ -183,9 +183,9 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
             {processSteps.map((step) => (
               <div key={step.n} className="text-center">
-                <span className="font-display text-4xl font-thin text-foreground/25">{step.n}</span>
+                <span className="font-display text-4xl font-thin text-foreground/70">{step.n}</span>
                 <h3 className="mt-3 font-display text-base font-medium">{step.title}</h3>
-                <p className="mt-1.5 text-sm leading-snug text-foreground/55">{step.desc}</p>
+                <p className="mt-1.5 text-sm leading-snug text-foreground/70">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -198,7 +198,7 @@ export default function Home() {
           <div className="mb-10 flex items-end justify-between">
             <div>
               <h2 className="font-display text-2xl font-light md:text-3xl">مختارات موثقة</h2>
-              <p className="mt-2 text-foreground/55">مختارات حديثية بدرجاتها ومصادرها الأصلية.</p>
+              <p className="mt-2 text-foreground/70">مختارات حديثية بدرجاتها ومصادرها الأصلية.</p>
             </div>
             <Link href="/search" className="hidden items-center gap-1 text-sm font-medium text-primary sm:inline-flex">
               عرض جميع المختارات <ChevronLeft size={16} />
@@ -212,12 +212,12 @@ export default function Home() {
                 <article key={hadith.id} className="surface-card flex flex-col p-6 transition-transform duration-300 hover:-translate-y-1">
                   <Link href={`/hadith/${hadith.id}`} className="flex-1">
                     <div className="mb-4 flex items-center justify-between gap-2">
-                      <span className="text-xs font-medium text-foreground/50">{hadith.bookName}</span>
+                      <span className="text-xs font-medium text-foreground/70">{hadith.bookName}</span>
                       <span
                         className={
                           isVerified
                             ? 'inline-flex items-center gap-1 rounded-full bg-seal/10 px-2.5 py-1 text-[0.7rem] font-medium text-seal'
-                            : 'inline-flex items-center gap-1 rounded-full bg-foreground/[0.05] px-2.5 py-1 text-[0.7rem] font-medium text-foreground/45'
+                            : 'inline-flex items-center gap-1 rounded-full bg-foreground/[0.05] px-2.5 py-1 text-[0.7rem] font-medium text-foreground/70'
                         }
                       >
                         {isVerified && <ShieldCheck size={11} strokeWidth={2.5} />}
@@ -229,7 +229,7 @@ export default function Home() {
                     </p>
                   </Link>
                   <div className="mt-5 flex items-center justify-between pt-4 text-xs">
-                    <Link href={`/hadith/${hadith.id}`} className="font-medium text-foreground/50 hover:text-primary">
+                    <Link href={`/hadith/${hadith.id}`} className="font-medium text-foreground/70 hover:text-primary">
                       حديث رقم {hadith.number}
                     </Link>
                     <button
@@ -238,7 +238,7 @@ export default function Home() {
                       className={
                         isSaved(hadith.id)
                           ? 'inline-flex items-center gap-1 font-medium text-secondary'
-                          : 'inline-flex items-center gap-1 font-medium text-foreground/50 hover:text-secondary'
+                          : 'inline-flex items-center gap-1 font-medium text-foreground/70 hover:text-secondary'
                       }
                       aria-label={isSaved(hadith.id) ? 'إلغاء حفظ الحديث' : 'حفظ الحديث'}
                     >
@@ -259,7 +259,7 @@ export default function Home() {
           <div className="mb-10 flex items-end justify-between">
             <div>
               <h2 className="font-display text-2xl font-light md:text-3xl">آخر الأخبار</h2>
-              <p className="mt-2 text-foreground/55">تحديثات وإعلانات رسمية من الرئاسة العامة للبحوث العلمية والإفتاء.</p>
+              <p className="mt-2 text-foreground/70">تحديثات وإعلانات رسمية من الرئاسة العامة للبحوث العلمية والإفتاء.</p>
             </div>
             <a href="https://alifta.gov.sa/news" target="_blank" rel="noopener noreferrer" className="hidden items-center gap-1 text-sm font-medium text-primary sm:inline-flex">
               عرض جميع الأخبار <ChevronLeft size={16} />
@@ -278,21 +278,21 @@ export default function Home() {
                   <img src="/images/alifta-mufti.jpg" alt="" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <div className="flex flex-1 flex-col justify-center p-7">
-                  <div className="mb-2 flex items-center gap-2 text-xs text-foreground/50">
+                  <div className="mb-2 flex items-center gap-2 text-xs text-foreground/70">
                     <Newspaper size={14} strokeWidth={2.5} className="text-secondary" />
                     <span>{leadNews.category}</span>
                     <span aria-hidden="true">·</span>
                     <time dateTime={leadNews.publishedAt}>{formatNewsDate(leadNews.publishedAt)}</time>
                   </div>
                   <h3 className="font-display text-lg font-medium leading-snug">{leadNews.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground/60">{leadNews.excerpt}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/70">{leadNews.excerpt}</p>
                   <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-medium text-primary">
                     قراءة الخبر <ArrowUpLeft size={15} strokeWidth={2.5} />
                   </span>
                 </div>
               </a>
             ) : (
-              <div className="surface-card flex items-center justify-center p-10 text-sm text-foreground/50 lg:col-span-2">
+              <div className="surface-card flex items-center justify-center p-10 text-sm text-foreground/70 lg:col-span-2">
                 جارٍ تحميل آخر الأخبار…
               </div>
             )}
@@ -300,7 +300,7 @@ export default function Home() {
             <div className="flex flex-col gap-4">
               {supportingNews.slice(0, 2).map((news) => (
                 <a key={news.id} href={news.url} target="_blank" rel="noopener noreferrer" className="surface-card p-6 transition-transform duration-300 hover:-translate-y-1">
-                  <div className="mb-2 flex items-center gap-2 text-[0.7rem] text-foreground/45">
+                  <div className="mb-2 flex items-center gap-2 text-[0.7rem] text-foreground/70">
                     <span>{news.category}</span>
                     <span aria-hidden="true">·</span>
                     <time dateTime={news.publishedAt}>{formatNewsDate(news.publishedAt)}</time>

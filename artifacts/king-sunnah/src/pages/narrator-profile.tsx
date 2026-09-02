@@ -51,7 +51,7 @@ export default function NarratorProfile() {
             </div>
             <div>
               <h1 className="mb-2 font-display text-3xl font-light md:text-4xl">{narrator.name}</h1>
-              <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-sm text-foreground/55">
+              <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-sm text-foreground/70">
                 الاسم كما ورد في المصدر
               </span>
             </div>
@@ -68,7 +68,7 @@ export default function NarratorProfile() {
             <ScrollText className="h-5 w-5 text-muted-foreground" />
             ملاحظة عن المصدر
           </h3>
-          <p className="max-w-3xl text-lg font-light leading-relaxed text-foreground/65">
+          <p className="max-w-3xl text-lg font-light leading-relaxed text-foreground/70">
             لا تتوفر في المصدر الحالي ترجمة موثقة أو حكم رجالي مستقل لهذا الاسم.
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function NarratorProfile() {
             <Link key={hadith.id} href={`/hadith/${hadith.id}`}>
               <div className="surface-card group cursor-pointer p-6 transition-transform duration-300 hover:-translate-y-0.5">
                 <div className="mb-3 flex items-center gap-2 text-sm">
-                  <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs font-medium text-foreground/65">
+                  <span className="rounded-full bg-foreground/[0.05] px-3 py-1 text-xs font-medium text-foreground/70">
                     {hadith.bookName}
                   </span>
                   <span className="text-muted-foreground">{hadith.chapter}</span>

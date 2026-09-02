@@ -56,14 +56,14 @@ export default function HadithDetail() {
         <div className="space-y-7 p-8 md:p-12">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-foreground/[0.05] px-3.5 py-1.5 text-sm font-medium text-foreground/65">
+              <span className="rounded-full bg-foreground/[0.05] px-3.5 py-1.5 text-sm font-medium text-foreground/70">
                 حديث رقم {hadith.number}
               </span>
               <span
                 className={
                   isVerified
                     ? 'inline-flex items-center gap-1.5 rounded-full bg-seal/10 px-3.5 py-1.5 text-sm font-medium text-seal'
-                    : 'inline-flex items-center gap-1.5 rounded-full bg-foreground/[0.05] px-3.5 py-1.5 text-sm font-medium text-foreground/50'
+                    : 'inline-flex items-center gap-1.5 rounded-full bg-foreground/[0.05] px-3.5 py-1.5 text-sm font-medium text-foreground/70'
                 }
               >
                 {isVerified && <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.5} />}

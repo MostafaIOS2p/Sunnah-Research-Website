@@ -41,18 +41,18 @@ export default function Books() {
                   : 'surface-card group flex h-full cursor-pointer flex-col justify-between gap-6 p-7 transition-transform duration-300 hover:-translate-y-1'
               }
             >
-              <span className="font-display text-2xl font-thin text-primary/50 tabular-nums">
+              <span className="font-display text-2xl font-thin text-primary/70 tabular-nums">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <div className={view === 'list' ? 'min-w-0 flex-1' : 'flex-1'}>
                 <h3 className="font-display text-lg font-medium transition-colors group-hover:text-primary">{book.title}</h3>
                 <p className="mb-2 text-sm font-medium text-muted-foreground">{book.author}</p>
                 {book.description && (
-                  <p className="line-clamp-2 text-sm text-foreground/65">{book.description}</p>
+                  <p className="line-clamp-2 text-sm text-foreground/70">{book.description}</p>
                 )}
               </div>
               <div className={view === 'list' ? 'flex flex-shrink-0 items-center gap-4' : 'flex items-center justify-between pt-2'}>
-                <span className="rounded-full bg-foreground/[0.06] px-3 py-1 text-sm font-medium text-foreground/60">
+                <span className="rounded-full bg-foreground/[0.06] px-3 py-1 text-sm font-medium text-foreground/70">
                   {book.hadithCount.toLocaleString('ar-SA')} حديث
                 </span>
                 <ChevronLeft className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-x-1" />
