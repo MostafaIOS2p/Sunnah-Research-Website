@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams, Link } from 'wouter';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Bookmark, ChevronLeft, Users, FileText, ScrollText } from 'lucide-react';
+import { Bookmark, ChevronLeft, FileText, ScrollText } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
+import { initialOf } from '@/lib/utils';
 import { useGetNarrator, useListNarratorHadiths } from '@workspace/api-client-react';
 
 export default function NarratorProfile() {
@@ -16,11 +16,11 @@ export default function NarratorProfile() {
   const relatedHadiths = relatedData?.items ?? [];
 
   if (isLoading) {
-    return <div className="text-center py-20 text-muted-foreground">جارٍ تحميل ترجمة الراوي...</div>;
+    return <div className="py-20 text-center text-muted-foreground">جارٍ تحميل ترجمة الراوي...</div>;
   }
 
   if (!narrator || isError) {
-    return <div className="text-center py-20 text-muted-foreground">الراوي غير موجود</div>;
+    return <div className="py-20 text-center text-muted-foreground">الراوي غير موجود</div>;
   }
 
   const saved = isSaved(narrator.id);
@@ -36,85 +36,80 @@ export default function NarratorProfile() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in">
+    <div className="animate-in fade-in space-y-8">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Link href="/narrators" className="hover:text-foreground transition-colors">الرواة</Link>
+        <Link href="/narrators" className="transition-colors hover:text-foreground">الرواة</Link>
         <ChevronLeft className="h-4 w-4" />
         <span className="text-foreground">{narrator.name}</span>
       </div>
 
-      <div className="bg-card border border-card-border rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
-        <div className="relative z-10 flex flex-col md:flex-row gap-6 md:items-start justify-between">
+      <div className="plaque p-6 md:p-8">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
           <div className="flex items-start gap-5">
-            <div className="h-16 w-16 md:h-20 md:w-20 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-              <Users className="h-8 w-8 md:h-10 md:w-10" />
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center border border-brass/50 font-display text-2xl font-semibold text-brass md:h-20 md:w-20 md:text-3xl">
+              {initialOf(narrator.name)}
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{narrator.name}</h1>
-              <div className="flex flex-wrap items-center gap-3">
-                <Badge variant="outline" className="text-sm bg-background">
-                  الاسم كما ورد في المصدر
-                </Badge>
-              </div>
+              <h1 className="mb-2 font-display text-3xl font-semibold md:text-4xl">{narrator.name}</h1>
+              <span className="border border-border bg-background px-2.5 py-1 text-sm text-foreground/60">
+                الاسم كما ورد في المصدر
+              </span>
             </div>
           </div>
-          
-          <Button 
-            variant={saved ? "secondary" : "outline"} 
-            onClick={toggleSave}
-            className={saved ? "bg-primary/10 text-primary border-primary/20" : ""}
-          >
-            <Bookmark className="h-4 w-4 ml-2" fill={saved ? "currentColor" : "none"} />
-            {saved ? "محفوظ" : "حفظ الراوي"}
+
+          <Button variant={saved ? 'secondary' : 'outline'} onClick={toggleSave} className="rounded-sm">
+            <Bookmark className="ml-2 h-4 w-4" fill={saved ? 'currentColor' : 'none'} />
+            {saved ? 'محفوظ' : 'حفظ الراوي'}
           </Button>
         </div>
 
-        <div className="relative z-10 mt-8 pt-8 border-t border-border">
-          <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
+        <div className="mt-8 border-t border-border/70 pt-8">
+          <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold">
             <ScrollText className="h-5 w-5 text-muted-foreground" />
             ملاحظة عن المصدر
           </h3>
-          <p className="text-lg text-foreground/80 leading-relaxed max-w-3xl">
-            لا تتوفر في مصدر corpus الحالي ترجمة موثقة أو حكم رجالي مستقل لهذا الاسم.
+          <p className="max-w-3xl text-lg leading-relaxed text-foreground/70">
+            لا تتوفر في المصدر الحالي ترجمة موثقة أو حكم رجالي مستقل لهذا الاسم.
           </p>
         </div>
 
-        <div className="relative z-10 mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-background border border-border rounded-lg p-4">
-            <div className="text-sm text-muted-foreground mb-1">أحاديث مرتبطة بالاسم</div>
-            <div className="text-2xl font-bold text-primary">{narrator.hadithCount}</div>
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="border border-border bg-background p-4">
+            <div className="mb-1 text-sm text-muted-foreground">أحاديث مرتبطة بالاسم</div>
+            <div className="font-display text-2xl font-semibold text-primary">
+              {narrator.hadithCount.toLocaleString('ar-SA')}
+            </div>
           </div>
-          <div className="bg-background border border-border rounded-lg p-4">
-            <div className="text-sm text-muted-foreground mb-1">نوع البيانات</div>
-            <div className="text-lg font-bold">تعريف المصدر</div>
+          <div className="border border-border bg-background p-4">
+            <div className="mb-1 text-sm text-muted-foreground">نوع البيانات</div>
+            <div className="text-lg font-semibold">تعريف المصدر</div>
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
+        <h2 className="flex items-center gap-2 font-display text-2xl font-semibold">
           <FileText className="h-6 w-6 text-primary" />
           أحاديث مرتبطة بالاسم في المصدر
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {relatedHadiths.map(hadith => (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {relatedHadiths.map((hadith) => (
             <Link key={hadith.id} href={`/hadith/${hadith.id}`}>
-              <div className="bg-card border border-border rounded-xl p-5 hover:border-primary/50 hover:shadow-sm transition-all cursor-pointer group">
-                <div className="flex items-center gap-2 mb-3 text-sm">
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
+              <div className="plaque group cursor-pointer p-5 transition-colors hover:border-secondary/50">
+                <div className="mb-3 flex items-center gap-2 text-sm">
+                  <span className="border border-border px-2 py-0.5 text-xs font-medium text-foreground/70">
                     {hadith.bookName}
-                  </Badge>
+                  </span>
                   <span className="text-muted-foreground">{hadith.chapter}</span>
                 </div>
-                <p className="font-serif text-lg leading-relaxed line-clamp-3 text-foreground group-hover:text-primary transition-colors">
+                <p className="line-clamp-3 font-display text-lg leading-relaxed text-foreground transition-colors group-hover:text-primary">
                   {hadith.textAr}
                 </p>
               </div>
             </Link>
           ))}
           {relatedHadiths.length === 0 && (
-            <div className="col-span-full text-center py-8 text-muted-foreground bg-card border border-dashed rounded-xl">
+            <div className="plaque col-span-full border-dashed py-8 text-center text-muted-foreground">
               لا تتوفر مرويات لهذا الراوي في المصدر.
             </div>
           )}

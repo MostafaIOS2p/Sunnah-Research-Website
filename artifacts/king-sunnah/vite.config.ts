@@ -72,6 +72,9 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    proxy: {
+      '/api': process.env.API_PROXY_TARGET || 'http://localhost:5000',
+    },
   },
   preview: {
     port,
