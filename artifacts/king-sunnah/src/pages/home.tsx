@@ -14,6 +14,7 @@ import {
   Search,
   SlidersHorizontal,
   Tags,
+  UserRound,
   Wrench,
   type LucideIcon,
 } from 'lucide-react';
@@ -417,20 +418,33 @@ export default function Home() {
           </div>
           <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
             {(topNarrators ?? []).map((narrator) => (
-              <div key={narrator.id} className="surface-card w-72 flex-shrink-0 snap-start p-5 md:w-auto">
-                <h3 className="font-display text-base font-medium">{narratorDisplayName(narrator)}</h3>
-                <div className="mt-3 flex flex-wrap gap-1.5 text-xs">
+              <div
+                key={narrator.id}
+                className="surface-card group flex w-72 flex-shrink-0 snap-start flex-col p-5 transition-transform duration-300 hover:-translate-y-1 md:w-auto"
+              >
+                <div className="flex items-start justify-between gap-3 border-b border-border/50 pb-4">
+                  <div className="min-w-0">
+                    <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
+                      {narratorDisplayName(narrator)}
+                    </h3>
+                    <p className="mt-0.5 truncate text-sm text-foreground/70">{narrator.laqab || ' '}</p>
+                  </div>
+                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <UserRound className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+                  </span>
+                </div>
+                <div className="mt-auto flex flex-wrap gap-1.5 pt-4 text-xs">
                   {narrator.kunia && (
-                    <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 text-foreground/70">
+                    <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 font-medium text-foreground/70">
                       {narrator.kunia}
                     </span>
                   )}
                   {narrator.deathYear && (
-                    <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 text-foreground/70">
+                    <span className="rounded-full bg-sky-500/10 px-2.5 py-1 font-medium text-sky-700 dark:text-sky-300">
                       الوفاة: {narrator.deathYear}
                     </span>
                   )}
-                  <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 font-medium text-foreground/70">
+                  <span className="rounded-full bg-amber-500/10 px-2.5 py-1 font-medium text-amber-700 dark:text-amber-300">
                     المرويات: {narrator.hadithsCount.toLocaleString('ar-SA')}
                   </span>
                 </div>
