@@ -1,23 +1,39 @@
 import React, { useState } from 'react';
-import { useLocation } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import {
   Apple,
-  ChevronDown,
+  ArrowLeft,
+  ArrowRight,
   Eye,
   EyeOff,
   Facebook,
-  Landmark,
+  GraduationCap,
+  Microscope,
+  PenLine,
   Plus,
-  ArrowLeft,
+  User,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth, type UserRole, ROLE_OPTIONS } from '@/lib/auth';
-import { RolePicker } from '@/components/auth/role-picker';
 import { GoogleIcon } from '@/components/auth/google-icon';
 
 type AuthMode = 'login' | 'register';
+
+const ROLE_ICONS: Record<UserRole, React.ComponentType<{ className?: string }>> = {
+  student: GraduationCap,
+  teacher: PenLine,
+  researcher: Microscope,
+  enthusiast: User,
+};
 
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
@@ -99,8 +115,7 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
 
   // Register fields
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<UserRole | null>(null);
-  const [rolePickerOpen, setRolePickerOpen] = useState(false);
+  const [role, setRole] = useState<UserRole | ''>('');
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -111,8 +126,6 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
     setFormError(null);
     setLocation(next === 'login' ? '/login' : '/register');
   };
-
-  const handleGuest = () => setLocation('/');
 
   const handleSocial = (provider: string) => {
     toast({
@@ -163,58 +176,68 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
   };
 
   const displayedError = formError || error;
-  const roleLabel = role ? ROLE_OPTIONS.find((o) => o.value === role)?.label : null;
 
   return (
-    <div className="animate-in fade-in duration-500">
-      {/* ── Hero band ─────────────────────────────────────────────── */}
-      <section className="relative bg-primary px-6 pb-20 pt-10 text-primary-foreground md:px-10 md:pt-14">
-        <div className="mx-auto flex max-w-md items-center justify-between md:max-w-lg">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/10">
-            <Landmark className="h-7 w-7" />
-          </div>
-          <button
-            type="button"
-            onClick={handleGuest}
-            className="rounded-full border border-primary-foreground/30 px-4 py-1.5 text-sm font-medium text-primary-foreground/90 transition-colors hover:bg-primary-foreground/10"
-          >
-            الدخول كزائر
-          </button>
-        </div>
-        <div className="mx-auto mt-8 max-w-md md:max-w-lg">
-          <h1 className="font-display text-[1.75rem] font-thin leading-tight md:text-4xl">
-            اهلاً بك في جامع خادم الحرمين الشريفين
+    <div className="animate-in fade-in duration-500 lg:grid lg:min-h-screen lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+      {/* ── Brand panel ───────────────────────────────────────────── */}
+      <aside className="flex flex-col justify-between bg-primary px-6 py-8 text-primary-foreground md:px-12 md:py-10 lg:py-14">
+        <Link href="/">
+          <span className="inline-flex cursor-pointer items-center gap-1.5 text-sm text-primary-foreground/75 transition-colors hover:text-primary-foreground">
+            <ArrowRight className="h-4 w-4" />
+            العودة للرئيسية
+          </span>
+        </Link>
+
+        <div className="flex flex-1 flex-col justify-center py-10 lg:py-0">
+          <img
+            src="/images/king-sunnah-mark.svg"
+            alt=""
+            className="h-12 w-12 opacity-90"
+          />
+          <h1 className="mt-8 max-w-sm font-display text-3xl font-thin leading-tight md:text-4xl">
+            بوابتك الموثقة لدراسة السنة النبوية
           </h1>
-          <p className="mt-2 text-sm font-light text-primary-foreground/75 md:text-base">
-            الملك عبدالله بن عبد العزيز للسنة النبوية المطهرة.
+          <p className="mt-4 max-w-sm text-base font-light leading-relaxed text-primary-foreground/75">
+            سجّل الدخول لحفظ بحثك ومحفوظاتك، ومتابعتها من أي جهاز تستخدمه.
           </p>
         </div>
-      </section>
 
-      {/* ── Form card ─────────────────────────────────────────────── */}
-      <div className="relative mx-auto -mt-10 max-w-md px-5 pb-16 md:-mt-12 md:max-w-lg">
-        <div className="surface-card p-6 md:p-8">
-          <div className="mb-6 flex items-center gap-1 rounded-full bg-foreground/[0.04] p-1">
-            <button
-              type="button"
-              onClick={() => goToMode('login')}
-              className={cn(
-                'flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors',
-                mode === 'login' ? 'bg-primary text-primary-foreground' : 'text-foreground/70 hover:text-foreground',
-              )}
-            >
-              تسجيل الدخول
-            </button>
-            <button
-              type="button"
-              onClick={() => goToMode('register')}
-              className={cn(
-                'flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors',
-                mode === 'register' ? 'bg-primary text-primary-foreground' : 'text-foreground/70 hover:text-foreground',
-              )}
-            >
-              إنشاء حساب جديد
-            </button>
+        <p className="text-xs text-primary-foreground/60">
+          مجموعة الملك عبدالعزيز للسنة النبوية · دار الإفتاء
+        </p>
+      </aside>
+
+      {/* ── Form panel ────────────────────────────────────────────── */}
+      <div className="flex flex-col justify-center px-5 py-12 md:px-10 lg:px-16 lg:py-0">
+        <div className="mx-auto w-full max-w-md">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div className="surface-card flex items-center gap-1 p-1">
+              <button
+                type="button"
+                onClick={() => goToMode('login')}
+                className={cn(
+                  'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                  mode === 'login' ? 'bg-primary text-primary-foreground' : 'text-foreground/70 hover:text-foreground',
+                )}
+              >
+                تسجيل الدخول
+              </button>
+              <button
+                type="button"
+                onClick={() => goToMode('register')}
+                className={cn(
+                  'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                  mode === 'register' ? 'bg-primary text-primary-foreground' : 'text-foreground/70 hover:text-foreground',
+                )}
+              >
+                إنشاء حساب
+              </button>
+            </div>
+            <Link href="/">
+              <span className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground">
+                تصفّح كزائر
+              </span>
+            </Link>
           </div>
 
           {displayedError && (
@@ -283,18 +306,24 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
               </div>
               <div>
                 <FieldLabel>صفتك</FieldLabel>
-                <button
-                  type="button"
-                  onClick={() => setRolePickerOpen(true)}
-                  className={cn(
-                    fieldClass,
-                    'flex items-center justify-between text-right',
-                    !roleLabel && 'text-muted-foreground',
-                  )}
-                >
-                  <span>{roleLabel || 'اختر صفتك : مثل طالب علم'}</span>
-                  <ChevronDown className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                </button>
+                <Select value={role} onValueChange={(v) => setRole(v as UserRole)}>
+                  <SelectTrigger className={cn(fieldClass, 'flex [&>span]:text-right')}>
+                    <SelectValue placeholder="اختر صفتك : مثل طالب علم" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLE_OPTIONS.map((option) => {
+                      const Icon = ROLE_ICONS[option.value];
+                      return (
+                        <SelectItem key={option.value} value={option.value} className="pl-8 pr-2">
+                          <span className="flex items-center gap-2">
+                            <Icon className="h-4 w-4 text-foreground/50" />
+                            {option.label}
+                          </span>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <FieldLabel required>البريد الإلكتروني</FieldLabel>
@@ -364,13 +393,6 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
           </div>
         </div>
       </div>
-
-      <RolePicker
-        open={rolePickerOpen}
-        onOpenChange={setRolePickerOpen}
-        value={role}
-        onSelect={setRole}
-      />
     </div>
   );
 }
