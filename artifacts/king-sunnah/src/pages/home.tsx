@@ -115,26 +115,44 @@ function narratorDisplayName(n: { shortName: string | null; name: string }): str
 // An original, drawn book-plate — a decorative frame and the title set in
 // place of the title's letters, not a photographed or scanned cover — so
 // each "كتب المتون" card reads as a book rather than a text-only tile.
-function BookCoverArt({ title }: { title: string }) {
-  return (
-    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] bg-gradient-to-b from-[#16392f] to-[#0a1e18]">
-      <svg viewBox="0 0 100 133" className="absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)]" fill="none" aria-hidden="true">
-        <rect x="1.5" y="1.5" width="97" height="130" rx="2" stroke="#c9a24b" strokeOpacity="0.75" strokeWidth="1.1" />
-        <rect x="6" y="6" width="88" height="121" rx="1.5" stroke="#c9a24b" strokeOpacity="0.5" strokeWidth="0.6" />
-        <g stroke="#c9a24b" strokeOpacity="0.85" strokeWidth="0.9" strokeLinecap="round">
-          <path d="M1.5 16 L1.5 1.5 L16 1.5" />
-          <path d="M84 1.5 L98.5 1.5 L98.5 16" />
-          <path d="M98.5 117 L98.5 131.5 L84 131.5" />
-          <path d="M16 131.5 L1.5 131.5 L1.5 117" />
-        </g>
-        <circle cx="50" cy="17" r="1.5" fill="#c9a24b" fillOpacity="0.85" />
-        <circle cx="50" cy="116" r="1.5" fill="#c9a24b" fillOpacity="0.85" />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center p-6">
-        <span className="line-clamp-4 text-balance text-center font-display text-base font-semibold leading-snug text-[#f1e6c8] md:text-lg">
-          {title}
-        </span>
+// Bukhari has a real cover (the app's own licensed asset, see
+// public/images/books/sahih-bukhari.png). Every other book gets a drawn
+// plate in the same black/red/gold language as that real cover — an
+// original design, not a copy of any other publisher's specific artwork —
+// so the row reads as one consistent shelf rather than one photo among
+// generic tiles.
+function BookCoverArt({ title, author, imageSrc }: { title: string; author: string; imageSrc?: string }) {
+  if (imageSrc) {
+    return (
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] bg-black">
+        <img src={imageSrc} alt={title} className="h-full w-full object-cover object-top" />
       </div>
+    );
+  }
+
+  return (
+    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] bg-black">
+      <svg viewBox="0 0 100 133" className="absolute inset-2.5 h-[calc(100%-1.25rem)] w-[calc(100%-1.25rem)]" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="97" height="130" rx="1.5" stroke="#c9a24b" strokeOpacity="0.85" strokeWidth="1.1" />
+        <rect x="5.5" y="5.5" width="89" height="122" rx="1" stroke="#c9a24b" strokeOpacity="0.55" strokeWidth="0.6" />
+        <g stroke="#c9a24b" strokeOpacity="0.9" strokeWidth="0.9" strokeLinecap="round">
+          <path d="M1.5 15 L1.5 1.5 L15 1.5" />
+          <path d="M85 1.5 L98.5 1.5 L98.5 15" />
+          <path d="M98.5 118 L98.5 131.5 L85 131.5" />
+          <path d="M15 131.5 L1.5 131.5 L1.5 118" />
+        </g>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-5">
+        <span className="text-[9px] font-medium tracking-[0.2em] text-[#c9a24b]/80">دواوين السنة</span>
+        <div className="w-full max-w-[85%] rounded-md border border-[#c9a24b]/70 bg-gradient-to-b from-[#7d2323] to-[#551515] px-3 py-4 text-center shadow-inner">
+          <span className="line-clamp-4 text-balance font-display text-base font-bold leading-snug text-[#f4e2b0] md:text-lg">
+            {title}
+          </span>
+        </div>
+        <span className="h-px w-10 bg-[#c9a24b]/60" aria-hidden="true" />
+        <span className="rounded-full border border-[#c9a24b]/60 px-3 py-1 text-xs text-[#e7d9ab]">{author}</span>
+      </div>
+      <div className="absolute bottom-3 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full border border-[#c9a24b]/70" aria-hidden="true" />
     </div>
   );
 }
@@ -357,7 +375,11 @@ export default function Home() {
                 href={`/search?q=${encodeURIComponent(book.title)}`}
                 className="surface-card group w-52 flex-shrink-0 snap-start overflow-hidden md:w-auto"
               >
-                <BookCoverArt title={book.title} />
+                <BookCoverArt
+                  title={book.title}
+                  author={book.author}
+                  imageSrc={book.title === 'صحيح البخاري' ? '/images/books/sahih-bukhari.png' : undefined}
+                />
                 <div className="p-5">
                   <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
                     {book.title}
