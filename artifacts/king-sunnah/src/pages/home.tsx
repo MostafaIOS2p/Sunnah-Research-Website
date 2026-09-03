@@ -112,6 +112,33 @@ function narratorDisplayName(n: { shortName: string | null; name: string }): str
   return n.shortName?.trim() || n.name;
 }
 
+// An original, drawn book-plate — a decorative frame and the title set in
+// place of the title's letters, not a photographed or scanned cover — so
+// each "كتب المتون" card reads as a book rather than a text-only tile.
+function BookCoverArt({ title }: { title: string }) {
+  return (
+    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] bg-gradient-to-b from-[#16392f] to-[#0a1e18]">
+      <svg viewBox="0 0 100 133" className="absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)]" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="97" height="130" rx="2" stroke="#c9a24b" strokeOpacity="0.75" strokeWidth="1.1" />
+        <rect x="6" y="6" width="88" height="121" rx="1.5" stroke="#c9a24b" strokeOpacity="0.5" strokeWidth="0.6" />
+        <g stroke="#c9a24b" strokeOpacity="0.85" strokeWidth="0.9" strokeLinecap="round">
+          <path d="M1.5 16 L1.5 1.5 L16 1.5" />
+          <path d="M84 1.5 L98.5 1.5 L98.5 16" />
+          <path d="M98.5 117 L98.5 131.5 L84 131.5" />
+          <path d="M16 131.5 L1.5 131.5 L1.5 117" />
+        </g>
+        <circle cx="50" cy="17" r="1.5" fill="#c9a24b" fillOpacity="0.85" />
+        <circle cx="50" cy="116" r="1.5" fill="#c9a24b" fillOpacity="0.85" />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center p-6">
+        <span className="line-clamp-4 text-balance text-center font-display text-base font-semibold leading-snug text-[#f1e6c8] md:text-lg">
+          {title}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [, setLocation] = useLocation();
   const { user, isAuthenticated } = useAuth();
@@ -328,15 +355,18 @@ export default function Home() {
               <Link
                 key={book.id}
                 href={`/search?q=${encodeURIComponent(book.title)}`}
-                className="surface-card group w-52 flex-shrink-0 snap-start p-5 md:w-auto"
+                className="surface-card group w-52 flex-shrink-0 snap-start overflow-hidden md:w-auto"
               >
-                <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
-                  {book.title}
-                </h3>
-                <p className="mt-1 text-sm text-foreground/70">{book.author}</p>
-                <span className="mt-4 inline-flex rounded-full bg-foreground/[0.06] px-2.5 py-1 text-xs font-medium text-foreground/70">
-                  {book.hadithCount.toLocaleString('ar-SA')} حديث
-                </span>
+                <BookCoverArt title={book.title} />
+                <div className="p-5">
+                  <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
+                    {book.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-foreground/70">{book.author}</p>
+                  <span className="mt-4 inline-flex rounded-full bg-foreground/[0.06] px-2.5 py-1 text-xs font-medium text-foreground/70">
+                    {book.hadithCount.toLocaleString('ar-SA')} حديث
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
