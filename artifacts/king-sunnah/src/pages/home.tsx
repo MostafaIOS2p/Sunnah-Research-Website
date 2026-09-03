@@ -108,6 +108,14 @@ const allServices: ServiceLink[] = [
   },
 ];
 
+// Real cover photos, keyed by the exact book title from the /mutoon feed.
+// Add a new entry here (and drop the file in public/images/books/) to give
+// any other book its own real cover — every title not listed here falls
+// back to the drawn plate in BookCoverArt.
+const bookCoverImages: Record<string, string> = {
+  'صحيح البخاري': '/images/books/sahih-bukhari.png',
+};
+
 function narratorDisplayName(n: { shortName: string | null; name: string }): string {
   return n.shortName?.trim() || n.name;
 }
@@ -378,7 +386,7 @@ export default function Home() {
                 <BookCoverArt
                   title={book.title}
                   author={book.author}
-                  imageSrc={book.title === 'صحيح البخاري' ? '/images/books/sahih-bukhari.png' : undefined}
+                  imageSrc={bookCoverImages[book.title]}
                 />
                 <div className="p-5">
                   <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
