@@ -85,24 +85,67 @@ const processSteps = [
 ] as const;
 
 // The mobile app's "جميع الخدمات" grid, reproduced as static data (no listing
-// endpoint given). Each service keeps a drawn icon for identity, but every
-// icon shares one neutral tint (see the Neutral Item Rule) instead of the
-// app's per-tile color variety — color still isn't used to distinguish items,
-// only the glyph is.
-type ServiceLink =
-  | { label: string; icon: LucideIcon; kind: 'link'; href: string }
-  | { label: string; icon: LucideIcon; kind: 'anchor'; href: string }
-  | { label: string; icon: LucideIcon; kind: 'soon' };
+// endpoint given). Per explicit direction, each tile keeps its own icon color
+// pair — mirroring the app's per-service color variety — rather than the
+// single shared neutral tint used elsewhere on this page.
+type ServiceLink = {
+  label: string;
+  icon: LucideIcon;
+  tint: string;
+} & ({ kind: 'link'; href: string } | { kind: 'anchor'; href: string } | { kind: 'soon' });
 
 const allServices: ServiceLink[] = [
-  { label: 'إحصائيات', icon: BarChart3, kind: 'link', href: '/stats' },
-  { label: 'مكانز موضوعية', icon: Tags, kind: 'soon' },
-  { label: 'متون مجمعة', icon: Layers, kind: 'anchor', href: '#compound-matn' },
-  { label: 'أطراف الحديث', icon: GitBranch, kind: 'soon' },
-  { label: 'تخريج الأبحاث', icon: FileSearch, kind: 'soon' },
-  { label: 'تطبيقات علوم الحديث', icon: Wrench, kind: 'soon' },
-  { label: 'فهارس', icon: ListOrdered, kind: 'soon' },
-  { label: 'معاجم', icon: Library, kind: 'link', href: '/books' },
+  {
+    label: 'إحصائيات',
+    icon: BarChart3,
+    tint: 'bg-violet-500/10 text-violet-600 dark:bg-violet-400/15 dark:text-violet-300',
+    kind: 'link',
+    href: '/stats',
+  },
+  {
+    label: 'مكانز موضوعية',
+    icon: Tags,
+    tint: 'bg-sky-500/10 text-sky-600 dark:bg-sky-400/15 dark:text-sky-300',
+    kind: 'soon',
+  },
+  {
+    label: 'متون مجمعة',
+    icon: Layers,
+    tint: 'bg-amber-500/10 text-amber-600 dark:bg-amber-400/15 dark:text-amber-300',
+    kind: 'anchor',
+    href: '#compound-matn',
+  },
+  {
+    label: 'أطراف الحديث',
+    icon: GitBranch,
+    tint: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-300',
+    kind: 'soon',
+  },
+  {
+    label: 'تخريج الأبحاث',
+    icon: FileSearch,
+    tint: 'bg-teal-500/10 text-teal-600 dark:bg-teal-400/15 dark:text-teal-300',
+    kind: 'soon',
+  },
+  {
+    label: 'تطبيقات علوم الحديث',
+    icon: Wrench,
+    tint: 'bg-orange-500/10 text-orange-600 dark:bg-orange-400/15 dark:text-orange-300',
+    kind: 'soon',
+  },
+  {
+    label: 'فهارس',
+    icon: ListOrdered,
+    tint: 'bg-blue-500/10 text-blue-600 dark:bg-blue-400/15 dark:text-blue-300',
+    kind: 'soon',
+  },
+  {
+    label: 'معاجم',
+    icon: Library,
+    tint: 'bg-stone-500/10 text-stone-600 dark:bg-stone-400/20 dark:text-stone-300',
+    kind: 'link',
+    href: '/books',
+  },
 ];
 
 const scholarQuote = {
@@ -270,7 +313,9 @@ export default function Home() {
               const Icon = service.icon;
               const content = (
                 <>
-                  <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-foreground/[0.06] text-foreground/70 transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+                  <span
+                    className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-105 ${service.tint}`}
+                  >
                     <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
                   </span>
                   <span className="text-sm font-medium text-foreground/80 transition-colors group-hover:text-foreground">
