@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   ArrowUpLeft,
   BarChart3,
-  BookOpen,
   Bookmark,
   BookmarkCheck,
   ChevronLeft,
@@ -13,14 +12,12 @@ import {
   Layers,
   Library,
   ListOrdered,
-  Microscope,
   Newspaper,
   Quote,
   Search,
   ShieldCheck,
   SlidersHorizontal,
   Tags,
-  Users,
   Wrench,
   type LucideIcon,
 } from 'lucide-react';
@@ -50,33 +47,6 @@ function getFeaturedExcerpt(text: string, limit = 140): string {
   const normalized = text.replace(/\s+/g, ' ').trim();
   return normalized.length > limit ? `${normalized.slice(0, limit).trimEnd()}…` : normalized;
 }
-
-const directoryHalls = [
-  {
-    path: '/search',
-    icon: Search,
-    title: 'بحث الأحاديث',
-    desc: 'ابحث في المتن والراوي والكتاب دفعة واحدة.',
-  },
-  {
-    path: '/books',
-    icon: BookOpen,
-    title: 'الكتب والمراجع',
-    desc: 'الصحاح والسنن والمسانيد مرتّبة بين يديك.',
-  },
-  {
-    path: '/narrators',
-    icon: Users,
-    title: 'الرواة والأسانيد',
-    desc: 'تراجم الرواة وصلات الإسناد كاملةً.',
-  },
-  {
-    path: '/research',
-    icon: Microscope,
-    title: 'البحث المتقدم',
-    desc: 'قارن حتى ثلاثة أحاديث وصدّر نتائجك.',
-  },
-] as const;
 
 const processSteps = [
   { n: '١', title: 'ابحث', desc: 'في النص، أو اسم الراوي، أو الكتاب.' },
@@ -274,57 +244,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Hall directory: an editorial link list, not an icon grid ──── */}
+      {/* ── All services: large icon tiles, in the hall directory's old spot ─ */}
       <section className="px-5 py-16 md:px-8 md:py-24">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] md:gap-16">
-          <div className="md:sticky md:top-24 md:self-start">
-            <h2 className="font-display text-3xl font-thin leading-tight md:text-4xl">
-              كل ما تحتاجه،
-              <br />
-              في مكان واحد.
-            </h2>
-            <p className="mt-4 max-w-sm text-base font-light leading-relaxed text-foreground/70">
-              من البحث السريع إلى دراسة الإسناد المتخصصة، بُنيت المنصة على أربع ركائز.
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 max-w-xl">
+            <h2 className="font-display text-3xl font-thin leading-tight md:text-4xl">جميع الخدمات</h2>
+            <p className="mt-4 text-base font-light leading-relaxed text-foreground/70">
+              من البحث السريع إلى دراسة الإسناد المتخصصة، بُنيت المنصة على هذه الخدمات.
             </p>
           </div>
-
-          <div className="border-t border-border/50">
-            {directoryHalls.map((hall) => (
-              <Link key={hall.path} href={hall.path}>
-                <div className="group flex cursor-pointer items-center justify-between gap-6 border-b border-border/50 py-7 transition-colors hover:bg-foreground/[0.02]">
-                  <div>
-                    <h3 className="font-display text-xl font-medium md:text-2xl">{hall.title}</h3>
-                    <p className="mt-1 text-sm leading-snug text-foreground/70 md:text-base">{hall.desc}</p>
-                  </div>
-                  <ArrowLeft className="h-5 w-5 flex-shrink-0 text-foreground/60 transition-transform group-hover:-translate-x-1 group-hover:text-foreground" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── All services: compact icon tiles, neutral tint, no per-item color ─ */}
-      <section className="px-5 pb-16 md:px-8 md:pb-20">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="mb-6 font-display text-xl font-medium text-foreground/80">جميع الخدمات</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:gap-6">
             {allServices.map((service) => {
               const Icon = service.icon;
               const content = (
                 <>
                   <span
-                    className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-105 ${service.tint}`}
+                    className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-105 md:h-20 md:w-20 ${service.tint}`}
                   >
-                    <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
+                    <Icon className="h-7 w-7 md:h-8 md:w-8" strokeWidth={1.75} aria-hidden="true" />
                   </span>
-                  <span className="text-sm font-medium text-foreground/80 transition-colors group-hover:text-foreground">
+                  <span className="text-base font-medium text-foreground/80 transition-colors group-hover:text-foreground md:text-lg">
                     {service.label}
                   </span>
                 </>
               );
               const className =
-                'surface-card group flex items-center gap-3 p-4 text-right transition-transform duration-300 hover:-translate-y-0.5';
+                'surface-card group flex flex-col items-center justify-center gap-4 p-6 text-center transition-transform duration-300 hover:-translate-y-1 md:p-8';
               if (service.kind === 'link') {
                 return (
                   <Link key={service.label} href={service.href} className={className}>
