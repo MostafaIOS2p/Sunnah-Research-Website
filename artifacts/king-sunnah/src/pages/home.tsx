@@ -291,12 +291,12 @@ export default function Home() {
               عرض جميع الكتب <ChevronLeft size={16} />
             </Link>
           </div>
-          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:px-0">
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-5">
             {(mutoon?.items ?? []).slice(0, 10).map((book) => (
               <Link
                 key={book.id}
                 href={`/search?q=${encodeURIComponent(book.title)}`}
-                className="surface-card group w-52 flex-shrink-0 snap-start p-5"
+                className="surface-card group w-52 flex-shrink-0 snap-start p-5 md:w-auto"
               >
                 <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
                   {book.title}
@@ -320,9 +320,9 @@ export default function Home() {
               عرض جميع الرواة <ChevronLeft size={16} />
             </Link>
           </div>
-          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:px-0">
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
             {(topNarrators ?? []).map((narrator) => (
-              <div key={narrator.id} className="surface-card w-72 flex-shrink-0 snap-start p-5">
+              <div key={narrator.id} className="surface-card w-72 flex-shrink-0 snap-start p-5 md:w-auto">
                 <h3 className="font-display text-base font-medium">{narratorDisplayName(narrator)}</h3>
                 <div className="mt-3 flex flex-wrap gap-1.5 text-xs">
                   {narrator.kunia && (
