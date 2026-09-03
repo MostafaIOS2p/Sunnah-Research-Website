@@ -9,11 +9,16 @@ import {
   ChevronLeft,
   Microscope,
   Newspaper,
+  Quote,
   Search,
   ShieldCheck,
+  SlidersHorizontal,
   Users,
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
+import { useAuth } from '@/lib/auth';
+import { useCompoundMatn, useMostNarratedRawys, useMutoonBooks } from '@/lib/home-feed';
+import { useToast } from '@/hooks/use-toast';
 import {
   useListHadithBooks,
   useListHadiths,
@@ -70,23 +75,63 @@ const processSteps = [
   { n: '٣', title: 'احفظ', desc: 'في محفوظاتك للعودة إليه، أو شاركه.' },
 ] as const;
 
+// The mobile app's "جميع الخدمات" grid, reproduced as static data (no listing
+// endpoint given). Rendered as a compact link row rather than the app's
+// colorful icon-tile grid — see this surface's brief for why.
+type ServiceLink =
+  | { label: string; kind: 'link'; href: string }
+  | { label: string; kind: 'anchor'; href: string }
+  | { label: string; kind: 'soon' };
+
+const allServices: ServiceLink[] = [
+  { label: 'إحصائيات', kind: 'link', href: '/stats' },
+  { label: 'مكانز موضوعية', kind: 'soon' },
+  { label: 'متون مجمعة', kind: 'anchor', href: '#compound-matn' },
+  { label: 'أطراف الحديث', kind: 'soon' },
+  { label: 'تخريج الأبحاث', kind: 'soon' },
+  { label: 'تطبيقات علوم الحديث', kind: 'soon' },
+  { label: 'فهارس', kind: 'soon' },
+  { label: 'معاجم', kind: 'link', href: '/books' },
+];
+
+const scholarQuote = {
+  text:
+    'حثّ على جعل القرآن دواءً للصدور وطمأنينةً للنفوس، وورداً يومياً ولو قليلاً، والمداومة عليه أحبّ الأعمال...',
+  attribution: 'الشيخ صالح بن فوزان الفوزان',
+  role: 'كلمة سماحة المفتي العام',
+} as const;
+
+function narratorDisplayName(n: { shortName: string | null; name: string }): string {
+  return n.shortName?.trim() || n.name;
+}
+
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isSaved, saveItem, removeItem } = useStore();
+  const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const [query, setQuery] = useState('');
   const { data: featuredData } = useListHadiths({ page: 1, pageSize: 3 });
   const { data: newsData } = useListNews();
   const { data: books } = useListHadithBooks();
+  const { data: mutoon } = useMutoonBooks();
+  const { data: topNarrators } = useMostNarratedRawys(8);
+  const { data: compoundMatns } = useCompoundMatn(6);
 
   const totalHadiths = books ? books.reduce((acc, b) => acc + b.hadithCount, 0) : null;
 
   const featuredHadiths = featuredData?.items ?? [];
   const [leadNews, ...supportingNews] = newsData?.items ?? [];
+  const firstName = user ? user.displayName.replace(/\s*\([^)]*\)\s*$/, '').trim().split(/\s+/)[0] : null;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = query.trim();
     if (trimmed) setLocation(`/search?q=${encodeURIComponent(trimmed)}`);
+  };
+
+  const handleComingSoonService = () => {
+    toast({ title: 'قريباً', description: 'هذه الخدمة قيد التطوير حالياً.' });
   };
 
   const handleToggleSave = (e: React.MouseEvent, hadith: Hadith) => {
@@ -103,11 +148,17 @@ export default function Home() {
       {/* ── HERO: one enormous, quiet statement ───────────────────── */}
       <section className="px-5 pb-16 pt-20 text-center md:px-8 md:pb-24 md:pt-28">
         <div className="mx-auto flex max-w-3xl flex-col items-center">
-          <h1 className="text-balance font-display text-[2.75rem] font-thin leading-[1.08] tracking-tight text-foreground md:text-[4.75rem]">
-            حيثُ يُصان الأثر،
-            <br />
-            <span className="font-normal text-primary">ويُتحقَّق السند.</span>
-          </h1>
+          {isAuthenticated && firstName ? (
+            <h1 className="text-balance font-display text-[2.75rem] font-thin leading-[1.08] tracking-tight text-foreground md:text-[4.75rem]">
+              حيّاك الله، <span className="font-normal text-primary">{firstName}</span>
+            </h1>
+          ) : (
+            <h1 className="text-balance font-display text-[2.75rem] font-thin leading-[1.08] tracking-tight text-foreground md:text-[4.75rem]">
+              حيثُ يُصان الأثر،
+              <br />
+              <span className="font-normal text-primary">ويُتحقَّق السند.</span>
+            </h1>
+          )}
 
           <p className="mt-7 max-w-xl text-balance text-lg font-light leading-relaxed text-foreground/70 md:text-xl">
             مكتبة حديثية رسمية تجمع أمهات الكتب وتراجم الرواة في مكان واحد، للقراءة المتأنية والبحث الموثّق.
@@ -129,7 +180,15 @@ export default function Home() {
             aria-label="البحث في السنة"
             className="surface-card mt-12 flex w-full max-w-xl items-center gap-2 p-2"
           >
-            <Search className="mx-3 h-5 w-5 flex-shrink-0 text-foreground/70" aria-hidden="true" />
+            <Link
+              href="/research"
+              aria-label="البحث المتقدم"
+              title="البحث المتقدم"
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-foreground/60 transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </Link>
+            <Search className="h-5 w-5 flex-shrink-0 text-foreground/70" aria-hidden="true" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -144,6 +203,20 @@ export default function Home() {
               ابحث
             </button>
           </form>
+        </div>
+      </section>
+
+      {/* ── Scholar quote: one quiet statement, not a decorative card ─── */}
+      <section className="bg-foreground/[0.02] px-5 py-16 md:px-8 md:py-20">
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+          <Quote className="h-6 w-6 text-primary/50" aria-hidden="true" />
+          <p className="mt-5 max-w-2xl font-display text-xl font-light leading-relaxed text-foreground/90 md:text-2xl">
+            «{scholarQuote.text}»
+          </p>
+          <div className="mt-5 flex flex-col items-center">
+            <span className="text-sm font-medium text-foreground">{scholarQuote.attribution}</span>
+            <span className="mt-0.5 text-xs text-foreground/70">{scholarQuote.role}</span>
+          </div>
         </div>
       </section>
 
@@ -172,6 +245,101 @@ export default function Home() {
                   <ArrowLeft className="h-5 w-5 flex-shrink-0 text-foreground/60 transition-transform group-hover:-translate-x-1 group-hover:text-foreground" />
                 </div>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── All services: a quick-links pill row, not the app's icon grid ─ */}
+      <section className="px-5 pb-16 md:px-8 md:pb-20">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-6 font-display text-xl font-medium text-foreground/80">جميع الخدمات</h2>
+          <div className="flex flex-wrap gap-2.5">
+            {allServices.map((service) => {
+              const className =
+                'rounded-full border border-border/60 px-4 py-2 text-sm font-medium text-foreground/75 transition-colors hover:border-primary/40 hover:text-foreground';
+              if (service.kind === 'link') {
+                return (
+                  <Link key={service.label} href={service.href} className={className}>
+                    {service.label}
+                  </Link>
+                );
+              }
+              if (service.kind === 'anchor') {
+                return (
+                  <a key={service.label} href={service.href} className={className}>
+                    {service.label}
+                  </a>
+                );
+              }
+              return (
+                <button key={service.label} type="button" onClick={handleComingSoonService} className={className}>
+                  {service.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── كتب المتون: horizontal book row ───────────────────────────── */}
+      <section className="bg-foreground/[0.02] px-5 py-16 md:px-8 md:py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 flex items-end justify-between">
+            <h2 className="font-display text-2xl font-light md:text-3xl">كتب المتون</h2>
+            <Link href="/books" className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+              عرض جميع الكتب <ChevronLeft size={16} />
+            </Link>
+          </div>
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:px-0">
+            {(mutoon?.items ?? []).slice(0, 10).map((book) => (
+              <Link
+                key={book.id}
+                href={`/search?q=${encodeURIComponent(book.title)}`}
+                className="surface-card group w-52 flex-shrink-0 snap-start p-5"
+              >
+                <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
+                  {book.title}
+                </h3>
+                <p className="mt-1 text-sm text-foreground/70">{book.author}</p>
+                <span className="mt-4 inline-flex rounded-full bg-foreground/[0.06] px-2.5 py-1 text-xs font-medium text-foreground/70">
+                  {book.hadithCount.toLocaleString('ar-SA')} حديث
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── أكثر الرواة رواية للحديث: horizontal narrator row ──────────── */}
+      <section className="px-5 py-16 md:px-8 md:py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 flex items-end justify-between">
+            <h2 className="font-display text-2xl font-light md:text-3xl">أكثر الرواة رواية للحديث</h2>
+            <Link href="/narrators" className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+              عرض جميع الرواة <ChevronLeft size={16} />
+            </Link>
+          </div>
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:px-0">
+            {(topNarrators ?? []).map((narrator) => (
+              <div key={narrator.id} className="surface-card w-72 flex-shrink-0 snap-start p-5">
+                <h3 className="font-display text-base font-medium">{narratorDisplayName(narrator)}</h3>
+                <div className="mt-3 flex flex-wrap gap-1.5 text-xs">
+                  {narrator.kunia && (
+                    <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 text-foreground/70">
+                      {narrator.kunia}
+                    </span>
+                  )}
+                  {narrator.deathYear && (
+                    <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 text-foreground/70">
+                      الوفاة: {narrator.deathYear}
+                    </span>
+                  )}
+                  <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 font-medium text-foreground/70">
+                    المرويات: {narrator.hadithsCount.toLocaleString('ar-SA')}
+                  </span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -249,6 +417,41 @@ export default function Home() {
                 </article>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── المتون المجمعة ─────────────────────────────────────────────── */}
+      <section id="compound-matn" className="scroll-mt-20 px-5 py-16 md:px-8 md:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 flex items-end justify-between">
+            <div>
+              <h2 className="font-display text-2xl font-light md:text-3xl">المتون المجمعة</h2>
+              <p className="mt-2 text-foreground/70">أحاديث ورد لفظها مجموعاً من أكثر من مصدر.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            {(compoundMatns ?? []).map((item) => (
+              <article key={item.treeId} className="surface-card flex flex-col p-6">
+                <p className="flex-1 font-display text-[0.95rem] font-light leading-relaxed text-foreground/90">
+                  «{getFeaturedExcerpt(item.tarf, 130)}»
+                </p>
+                <div className="mt-5 flex items-center justify-between gap-2 pt-4 text-xs">
+                  <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 font-medium text-foreground/70">
+                    {item.bookName}
+                  </span>
+                  <span className="text-foreground/70">رقم الحديث: {item.hadithNumber.trim()}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleComingSoonService}
+                  className="mt-4 inline-flex items-center justify-center gap-1 rounded-full bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
+                >
+                  عرض المتن المجمع <ArrowLeft size={14} />
+                </button>
+              </article>
+            ))}
           </div>
         </div>
       </section>
