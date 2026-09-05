@@ -42,6 +42,61 @@ export type MutoonBook = {
   treeId: number;
 };
 
+export type ServiceBook = {
+  id: number;
+  title: string;
+  author: string;
+  category: string;
+  hadithCount: number;
+  chaptersCount: number;
+  imageUrl: string;
+};
+
+export type BookSummary = {
+  id: number;
+  title: string;
+  isMatn: boolean;
+  hadithCount: number;
+  chaptersCount: number;
+  category: string;
+  imageUrl: string;
+};
+
+export type BookDefinitionSection = {
+  title: string;
+  content: string;
+  type: number;
+};
+
+export type BookAuthor = {
+  id: number;
+  name: string;
+  shortName: string | null;
+  deathDate: number | null;
+  deathCity: string | null;
+  birthCity: string | null;
+  birthYear: string | null;
+  deathYear: string | null;
+  tabaqa: string | null;
+  biography: BookDefinitionSection[];
+  chips: {
+    fame?: string[];
+    kunia?: string[];
+    laqab?: string[];
+    nasab?: string[];
+    livingCities?: string[];
+    journeyCities?: string[];
+    relations?: string[];
+  } | null;
+  rankings: { ibnHajar: string | null; dahabi: string | null } | null;
+};
+
+export type BookDetail = {
+  bookSummary: BookSummary;
+  bookDefinition: BookDefinitionSection[];
+  author: BookAuthor | null;
+};
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, { headers: { Accept: 'application/json' } });
   if (!response.ok) throw new Error(`Request to ${url} failed with ${response.status}`);
@@ -86,5 +141,34 @@ export function useMutoonBooks() {
       const items = Array.isArray(data?.value?.mutoon) ? (data.value!.mutoon as MutoonBook[]) : [];
       return { items, count: data?.value?.mutoonBooksCount ?? items.length };
     },
+  });
+}
+
+// The service/reference books (شروح، رجال، مصطلح الحديث، ...) have no listing
+// endpoint upstream — the proxy assembles this by walking individual book
+// ids server-side and caches the result for hours, since it's static
+// reference data. First load can take a moment to warm; afterwards it's
+// instant.
+export function useServiceBooks() {
+  return useQuery({
+    queryKey: ['home-feed', 'service-books'],
+    queryFn: async () => {
+      const data = await fetchJson<{ value?: { items?: unknown } }>(`/api/home/service-books`);
+      const items = Array.isArray(data?.value?.items) ? (data.value!.items as ServiceBook[]) : [];
+      return items;
+    },
+    staleTime: 60 * 60 * 1000,
+  });
+}
+
+export function useBookDetail(id: string | number | undefined) {
+  return useQuery({
+    queryKey: ['home-feed', 'book', id],
+    queryFn: async () => {
+      const data = await fetchJson<{ value?: BookDetail }>(`/api/home/books/${id}`);
+      if (!data?.value) throw new Error('Book not found');
+      return data.value;
+    },
+    enabled: id !== undefined && id !== '',
   });
 }

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 
 type SavedItem = {
   id: string;
-  type: 'hadith' | 'narrator';
+  type: 'hadith' | 'narrator' | 'book';
   title: string;
   addedAt: string;
   notes?: string;
@@ -25,7 +25,7 @@ function isSavedItem(value: unknown): value is SavedItem {
   return (
     typeof item.id === 'string' &&
     item.id.length > 0 &&
-    (item.type === 'hadith' || item.type === 'narrator') &&
+    (item.type === 'hadith' || item.type === 'narrator' || item.type === 'book') &&
     typeof item.title === 'string' &&
     typeof item.addedAt === 'string'
   );
