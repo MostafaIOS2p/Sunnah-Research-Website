@@ -11,8 +11,18 @@ export type Narrator = {
   shortName: string | null;
   laqab: string | null;
   kunia: string | null;
+  nasab: string | null;
+  famousName: string | null;
+  mazhab: string | null;
+  birthYear: string | null;
+  birthCity: string | null;
   deathYear: string | null;
+  deathCity: string | null;
+  journeyCity: string | null;
+  journeyDate: string | null;
+  tabaqa: string | null;
   hadithsCount: number;
+  rankings: { ibnHajar: string | null; dahabi: string | null } | null;
 };
 
 export type CompoundMatnItem = {
