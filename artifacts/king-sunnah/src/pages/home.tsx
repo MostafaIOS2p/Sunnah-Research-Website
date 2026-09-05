@@ -417,43 +417,72 @@ export default function Home() {
             </Link>
           </div>
           <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
-            {(topNarrators ?? []).map((narrator) => (
-              <Link
-                key={narrator.id}
-                href={`/narrator/${narrator.id}`}
-                className="surface-card group flex w-72 flex-shrink-0 snap-start flex-col p-5 transition-transform duration-300 hover:-translate-y-1 md:w-auto"
-              >
-                <div className="flex items-start justify-between gap-3 border-b border-border/50 pb-4">
-                  <div className="min-w-0">
-                    <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
-                      {narratorDisplayName(narrator)}
-                    </h3>
-                    <p className="mt-0.5 truncate text-sm text-foreground/70">
-                      {narrator.nasab || narrator.laqab || ' '}
-                    </p>
+            {(topNarrators ?? []).map((narrator) => {
+              const extraFactsCount = [
+                narrator.mazhab,
+                narrator.birthCity,
+                narrator.deathCity,
+                narrator.journeyCity,
+                narrator.famousName,
+                narrator.rankings?.ibnHajar,
+                narrator.rankings?.dahabi,
+              ].filter(Boolean).length;
+
+              return (
+                <Link
+                  key={narrator.id}
+                  href={`/narrator/${narrator.id}`}
+                  className="surface-card group flex w-72 flex-shrink-0 snap-start flex-col p-5 transition-transform duration-300 hover:-translate-y-1 md:w-auto"
+                >
+                  <div className="flex items-start justify-between gap-3 border-b border-border/50 pb-4">
+                    <div className="min-w-0">
+                      <h3 className="font-display text-base font-medium transition-colors group-hover:text-primary">
+                        {narratorDisplayName(narrator)}
+                      </h3>
+                      <p className="mt-0.5 truncate text-sm text-foreground/70">
+                        {narrator.nasab || narrator.laqab || ' '}
+                      </p>
+                    </div>
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <UserRound className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+                    </span>
                   </div>
-                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <UserRound className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-                  </span>
-                </div>
-                <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-4 text-xs">
-                  {narrator.kunia && (
-                    <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 font-medium text-foreground/70">
-                      {narrator.kunia}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-4 text-xs">
+                    {narrator.kunia && (
+                      <span className="rounded-full bg-foreground/[0.06] px-2.5 py-1 font-medium text-foreground/70">
+                        {narrator.kunia}
+                      </span>
+                    )}
+                    {narrator.tabaqa && (
+                      <span className="rounded-full bg-violet-500/10 px-2.5 py-1 font-medium text-violet-700 dark:text-violet-300">
+                        الطبقة: {narrator.tabaqa}
+                      </span>
+                    )}
+                    {narrator.birthYear && (
+                      <span className="rounded-full bg-teal-500/10 px-2.5 py-1 font-medium text-teal-700 dark:text-teal-300">
+                        الولادة: {narrator.birthYear}
+                      </span>
+                    )}
+                    {narrator.deathYear && (
+                      <span className="rounded-full bg-sky-500/10 px-2.5 py-1 font-medium text-sky-700 dark:text-sky-300">
+                        الوفاة: {narrator.deathYear}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-2.5 text-xs">
+                    <span className="rounded-full bg-amber-500/10 px-2.5 py-1 font-medium text-amber-700 dark:text-amber-300">
+                      المرويات: {narrator.hadithsCount.toLocaleString('ar-SA')}
                     </span>
-                  )}
-                  {narrator.deathYear && (
-                    <span className="rounded-full bg-sky-500/10 px-2.5 py-1 font-medium text-sky-700 dark:text-sky-300">
-                      الوفاة: {narrator.deathYear}
-                    </span>
-                  )}
-                  <span className="rounded-full bg-amber-500/10 px-2.5 py-1 font-medium text-amber-700 dark:text-amber-300">
-                    المرويات: {narrator.hadithsCount.toLocaleString('ar-SA')}
-                  </span>
-                  <ArrowLeft className="mr-auto h-4 w-4 flex-shrink-0 text-foreground/40 transition-transform group-hover:-translate-x-1 group-hover:text-primary" />
-                </div>
-              </Link>
-            ))}
+                    {extraFactsCount > 0 && (
+                      <span className="rounded-full bg-foreground/[0.05] px-2.5 py-1 font-medium text-foreground/60">
+                        +{extraFactsCount}
+                      </span>
+                    )}
+                    <ArrowLeft className="mr-auto h-4 w-4 flex-shrink-0 text-foreground/40 transition-transform group-hover:-translate-x-1 group-hover:text-primary" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
