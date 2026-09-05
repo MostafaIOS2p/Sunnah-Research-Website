@@ -97,6 +97,63 @@ export type BookDetail = {
   author: BookAuthor | null;
 };
 
+// /chapters/{id} is recursive: {id} is a book id or a chapter/بab id, and it
+// returns that node's direct children plus a breadcrumb trail back to the
+// book. Leaf children have isHadith: true — an actual hadith to read.
+export type ChapterBreadcrumb = { id: number; title: string };
+
+export type ChapterNode = {
+  id: number;
+  title: string;
+  isHadith: boolean;
+  chaptersCount: number;
+  hadithsCount: number;
+  hadithNumber: string | null;
+  parentChapterId: number | null;
+  parentChapterTitle: string | null;
+};
+
+export type ChaptersPage = {
+  breadcrumbs: ChapterBreadcrumb[];
+  items: ChapterNode[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+};
+
+export type HadithSourceToken = {
+  type: number;
+  text: string;
+  plainText: string;
+  entityId: number | null;
+  attributes: Record<string, string> | null;
+  parentType: number | null;
+  parentEntityId: number | null;
+  ancestors: unknown;
+};
+
+export type HadithSourceBreadcrumb = { treeId: number; title: string };
+
+export type HadithSourceServices = Record<string, boolean>;
+
+export type HadithSource = {
+  id: number;
+  bookId: number;
+  bookTitle: string;
+  breadcrumbs: HadithSourceBreadcrumb[];
+  content: HadithSourceToken[];
+  services: HadithSourceServices;
+  navigation: { nextId: number | null; prevId: number | null };
+  metadata: { pageNum: number | null; partNum: number | null; hadithNumber: string | null; tarf: string | null };
+};
+
+export function hadithSourcePlainText(source: HadithSource): string {
+  return source.content.map((token) => token.plainText).join('').trim();
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, { headers: { Accept: 'application/json' } });
   if (!response.ok) throw new Error(`Request to ${url} failed with ${response.status}`);
@@ -167,6 +224,33 @@ export function useBookDetail(id: string | number | undefined) {
     queryFn: async () => {
       const data = await fetchJson<{ value?: BookDetail }>(`/api/home/books/${id}`);
       if (!data?.value) throw new Error('Book not found');
+      return data.value;
+    },
+    enabled: id !== undefined && id !== '',
+  });
+}
+
+export function useChapters(id: string | number | undefined, page = 1, pageSize = 20) {
+  return useQuery({
+    queryKey: ['home-feed', 'chapters', id, page, pageSize],
+    queryFn: async () => {
+      const data = await fetchJson<{ value?: ChaptersPage }>(
+        `/api/home/chapters/${id}?page=${page}&pageSize=${pageSize}`,
+      );
+      if (!data?.value) throw new Error('Chapter not found');
+      return data.value;
+    },
+    enabled: id !== undefined && id !== '',
+    staleTime: 30 * 60 * 1000,
+  });
+}
+
+export function useHadithSource(id: string | number | undefined) {
+  return useQuery({
+    queryKey: ['home-feed', 'hadith-source', id],
+    queryFn: async () => {
+      const data = await fetchJson<{ value?: HadithSource }>(`/api/home/hadith-source/${id}`);
+      if (!data?.value) throw new Error('Hadith not found');
       return data.value;
     },
     enabled: id !== undefined && id !== '',

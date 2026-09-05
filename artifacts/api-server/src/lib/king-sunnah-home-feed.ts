@@ -69,6 +69,21 @@ export function fetchBookDetail(id: string) {
   return fetchJsonCached(`book:${id}`, `${API_BASE}/books/${encodeURIComponent(id)}`);
 }
 
+// /chapters/{id} is recursive: {id} is either a book id or a chapter/bab id,
+// and it returns that node's direct children plus a breadcrumb trail back to
+// the book. Leaf children have isHadith: true (an actual hadith), everything
+// else is a further كتاب/باب to drill into.
+export function fetchChapters(id: string, page: number, pageSize: number) {
+  return fetchJsonCached(
+    `chapters:${id}:${page}:${pageSize}`,
+    `${API_BASE}/chapters/${encodeURIComponent(id)}?page=${page}&pageSize=${pageSize}`,
+  );
+}
+
+export function fetchHadithSource(id: string) {
+  return fetchJsonCached(`hadith-source:${id}`, `${API_BASE}/hadith/${encodeURIComponent(id)}`);
+}
+
 // The "خدمية" (service/reference) books have no listing endpoint of their
 // own — only /books/{id} for a single book, and no way to ask "which ids
 // exist". They turned out to occupy the id range right after the 33 مُتون

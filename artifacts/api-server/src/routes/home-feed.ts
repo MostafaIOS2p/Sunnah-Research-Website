@@ -1,7 +1,9 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import {
   fetchBookDetail,
+  fetchChapters,
   fetchCompoundMatn,
+  fetchHadithSource,
   fetchMostNarratedRawys,
   fetchMutoon,
   fetchServiceBooks,
@@ -67,6 +69,30 @@ router.get("/home/books/:id", async (req: Request, res: Response) => {
   } catch (err) {
     logger.warn({ err, id }, "book detail request failed");
     res.status(502).json({ message: "تعذّر تحميل بيانات الكتاب حالياً." });
+  }
+});
+
+router.get("/home/chapters/:id", async (req: Request, res: Response) => {
+  const id = String(req.params.id);
+  const page = parsePositiveInt(req.query.page, 1);
+  const pageSize = parsePositiveInt(req.query.pageSize, 20);
+  try {
+    const data = await fetchChapters(id, page, pageSize);
+    res.json(data);
+  } catch (err) {
+    logger.warn({ err, id }, "chapters request failed");
+    res.status(502).json({ message: "تعذّر تحميل محتوى الكتاب حالياً." });
+  }
+});
+
+router.get("/home/hadith-source/:id", async (req: Request, res: Response) => {
+  const id = String(req.params.id);
+  try {
+    const data = await fetchHadithSource(id);
+    res.json(data);
+  } catch (err) {
+    logger.warn({ err, id }, "hadith source request failed");
+    res.status(502).json({ message: "تعذّر تحميل الحديث حالياً." });
   }
 });
 

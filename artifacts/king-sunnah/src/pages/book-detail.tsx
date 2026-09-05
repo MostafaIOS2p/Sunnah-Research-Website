@@ -1,13 +1,183 @@
 import React from 'react';
-import { useParams, Link } from 'wouter';
-import { Bookmark, ChevronLeft, Layers, Share2 } from 'lucide-react';
-import { useBookDetail } from '@/lib/home-feed';
+import { useParams, useLocation, Link } from 'wouter';
+import { Bookmark, BookOpen, ChevronLeft, ChevronRight, ListTree, Share2 } from 'lucide-react';
+import { useBookDetail, useChapters, type ChapterNode } from '@/lib/home-feed';
 import { BookCoverArt, coverImageForTitle } from '@/components/book-cover-art';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
 
 type DetailTab = 'content' | 'about' | 'author';
+
+// A "بet me read" shortcut: resolve a chapter node down to its first actual
+// hadith by repeatedly asking for that node's first child, so "تصفح
+// الأحاديث مباشرة" can jump straight into reading without forcing the user
+// to drill through every intermediate باب level by hand.
+const MAX_RESOLVE_DEPTH = 8;
+
+async function resolveFirstHadithId(startId: number): Promise<number | null> {
+  let currentId = startId;
+  for (let depth = 0; depth < MAX_RESOLVE_DEPTH; depth += 1) {
+    const response = await fetch(`/api/home/chapters/${currentId}?page=1&pageSize=1`, {
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) return null;
+    const data = (await response.json()) as { value?: { items?: ChapterNode[] } };
+    const first = data.value?.items?.[0];
+    if (!first) return null;
+    if (first.isHadith) return first.id;
+    currentId = first.id;
+  }
+  return null;
+}
+
+function ChapterBrowser({ bookId, bookTitle }: { bookId: number; bookTitle: string }) {
+  const [, navigate] = useLocation();
+  const [trail, setTrail] = React.useState<{ id: number; title: string }[]>([{ id: bookId, title: bookTitle }]);
+  const [page, setPage] = React.useState(1);
+  const [resolvingId, setResolvingId] = React.useState<number | null>(null);
+  const current = trail[trail.length - 1];
+  const { data, isLoading, isError } = useChapters(current.id, page, 20);
+
+  const drillInto = (node: ChapterNode) => {
+    setTrail((t) => [...t, { id: node.id, title: node.title }]);
+    setPage(1);
+  };
+
+  const goToTrailIndex = (index: number) => {
+    setTrail((t) => t.slice(0, index + 1));
+    setPage(1);
+  };
+
+  const readFrom = async (node: ChapterNode) => {
+    if (node.isHadith) {
+      navigate(`/hadith-source/${node.id}`);
+      return;
+    }
+    setResolvingId(node.id);
+    const hadithId = await resolveFirstHadithId(node.id);
+    setResolvingId(null);
+    if (hadithId !== null) navigate(`/hadith-source/${hadithId}`);
+  };
+
+  return (
+    <div>
+      {trail.length > 1 && (
+        <div className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+          {trail.map((crumb, i) => (
+            <React.Fragment key={crumb.id}>
+              {i > 0 && <ChevronLeft className="h-3.5 w-3.5" />}
+              {i === trail.length - 1 ? (
+                <span className="truncate font-medium text-foreground">{crumb.title}</span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => goToTrailIndex(i)}
+                  className="truncate transition-colors hover:text-foreground"
+                >
+                  {crumb.title}
+                </button>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+
+      {isLoading && <div className="py-16 text-center text-muted-foreground">جارٍ تحميل المحتوى...</div>}
+
+      {!isLoading && (isError || !data) && (
+        <div className="py-16 text-center text-muted-foreground">تعذّر تحميل محتوى هذا الكتاب.</div>
+      )}
+
+      {!isLoading && data && (
+        <>
+          <div className="space-y-2">
+            {data.items.map((node) => (
+              <div
+                key={node.id}
+                className="surface-card flex items-center gap-3 p-4 transition-colors hover:bg-foreground/[0.02] sm:p-5"
+              >
+                <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-foreground/[0.06] text-foreground/60">
+                  {node.isHadith ? <BookOpen className="h-4 w-4" /> : <ListTree className="h-4 w-4" />}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-base font-medium">{node.title}</p>
+                  {!node.isHadith && (
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
+                      {node.chaptersCount > 0 && (
+                        <span className="rounded-full bg-sky-500/10 px-2 py-0.5 font-medium text-sky-700 dark:text-sky-300">
+                          {node.chaptersCount.toLocaleString('ar-SA')} باب
+                        </span>
+                      )}
+                      {node.hadithsCount > 0 && (
+                        <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-medium text-amber-700 dark:text-amber-300">
+                          {node.hadithsCount.toLocaleString('ar-SA')} حديث
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {node.isHadith && node.hadithNumber && node.hadithNumber.trim() && (
+                    <p className="mt-0.5 text-xs text-muted-foreground">حديث رقم {node.hadithNumber.trim()}</p>
+                  )}
+                </div>
+
+                <div className="flex flex-shrink-0 items-center gap-1.5">
+                  {!node.isHadith && node.chaptersCount > 0 && (
+                    <Button variant="outline" size="sm" className="rounded-full" onClick={() => drillInto(node)}>
+                      تصفح الأبواب
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    className="rounded-full"
+                    disabled={resolvingId === node.id}
+                    onClick={() => readFrom(node)}
+                  >
+                    {resolvingId === node.id ? 'جارٍ التحميل...' : node.isHadith ? 'قراءة الحديث' : 'عرض الأحاديث'}
+                  </Button>
+                </div>
+              </div>
+            ))}
+
+            {data.items.length === 0 && (
+              <div className="py-16 text-center text-muted-foreground">لا يوجد محتوى في هذا القسم.</div>
+            )}
+          </div>
+
+          {data.totalPages > 1 && (
+            <div className="mt-5 flex items-center justify-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 rounded-full"
+                disabled={!data.hasPreviousPage}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                <ChevronRight className="h-4 w-4" />
+                السابق
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                صفحة {data.page.toLocaleString('ar-SA')} من {data.totalPages.toLocaleString('ar-SA')}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 rounded-full"
+                disabled={!data.hasNextPage}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                التالي
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function BookDetail() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +185,8 @@ export default function BookDetail() {
   const { saveItem, removeItem, isSaved } = useStore();
   const { toast } = useToast();
   const [tab, setTab] = React.useState<DetailTab>('content');
+  const [, navigate] = useLocation();
+  const [startingToRead, setStartingToRead] = React.useState(false);
 
   if (isLoading) {
     return <div className="py-24 text-center text-muted-foreground">جارٍ تحميل بيانات الكتاب...</div>;
@@ -55,6 +227,17 @@ export default function BookDetail() {
       }
     } catch {
       // The user cancelled the share sheet.
+    }
+  };
+
+  const startReading = async () => {
+    setStartingToRead(true);
+    const hadithId = await resolveFirstHadithId(bookSummary.id);
+    setStartingToRead(false);
+    if (hadithId !== null) {
+      navigate(`/hadith-source/${hadithId}`);
+    } else {
+      toast({ title: 'تعذّر العثور على أحاديث في هذا الكتاب' });
     }
   };
 
@@ -119,12 +302,14 @@ export default function BookDetail() {
               <Share2 className="h-4 w-4" />
               مشاركة
             </button>
-            <Link
-              href={`/search?q=${encodeURIComponent(bookSummary.title)}`}
-              className="mr-auto inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03]"
+            <button
+              type="button"
+              onClick={startReading}
+              disabled={startingToRead}
+              className="mr-auto inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03] disabled:opacity-60"
             >
-              تصفح الأحاديث
-            </Link>
+              {startingToRead ? 'جارٍ التحميل...' : 'تصفح الأحاديث'}
+            </button>
           </div>
         </div>
       </div>
@@ -143,21 +328,7 @@ export default function BookDetail() {
         </TabsList>
 
         <TabsContent value="content" className="mt-6">
-          <div className="surface-card flex flex-col items-center gap-4 p-10 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300">
-              <Layers className="h-6 w-6" />
-            </span>
-            <div>
-              <div className="font-display text-3xl font-light text-primary">
-                {bookSummary.chaptersCount.toLocaleString('ar-SA')}
-              </div>
-              <p className="mt-1 text-muted-foreground">كتاب فرعي في هذا المصدر</p>
-            </div>
-            <p className="max-w-md text-sm text-muted-foreground">
-              تصفح الأبواب والكتب الفرعية بابًا بابًا قادم قريبًا. يمكنك الآن تصفح أحاديث هذا الكتاب مباشرة من زر
-              «تصفح الأحاديث» أعلاه.
-            </p>
-          </div>
+          <ChapterBrowser bookId={bookSummary.id} bookTitle={bookSummary.title} />
         </TabsContent>
 
         <TabsContent value="about" className="mt-6 space-y-5">
