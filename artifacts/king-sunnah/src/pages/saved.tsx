@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '@/lib/store';
-import { Bookmark, FileText, Users, Trash2, Edit3 } from 'lucide-react';
+import { Bookmark, FileText, Users, BookOpen, Trash2, Edit3 } from 'lucide-react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,11 +50,15 @@ export default function Saved() {
                   className={
                     item.type === 'hadith'
                       ? 'inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary'
-                      : 'inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-2.5 py-1 text-xs font-medium text-secondary'
+                      : item.type === 'narrator'
+                        ? 'inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-2.5 py-1 text-xs font-medium text-secondary'
+                        : 'inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-300'
                   }
                 >
-                  {item.type === 'hadith' ? <FileText className="h-3 w-3" /> : <Users className="h-3 w-3" />}
-                  {item.type === 'hadith' ? 'حديث' : 'راوي'}
+                  {item.type === 'hadith' && <FileText className="h-3 w-3" />}
+                  {item.type === 'narrator' && <Users className="h-3 w-3" />}
+                  {item.type === 'book' && <BookOpen className="h-3 w-3" />}
+                  {item.type === 'hadith' ? 'حديث' : item.type === 'narrator' ? 'راوي' : 'كتاب'}
                 </span>
                 <Button
                   variant="ghost"
@@ -66,7 +70,15 @@ export default function Saved() {
                 </Button>
               </div>
 
-              <Link href={item.type === 'hadith' ? `/hadith/${item.id}` : `/narrator/${item.id}`}>
+              <Link
+                href={
+                  item.type === 'hadith'
+                    ? `/hadith/${item.id}`
+                    : item.type === 'narrator'
+                      ? `/narrator/${item.id}`
+                      : `/book/${item.id}`
+                }
+              >
                 <h3 className="mb-2 cursor-pointer font-display text-lg font-medium transition-colors hover:text-primary">
                   {item.title}
                 </h3>
