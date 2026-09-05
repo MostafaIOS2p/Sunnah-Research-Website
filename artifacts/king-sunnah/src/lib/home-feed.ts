@@ -11,6 +11,7 @@ export type Narrator = {
   shortName: string | null;
   laqab: string | null;
   kunia: string | null;
+  nasab: string | null;
   deathYear: string | null;
   hadithsCount: number;
 };
