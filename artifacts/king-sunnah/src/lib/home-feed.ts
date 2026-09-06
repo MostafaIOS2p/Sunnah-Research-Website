@@ -150,6 +150,44 @@ export type HadithSource = {
   metadata: { pageNum: number | null; partNum: number | null; hadithNumber: string | null; tarf: string | null };
 };
 
+// /chapterHadiths/{id} flattens every hadith under a node (same id space as
+// /chapters/{id} — a book, a كتاب, or a باب) into one paginated list, so
+// "show hadiths" opens a real list of destinations rather than guessing at
+// "the first one".
+export type ChapterHadithItem = {
+  id: number;
+  title: string;
+  hadithNumber: string | null;
+  parentChapterId: number | null;
+  parentChapterTitle: string | null;
+};
+
+export type ChapterHadithsPage = {
+  breadcrumbs: ChapterBreadcrumb[];
+  items: ChapterHadithItem[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+};
+
+export function useChapterHadiths(id: string | number | undefined, page = 1, pageSize = 20) {
+  return useQuery({
+    queryKey: ['home-feed', 'chapter-hadiths', id, page, pageSize],
+    queryFn: async () => {
+      const data = await fetchJson<{ value?: ChapterHadithsPage }>(
+        `/api/home/chapter-hadiths/${id}?page=${page}&pageSize=${pageSize}`,
+      );
+      if (!data?.value) throw new Error('Hadith list not found');
+      return data.value;
+    },
+    enabled: id !== undefined && id !== '',
+    staleTime: 30 * 60 * 1000,
+  });
+}
+
 export function hadithSourcePlainText(source: HadithSource): string {
   return source.content.map((token) => token.plainText).join('').trim();
 }

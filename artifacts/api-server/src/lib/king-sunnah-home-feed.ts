@@ -84,6 +84,17 @@ export function fetchHadithSource(id: string) {
   return fetchJsonCached(`hadith-source:${id}`, `${API_BASE}/hadith/${encodeURIComponent(id)}`);
 }
 
+// /chapterHadiths/{id} flattens every hadith under a node (book, كتاب, or
+// باب — same id space as /chapters/{id}) into one paginated list, instead of
+// only that node's direct children. This is what "show hadiths" should open:
+// a real list of destinations to pick from, not a guess at "the first one".
+export function fetchChapterHadiths(id: string, page: number, pageSize: number) {
+  return fetchJsonCached(
+    `chapter-hadiths:${id}:${page}:${pageSize}`,
+    `${API_BASE}/chapterHadiths/${encodeURIComponent(id)}?page=${page}&pageSize=${pageSize}`,
+  );
+}
+
 // The "خدمية" (service/reference) books have no listing endpoint of their
 // own — only /books/{id} for a single book, and no way to ask "which ids
 // exist". They turned out to occupy the id range right after the 33 مُتون
