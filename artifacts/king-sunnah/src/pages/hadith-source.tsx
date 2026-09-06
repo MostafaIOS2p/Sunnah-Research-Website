@@ -541,6 +541,7 @@ export default function HadithSource() {
         onOpenChange={setServicesOpen}
         hadithNumber={metadata.hadithNumber}
         bookTitle={hadith.bookTitle}
+        services={hadith.services}
       />
       <HadithCommentsPanel
         open={commentsOpen}
