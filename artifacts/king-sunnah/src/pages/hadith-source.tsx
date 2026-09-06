@@ -5,6 +5,8 @@ import {
   ChevronRight,
   Copy,
   FileDown,
+  FileText,
+  Image as ImageIcon,
   MessageSquare,
   Search,
   Share2,
@@ -17,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +30,48 @@ import { useHadithSource, hadithSourcePlainText, type HadithSourceToken } from '
 import { useToast } from '@/hooks/use-toast';
 import { HadithServicesDialog } from '@/components/hadith/services-dialog';
 import { HadithCommentsPanel } from '@/components/hadith/comments-panel';
+
+// A single toolbar icon action, always with a hover tooltip naming it — the
+// row reads as a desktop document toolbar (think Docs/Notion) rather than a
+// mobile bottom icon bar precisely because hover affordances like this only
+// make sense with a pointer.
+function ToolbarButton({
+  label,
+  active,
+  disabled,
+  onClick,
+  children,
+}: {
+  label: string;
+  active?: boolean;
+  disabled?: boolean;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Tooltip delayDuration={300}>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          disabled={disabled}
+          onClick={onClick}
+          className={active ? 'rounded-full bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary' : 'rounded-full'}
+        >
+          {children}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+// A thin vertical rule between toolbar clusters — the desktop signal that
+// replaces cramming every action into one undifferentiated row: reading
+// preferences, document actions, and engagement each get their own group.
+function ToolbarDivider() {
+  return <span className="mx-1 h-5 w-px flex-shrink-0 bg-border/60" aria-hidden="true" />;
+}
 
 const MIN_FONT_SIZE = 16;
 const MAX_FONT_SIZE = 34;
@@ -247,13 +292,22 @@ export default function HadithSource() {
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-1" data-html2canvas-ignore={exporting ? 'true' : undefined}>
+            <div
+              className="flex flex-wrap items-center gap-0.5 rounded-full bg-foreground/[0.03] p-1"
+              data-html2canvas-ignore={exporting ? 'true' : undefined}
+            >
+              {/* Reading preferences */}
               <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full" title="إعدادات الخط">
-                    <Type className="h-4 w-4" />
-                  </Button>
-                </PopoverTrigger>
+                <Tooltip delayDuration={300}>
+                  <TooltipTrigger asChild>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full">
+                        <Type className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>إعدادات الخط</TooltipContent>
+                </Tooltip>
                 <PopoverContent className="w-64" align="end">
                   <p className="mb-3 text-sm font-medium">حجم الخط</p>
                   <div className="flex items-center gap-3">
@@ -270,55 +324,62 @@ export default function HadithSource() {
                 </PopoverContent>
               </Popover>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className={showTashkeel ? 'rounded-full bg-primary/10 text-primary' : 'rounded-full'}
+              <ToolbarButton
+                label={showTashkeel ? 'إخفاء التشكيل' : 'إظهار التشكيل'}
+                active={showTashkeel}
                 onClick={() => setShowTashkeel((v) => !v)}
-                title={showTashkeel ? 'إخفاء التشكيل' : 'إظهار التشكيل'}
               >
                 <Sparkles className="h-4 w-4" />
-              </Button>
+              </ToolbarButton>
 
-              <Button variant="ghost" size="icon" className="rounded-full" onClick={copyText} title="نسخ النص">
+              <ToolbarDivider />
+
+              {/* Document actions */}
+              <ToolbarButton label="نسخ النص" onClick={copyText}>
                 <Copy className="h-4 w-4" />
-              </Button>
+              </ToolbarButton>
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full" title="تصدير" disabled={exporting}>
-                    <FileDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
+                <Tooltip delayDuration={300}>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full" disabled={exporting}>
+                        <FileDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>تصدير</TooltipContent>
+                </Tooltip>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => handleExport('png')}>تصدير كصورة (PNG)</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleExport('pdf')}>تصدير كملف PDF</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport('png')} className="gap-2">
+                    <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                    تصدير كصورة (PNG)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport('pdf')} className="gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    تصدير كملف PDF
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full"
-                onClick={() => setCommentsOpen(true)}
-                title="التعليقات"
-              >
-                <MessageSquare className="h-4 w-4" />
-              </Button>
+              <ToolbarButton label="مشاركة" onClick={handleShare}>
+                <Share2 className="h-4 w-4" />
+              </ToolbarButton>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className={searchOpen ? 'rounded-full bg-primary/10 text-primary' : 'rounded-full'}
+              <ToolbarDivider />
+
+              {/* Engagement */}
+              <ToolbarButton label="التعليقات" onClick={() => setCommentsOpen(true)}>
+                <MessageSquare className="h-4 w-4" />
+              </ToolbarButton>
+
+              <ToolbarButton
+                label="بحث في الحديث"
+                active={searchOpen}
                 onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
-                title="بحث في الحديث"
               >
                 <Search className="h-4 w-4" />
-              </Button>
-
-              <Button variant="ghost" size="icon" className="rounded-full" onClick={handleShare} title="مشاركة">
-                <Share2 className="h-4 w-4" />
-              </Button>
+              </ToolbarButton>
             </div>
           </div>
 
@@ -412,42 +473,44 @@ export default function HadithSource() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center border-t border-border/50 bg-foreground/[0.02] px-8 py-5 md:px-12">
-          <button
-            type="button"
-            onClick={() => setServicesOpen(true)}
-            className="rounded-full bg-brass/10 px-5 py-2 text-sm font-medium text-brass transition-transform hover:scale-[1.02]"
-          >
-            خدمات الحديث
-          </button>
-        </div>
+        <div className="space-y-4 border-t border-border/50 bg-foreground/[0.02] px-8 py-6 md:px-12">
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => setServicesOpen(true)}
+              className="rounded-full bg-brass/10 px-5 py-2 text-sm font-medium text-brass transition-transform hover:scale-[1.02]"
+            >
+              خدمات الحديث
+            </button>
+          </div>
 
-        <div className="flex items-center justify-between gap-3 border-t border-border/50 bg-foreground/[0.02] px-8 py-5 md:px-12">
-          <Button
-            variant="outline"
-            className="gap-1.5 rounded-full"
-            disabled={navigation.prevId === null}
-            onClick={() => navigation.prevId !== null && navigate(`/hadith-source/${navigation.prevId}`)}
-          >
-            <ChevronRight className="h-4 w-4" />
-            الحديث السابق
-          </Button>
-          <Link
-            href={`/book/${hadith.bookId}`}
-            className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
-          >
-            <BookOpen className="h-4 w-4" />
-            محتوى الكتاب
-          </Link>
-          <Button
-            variant="outline"
-            className="gap-1.5 rounded-full"
-            disabled={navigation.nextId === null}
-            onClick={() => navigation.nextId !== null && navigate(`/hadith-source/${navigation.nextId}`)}
-          >
-            الحديث التالي
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              variant="outline"
+              className="gap-1.5 rounded-full"
+              disabled={navigation.prevId === null}
+              onClick={() => navigation.prevId !== null && navigate(`/hadith-source/${navigation.prevId}`)}
+            >
+              <ChevronRight className="h-4 w-4" />
+              الحديث السابق
+            </Button>
+            <Link
+              href={`/book/${hadith.bookId}`}
+              className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
+            >
+              <BookOpen className="h-4 w-4" />
+              محتوى الكتاب
+            </Link>
+            <Button
+              variant="outline"
+              className="gap-1.5 rounded-full"
+              disabled={navigation.nextId === null}
+              onClick={() => navigation.nextId !== null && navigate(`/hadith-source/${navigation.nextId}`)}
+            >
+              الحديث التالي
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
