@@ -21,6 +21,7 @@ import Login from '@/pages/login';
 import Register from '@/pages/register';
 import ForgotPassword from '@/pages/forgot-password';
 import { StoreProvider } from '@/lib/store';
+import { HadithCommentsProvider } from '@/lib/hadith-comments';
 import { AuthProvider } from '@/lib/auth';
 import {
   Route,
@@ -81,12 +82,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <StoreProvider>
-          <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </TooltipProvider>
+          <HadithCommentsProvider>
+            <TooltipProvider>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+                <Router />
+              </WouterRouter>
+              <Toaster />
+            </TooltipProvider>
+          </HadithCommentsProvider>
         </StoreProvider>
       </AuthProvider>
     </QueryClientProvider>
