@@ -61,8 +61,8 @@ function BookCard({ book, isMatn }: { book: MutoonBook | ServiceBook; isMatn: bo
           aria-label={saved ? 'إزالة من المحفوظات' : 'حفظ الكتاب'}
           className={
             saved
-              ? 'absolute left-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm'
-              : 'absolute left-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-sm transition-colors hover:bg-black/50'
+              ? 'absolute end-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm'
+              : 'absolute end-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-sm transition-colors hover:bg-black/50'
           }
         >
           <Bookmark className="h-3.5 w-3.5" fill={saved ? 'currentColor' : 'none'} />
@@ -175,12 +175,12 @@ export default function Books() {
         </Tabs>
 
         <div className="relative flex-1">
-          <Search className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute start-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="ابحث باسم الكتاب أو المصنّف..."
-            className="h-11 rounded-full border-0 bg-foreground/[0.04] pr-11 focus-visible:bg-background"
+            className="h-11 rounded-full border-0 bg-foreground/[0.04] ps-11 focus-visible:bg-background"
           />
         </div>
       </div>
