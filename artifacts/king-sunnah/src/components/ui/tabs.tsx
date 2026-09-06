@@ -2,7 +2,18 @@ import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { cn } from '@/lib/utils';
 
-const Tabs = TabsPrimitive.Root;
+// Radix's Tabs.Root defaults its internal direction to "ltr" and stamps that
+// as an actual dir="ltr" attribute on its root element whenever no `dir`
+// prop is passed — which overrides the page's dir="rtl" and visually
+// reverses the tab order (and keyboard arrow-key navigation) even though
+// everything else on the page reads right-to-left. The site is Arabic-only
+// today, so default to rtl here; a caller can still pass its own `dir` prop
+// to override this once other locales/directions are supported.
+const Tabs = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
+>(({ dir = 'rtl', ...props }, ref) => <TabsPrimitive.Root ref={ref} dir={dir} {...props} />);
+Tabs.displayName = TabsPrimitive.Root.displayName;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
