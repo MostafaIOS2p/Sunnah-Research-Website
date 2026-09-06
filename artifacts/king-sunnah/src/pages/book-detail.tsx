@@ -10,33 +10,10 @@ import { useToast } from '@/hooks/use-toast';
 
 type DetailTab = 'content' | 'about' | 'author';
 
-// A "بet me read" shortcut: resolve a chapter node down to its first actual
-// hadith by repeatedly asking for that node's first child, so "تصفح
-// الأحاديث مباشرة" can jump straight into reading without forcing the user
-// to drill through every intermediate باب level by hand.
-const MAX_RESOLVE_DEPTH = 8;
-
-async function resolveFirstHadithId(startId: number): Promise<number | null> {
-  let currentId = startId;
-  for (let depth = 0; depth < MAX_RESOLVE_DEPTH; depth += 1) {
-    const response = await fetch(`/api/home/chapters/${currentId}?page=1&pageSize=1`, {
-      headers: { Accept: 'application/json' },
-    });
-    if (!response.ok) return null;
-    const data = (await response.json()) as { value?: { items?: ChapterNode[] } };
-    const first = data.value?.items?.[0];
-    if (!first) return null;
-    if (first.isHadith) return first.id;
-    currentId = first.id;
-  }
-  return null;
-}
-
 function ChapterBrowser({ bookId, bookTitle }: { bookId: number; bookTitle: string }) {
   const [, navigate] = useLocation();
   const [trail, setTrail] = React.useState<{ id: number; title: string }[]>([{ id: bookId, title: bookTitle }]);
   const [page, setPage] = React.useState(1);
-  const [resolvingId, setResolvingId] = React.useState<number | null>(null);
   const current = trail[trail.length - 1];
   const { data, isLoading, isError } = useChapters(current.id, page, 20);
 
@@ -50,15 +27,13 @@ function ChapterBrowser({ bookId, bookTitle }: { bookId: number; bookTitle: stri
     setPage(1);
   };
 
-  const readFrom = async (node: ChapterNode) => {
-    if (node.isHadith) {
-      navigate(`/hadith-source/${node.id}`);
-      return;
-    }
-    setResolvingId(node.id);
-    const hadithId = await resolveFirstHadithId(node.id);
-    setResolvingId(null);
-    if (hadithId !== null) navigate(`/hadith-source/${hadithId}`);
+  // Leaf nodes (isHadith: true) open the hadith directly, matching the
+  // mobile app's own "عرض الحديث" behavior. Everything else — a كتاب or
+  // باب with hadiths under it — opens the flattened hadith-list page
+  // instead of guessing at "the first one": the user picks a real
+  // destination from a real list.
+  const readFrom = (node: ChapterNode) => {
+    navigate(node.isHadith ? `/hadith-source/${node.id}` : `/chapters/${node.id}/hadiths`);
   };
 
   return (
@@ -129,13 +104,8 @@ function ChapterBrowser({ bookId, bookTitle }: { bookId: number; bookTitle: stri
                       تصفح الأبواب
                     </Button>
                   )}
-                  <Button
-                    size="sm"
-                    className="rounded-full"
-                    disabled={resolvingId === node.id}
-                    onClick={() => readFrom(node)}
-                  >
-                    {resolvingId === node.id ? 'جارٍ التحميل...' : node.isHadith ? 'قراءة الحديث' : 'عرض الأحاديث'}
+                  <Button size="sm" className="rounded-full" onClick={() => readFrom(node)}>
+                    {node.isHadith ? 'قراءة الحديث' : 'عرض الأحاديث'}
                   </Button>
                 </div>
               </div>
@@ -186,7 +156,6 @@ export default function BookDetail() {
   const { toast } = useToast();
   const [tab, setTab] = React.useState<DetailTab>('content');
   const [, navigate] = useLocation();
-  const [startingToRead, setStartingToRead] = React.useState(false);
 
   if (isLoading) {
     return <div className="py-24 text-center text-muted-foreground">جارٍ تحميل بيانات الكتاب...</div>;
@@ -230,15 +199,8 @@ export default function BookDetail() {
     }
   };
 
-  const startReading = async () => {
-    setStartingToRead(true);
-    const hadithId = await resolveFirstHadithId(bookSummary.id);
-    setStartingToRead(false);
-    if (hadithId !== null) {
-      navigate(`/hadith-source/${hadithId}`);
-    } else {
-      toast({ title: 'تعذّر العثور على أحاديث في هذا الكتاب' });
-    }
+  const startReading = () => {
+    navigate(`/chapters/${bookSummary.id}/hadiths`);
   };
 
   const chips = author?.chips;
@@ -282,10 +244,9 @@ export default function BookDetail() {
             <button
               type="button"
               onClick={startReading}
-              disabled={startingToRead}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
             >
-              {startingToRead ? 'جارٍ التحميل...' : 'تصفح الأحاديث'}
+              تصفح الأحاديث
             </button>
             <div className="flex items-center gap-2">
               <button
