@@ -1,20 +1,67 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Gavel,
+  LibraryBig,
+  ListTree,
+  Quote,
+  Search,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useMostNarratedRawysPage, type Narrator } from '@/lib/home-feed';
 
-// The mobile app's "الرواة" tab home screen — a search field, a set of
-// destinations for exploring narrator data, and the full ranked list of most-
-// narrated narrators. The stat cards at the top of that screen (18,857 راوٍ،
-// 500 من الصحابة...) are deliberately left out here per the redesign brief.
-const EXPLORE_LINKS: { key: string; label: string; description: string; href?: string }[] = [
-  { key: 'classifications', label: 'تصنيفات الرواة', description: 'تصفح الرواة مجموعين بحسب تصنيفهم العلمي' },
-  { key: 'by-book', label: 'رواة كتاب / كتب', description: 'رواة حديث مرتبطون بكتاب أو أكثر من كتب السنة' },
-  { key: 'list', label: 'قائمة الرواة', description: 'تصفح معجم الرواة كاملاً والبحث فيه بالاسم أو الكنية أو النسب', href: '/narrators/list' },
-  { key: 'jarh-tadil', label: 'ألفاظ الجرح والتعديل', description: 'مصطلحات علماء الحديث في توثيق الرواة أو تضعيفهم' },
-  { key: 'scholars-sayings', label: 'أقوال أهل العلم في الرواة', description: 'ما ورد عن الأئمة والحفاظ في تراجم الرواة' },
+// Same tile treatment as the home page's "جميع الخدمات" grid: large circular
+// icon tiles, each keeping its own color pair, in a surface-card grid — not
+// the plain divided list used for services-dialog's per-hadith options.
+type ExploreLink = {
+  key: string;
+  label: string;
+  icon: LucideIcon;
+  tint: string;
+} & ({ kind: 'link'; href: string } | { kind: 'soon' });
+
+const EXPLORE_LINKS: ExploreLink[] = [
+  {
+    key: 'classifications',
+    label: 'تصنيفات الرواة',
+    icon: ListTree,
+    tint: 'bg-sky-500/10 text-sky-600 dark:bg-sky-400/15 dark:text-sky-300',
+    kind: 'soon',
+  },
+  {
+    key: 'by-book',
+    label: 'رواة كتاب / كتب',
+    icon: LibraryBig,
+    tint: 'bg-amber-500/10 text-amber-600 dark:bg-amber-400/15 dark:text-amber-300',
+    kind: 'soon',
+  },
+  {
+    key: 'list',
+    label: 'قائمة الرواة',
+    icon: Users,
+    tint: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-300',
+    kind: 'link',
+    href: '/narrators/list',
+  },
+  {
+    key: 'jarh-tadil',
+    label: 'ألفاظ الجرح والتعديل',
+    icon: Gavel,
+    tint: 'bg-violet-500/10 text-violet-600 dark:bg-violet-400/15 dark:text-violet-300',
+    kind: 'soon',
+  },
+  {
+    key: 'scholars-sayings',
+    label: 'أقوال أهل العلم في الرواة',
+    icon: Quote,
+    tint: 'bg-teal-500/10 text-teal-600 dark:bg-teal-400/15 dark:text-teal-300',
+    kind: 'soon',
+  },
 ];
 
 function narratorDisplayName(n: Pick<Narrator, 'shortName' | 'name'>): string {
@@ -60,24 +107,31 @@ export default function Narrators() {
         </form>
       </div>
 
-      {/* ── استكشف كل ما يتعلق بالرواة: divided destination list ─────── */}
+      {/* ── استكشف كل ما يتعلق بالرواة: icon tile grid، matching the home
+          page's "جميع الخدمات" section rather than a plain link list ───── */}
       <section className="mt-16 md:mt-20">
         <h2 className="mb-5 font-display text-2xl font-light md:text-3xl">استكشف كل ما يتعلق بالرواة</h2>
-        <div className="surface-card divide-y divide-border/60 overflow-hidden">
-          {EXPLORE_LINKS.map(({ key, label, description, href }) => {
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-6">
+          {EXPLORE_LINKS.map((service) => {
+            const Icon = service.icon;
             const content = (
-              <div className="group flex w-full items-center justify-between gap-4 px-5 py-4 text-right transition-colors hover:bg-foreground/[0.03] sm:px-6">
-                <span className="min-w-0">
-                  <span className="block text-base font-medium leading-snug">{label}</span>
-                  <span className="mt-0.5 block text-sm text-muted-foreground">{description}</span>
+              <>
+                <span
+                  className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-105 md:h-20 md:w-20 ${service.tint}`}
+                >
+                  <Icon className="h-7 w-7 md:h-8 md:w-8" strokeWidth={1.75} aria-hidden="true" />
                 </span>
-                <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
+                <span className="text-base font-medium text-foreground/80 transition-colors group-hover:text-foreground md:text-lg">
+                  {service.label}
+                </span>
+              </>
             );
+            const className =
+              'surface-card group flex flex-col items-center justify-center gap-4 p-6 text-center transition-transform duration-300 hover:-translate-y-1 md:p-8';
 
-            if (href) {
+            if (service.kind === 'link') {
               return (
-                <Link key={key} href={href}>
+                <Link key={service.key} href={service.href} className={className}>
                   {content}
                 </Link>
               );
@@ -85,10 +139,10 @@ export default function Narrators() {
 
             return (
               <button
-                key={key}
+                key={service.key}
                 type="button"
-                onClick={() => toast({ title: 'قريباً', description: `قسم "${label}" قيد التطوير حالياً.` })}
-                className="block w-full text-right"
+                onClick={() => toast({ title: 'قريباً', description: `قسم "${service.label}" قيد التطوير حالياً.` })}
+                className={className}
               >
                 {content}
               </button>
