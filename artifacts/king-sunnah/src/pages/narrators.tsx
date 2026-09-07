@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useMostNarratedRawysPage, type Narrator } from '@/lib/home-feed';
@@ -44,20 +43,26 @@ export default function Narrators() {
             معجم رواة الحديث، وأكثرهم رواية له، وكل ما يتعلق بهم.
           </p>
         </div>
-        <form onSubmit={handleSearch} className="relative w-full shrink-0 md:w-80">
-          <Search className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
+        <form
+          onSubmit={handleSearch}
+          role="search"
+          aria-label="البحث عن راوٍ"
+          className="surface-card flex w-full shrink-0 items-center gap-2 p-2 md:w-96"
+        >
+          <Search className="h-4 w-4 flex-shrink-0 text-foreground/60" aria-hidden="true" />
+          <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="اسم الراوي، شهرته، كنيته، لقبه، أو نسبه"
-            className="h-11 rounded-full pr-11"
+            aria-label="نص البحث"
+            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-foreground/60"
           />
         </form>
       </div>
 
       {/* ── استكشف كل ما يتعلق بالرواة: divided destination list ─────── */}
-      <section className="mt-14">
-        <h2 className="mb-4 font-display text-xl font-medium">استكشف كل ما يتعلق بالرواة</h2>
+      <section className="mt-16 md:mt-20">
+        <h2 className="mb-5 font-display text-2xl font-light md:text-3xl">استكشف كل ما يتعلق بالرواة</h2>
         <div className="surface-card divide-y divide-border/60 overflow-hidden">
           {EXPLORE_LINKS.map(({ key, label, description, href }) => {
             const content = (
@@ -93,8 +98,8 @@ export default function Narrators() {
       </section>
 
       {/* ── أكثر الرواة رواية للحديث: full ranked list ────────────────── */}
-      <section className="mt-16">
-        <h2 className="mb-4 font-display text-xl font-medium">أكثر الرواة رواية للحديث</h2>
+      <section className="mt-16 md:mt-20">
+        <h2 className="mb-5 font-display text-2xl font-light md:text-3xl">أكثر الرواة رواية للحديث</h2>
 
         {isLoading && (
           <div className="py-16 text-center text-muted-foreground">جارٍ تحميل قائمة الرواة...</div>
@@ -117,7 +122,7 @@ export default function Narrators() {
                     href={`/narrator/${narrator.id}`}
                     className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-foreground/[0.03] sm:px-6"
                   >
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-foreground/[0.06] font-display text-sm font-medium text-foreground/60 tabular-nums">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 font-display text-sm font-medium text-primary tabular-nums">
                       {rank.toLocaleString('ar-SA')}
                     </span>
                     <div className="min-w-0 flex-1">

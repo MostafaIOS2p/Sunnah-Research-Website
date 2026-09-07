@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChevronLeft, Search } from 'lucide-react';
 import { Link, useSearch } from 'wouter';
-import { Input } from '@/components/ui/input';
 import { initialOf } from '@/lib/utils';
 import { useListNarrators } from '@workspace/api-client-react';
 
@@ -24,13 +23,14 @@ export default function NarratorsList() {
           <h1 className="font-display text-4xl font-thin tracking-tight md:text-5xl">تراجم الرواة</h1>
           <p className="mt-3 text-lg font-light text-muted-foreground">معجم رواة الحديث، طبقاتهم، والجرح والتعديل.</p>
         </div>
-        <div className="relative w-full shrink-0 md:w-72">
-          <Search className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
+        <div role="search" aria-label="البحث عن راوٍ" className="surface-card flex w-full shrink-0 items-center gap-2 p-2 md:w-80">
+          <Search className="h-4 w-4 flex-shrink-0 text-foreground/60" aria-hidden="true" />
+          <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="ابحث عن راوٍ..."
-            className="h-11 rounded-full pr-11"
+            aria-label="نص البحث"
+            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-foreground/60"
           />
         </div>
       </div>
