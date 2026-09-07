@@ -13,6 +13,7 @@ import BookDetail from '@/pages/book-detail';
 import HadithSource from '@/pages/hadith-source';
 import ChapterHadiths from '@/pages/chapter-hadiths';
 import Narrators from '@/pages/narrators';
+import NarratorsList from '@/pages/narrators-list';
 import NarratorProfile from '@/pages/narrator-profile';
 import Research from '@/pages/research';
 import Saved from '@/pages/saved';
@@ -52,6 +53,7 @@ function Router() {
         <Route path="/hadith-source/:id" component={HadithSource} />
         <Route path="/chapters/:id/hadiths" component={ChapterHadiths} />
         <Route path="/narrators" component={Narrators} />
+        <Route path="/narrators/list" component={NarratorsList} />
         <Route path="/narrator/:id" component={NarratorProfile} />
         <Route path="/research" component={Research} />
         <Route path="/saved" component={Saved} />

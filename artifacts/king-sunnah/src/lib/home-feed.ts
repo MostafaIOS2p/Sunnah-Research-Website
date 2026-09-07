@@ -211,6 +211,32 @@ export function useMostNarratedRawys(pageSize = 8) {
   });
 }
 
+export type MostNarratedRawysPage = {
+  items: Narrator[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+};
+
+// The paginated form of the same endpoint, for the "الرواة" landing page's
+// full ranked list (as opposed to the home page's 8-item preview row above).
+export function useMostNarratedRawysPage(page = 1, pageSize = 20) {
+  return useQuery({
+    queryKey: ['home-feed', 'most-narrators-page', page, pageSize],
+    queryFn: async () => {
+      const data = await fetchJson<{ value?: MostNarratedRawysPage }>(
+        `/api/home/most-narrators?page=${page}&pageSize=${pageSize}`,
+      );
+      if (!data?.value) throw new Error('Narrators list not found');
+      return data.value;
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
 export function useCompoundMatn(pageSize = 8) {
   return useQuery({
     queryKey: ['home-feed', 'compound-matn', pageSize],
