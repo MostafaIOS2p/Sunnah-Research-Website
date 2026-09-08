@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useLocation, Link } from 'wouter';
-import { Bookmark, BookOpen, ChevronLeft, ChevronRight, ListTree, Share2 } from 'lucide-react';
+import { Bookmark, BookOpen, ChevronDown, ChevronLeft, ListTree, Loader2, Share2 } from 'lucide-react';
 import { useBookDetail, useChapters, type ChapterNode } from '@/lib/home-feed';
 import { BookCoverArt, coverImageForTitle } from '@/components/book-cover-art';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,55 +10,150 @@ import { useToast } from '@/hooks/use-toast';
 
 type DetailTab = 'content' | 'about' | 'author';
 
-function ChapterBrowser({ bookId, bookTitle }: { bookId: number; bookTitle: string }) {
+const CHILD_PAGE_SIZE = 100;
+
+// A single node in the chapter tree. A كتاب/باب expands in place when
+// tapped, fetching and revealing its own children indented beneath it —
+// exactly like a file-explorer tree — instead of replacing the whole list
+// with a new "drill in" screen. A hadith leaf has nothing to expand, so
+// tapping it opens the hadith directly.
+function ChapterTreeNode({ node, depth }: { node: ChapterNode; depth: number }) {
   const [, navigate] = useLocation();
-  const [trail, setTrail] = React.useState<{ id: number; title: string }[]>([{ id: bookId, title: bookTitle }]);
-  const [page, setPage] = React.useState(1);
-  const current = trail[trail.length - 1];
-  const { data, isLoading, isError } = useChapters(current.id, page, 20);
+  const [expanded, setExpanded] = React.useState(false);
+  const [pagesLoaded, setPagesLoaded] = React.useState(1);
+  const [accumulated, setAccumulated] = React.useState<ChapterNode[]>([]);
 
-  const drillInto = (node: ChapterNode) => {
-    setTrail((t) => [...t, { id: node.id, title: node.title }]);
-    setPage(1);
-  };
+  const { data, isLoading, isError } = useChapters(node.id, pagesLoaded, CHILD_PAGE_SIZE, {
+    enabled: expanded && !node.isHadith,
+  });
 
-  const goToTrailIndex = (index: number) => {
-    setTrail((t) => t.slice(0, index + 1));
-    setPage(1);
-  };
+  React.useEffect(() => {
+    if (!data) return;
+    setAccumulated((prev) => (pagesLoaded === 1 ? data.items : [...prev, ...data.items]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
-  // Leaf nodes (isHadith: true) open the hadith directly, matching the
-  // mobile app's own "عرض الحديث" behavior. Everything else — a كتاب or
-  // باب with hadiths under it — opens the flattened hadith-list page
-  // instead of guessing at "the first one": the user picks a real
-  // destination from a real list.
-  const readFrom = (node: ChapterNode) => {
-    navigate(node.isHadith ? `/hadith-source/${node.id}` : `/chapters/${node.id}/hadiths`);
+  const hasChildren = !node.isHadith && (node.chaptersCount > 0 || node.hadithsCount > 0);
+
+  const toggle = () => {
+    if (node.isHadith) {
+      navigate(`/hadith-source/${node.id}`);
+      return;
+    }
+    if (!hasChildren) return;
+    setExpanded((e) => !e);
   };
 
   return (
     <div>
-      {trail.length > 1 && (
-        <div className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
-          {trail.map((crumb, i) => (
-            <React.Fragment key={crumb.id}>
-              {i > 0 && <ChevronLeft className="h-3.5 w-3.5" />}
-              {i === trail.length - 1 ? (
-                <span className="truncate font-medium text-foreground">{crumb.title}</span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => goToTrailIndex(i)}
-                  className="truncate transition-colors hover:text-foreground"
-                >
-                  {crumb.title}
-                </button>
-              )}
-            </React.Fragment>
-          ))}
+      <div
+        className="surface-card flex items-center gap-3 p-4 transition-colors hover:bg-foreground/[0.02] sm:p-5"
+        style={{ marginInlineStart: depth * 20 }}
+      >
+        <button
+          type="button"
+          onClick={toggle}
+          className="flex min-w-0 flex-1 items-center gap-3 text-right"
+          aria-expanded={node.isHadith ? undefined : expanded}
+        >
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-foreground/[0.06] text-foreground/60">
+            {node.isHadith ? <BookOpen className="h-4 w-4" /> : <ListTree className="h-4 w-4" />}
+          </span>
+
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-base font-medium">{node.title}</span>
+            {!node.isHadith && (
+              <span className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
+                {node.chaptersCount > 0 && (
+                  <span className="rounded-full bg-sky-500/10 px-2 py-0.5 font-medium text-sky-700 dark:text-sky-300">
+                    {node.chaptersCount.toLocaleString('ar-SA')} باب
+                  </span>
+                )}
+                {node.hadithsCount > 0 && (
+                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-medium text-amber-700 dark:text-amber-300">
+                    {node.hadithsCount.toLocaleString('ar-SA')} حديث
+                  </span>
+                )}
+              </span>
+            )}
+            {node.isHadith && node.hadithNumber && node.hadithNumber.trim() && (
+              <span className="mt-0.5 block text-xs text-muted-foreground">حديث رقم {node.hadithNumber.trim()}</span>
+            )}
+          </span>
+
+          {!node.isHadith && hasChildren && (
+            <ChevronDown
+              className={`h-4 w-4 flex-shrink-0 text-muted-foreground transition-transform ${expanded ? 'rotate-180' : ''}`}
+            />
+          )}
+        </button>
+
+        {node.isHadith && (
+          <Button size="sm" className="flex-shrink-0 rounded-full" onClick={() => navigate(`/hadith-source/${node.id}`)}>
+            قراءة الحديث
+          </Button>
+        )}
+        {!node.isHadith && node.hadithsCount > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-shrink-0 rounded-full"
+            onClick={() => navigate(`/chapters/${node.id}/hadiths`)}
+          >
+            عرض الأحاديث
+          </Button>
+        )}
+      </div>
+
+      {expanded && !node.isHadith && (
+        <div
+          className="mt-2 space-y-2 border-s border-border/50 py-0.5 ps-3"
+          style={{ marginInlineStart: depth * 20 + 18 }}
+        >
+          {isLoading && pagesLoaded === 1 && (
+            <div className="py-6 text-center text-sm text-muted-foreground">جارٍ تحميل المحتوى...</div>
+          )}
+
+          {!isLoading && (isError || !data) && accumulated.length === 0 && (
+            <div className="py-6 text-center text-sm text-muted-foreground">تعذّر تحميل محتوى هذا القسم.</div>
+          )}
+
+          {accumulated.length > 0 && (
+            <div className="space-y-2">
+              {accumulated.map((child) => (
+                <ChapterTreeNode key={child.id} node={child} depth={0} />
+              ))}
+            </div>
+          )}
+
+          {accumulated.length === 0 && data && data.items.length === 0 && (
+            <div className="py-6 text-center text-sm text-muted-foreground">لا يوجد محتوى في هذا القسم.</div>
+          )}
+
+          {data && data.hasNextPage && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 rounded-full text-muted-foreground"
+              disabled={isLoading}
+              onClick={() => setPagesLoaded((p) => p + 1)}
+            >
+              {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+              تحميل المزيد
+            </Button>
+          )}
         </div>
       )}
+    </div>
+  );
+}
 
+function ChapterBrowser({ bookId }: { bookId: number }) {
+  const [page, setPage] = React.useState(1);
+  const { data, isLoading, isError } = useChapters(bookId, page, 50);
+
+  return (
+    <div>
       {isLoading && <div className="py-16 text-center text-muted-foreground">جارٍ تحميل المحتوى...</div>}
 
       {!isLoading && (isError || !data) && (
@@ -69,46 +164,7 @@ function ChapterBrowser({ bookId, bookTitle }: { bookId: number; bookTitle: stri
         <>
           <div className="space-y-2">
             {data.items.map((node) => (
-              <div
-                key={node.id}
-                className="surface-card flex items-center gap-3 p-4 transition-colors hover:bg-foreground/[0.02] sm:p-5"
-              >
-                <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-foreground/[0.06] text-foreground/60">
-                  {node.isHadith ? <BookOpen className="h-4 w-4" /> : <ListTree className="h-4 w-4" />}
-                </span>
-
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-base font-medium">{node.title}</p>
-                  {!node.isHadith && (
-                    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
-                      {node.chaptersCount > 0 && (
-                        <span className="rounded-full bg-sky-500/10 px-2 py-0.5 font-medium text-sky-700 dark:text-sky-300">
-                          {node.chaptersCount.toLocaleString('ar-SA')} باب
-                        </span>
-                      )}
-                      {node.hadithsCount > 0 && (
-                        <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-medium text-amber-700 dark:text-amber-300">
-                          {node.hadithsCount.toLocaleString('ar-SA')} حديث
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  {node.isHadith && node.hadithNumber && node.hadithNumber.trim() && (
-                    <p className="mt-0.5 text-xs text-muted-foreground">حديث رقم {node.hadithNumber.trim()}</p>
-                  )}
-                </div>
-
-                <div className="flex flex-shrink-0 items-center gap-1.5">
-                  {!node.isHadith && node.chaptersCount > 0 && (
-                    <Button variant="outline" size="sm" className="rounded-full" onClick={() => drillInto(node)}>
-                      تصفح الأبواب
-                    </Button>
-                  )}
-                  <Button size="sm" className="rounded-full" onClick={() => readFrom(node)}>
-                    {node.isHadith ? 'قراءة الحديث' : 'عرض الأحاديث'}
-                  </Button>
-                </div>
-              </div>
+              <ChapterTreeNode key={node.id} node={node} depth={0} />
             ))}
 
             {data.items.length === 0 && (
@@ -125,7 +181,7 @@ function ChapterBrowser({ bookId, bookTitle }: { bookId: number; bookTitle: stri
                 disabled={!data.hasPreviousPage}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4 rotate-180" />
                 السابق
               </Button>
               <span className="text-sm text-muted-foreground">
@@ -291,7 +347,7 @@ export default function BookDetail() {
             </TabsList>
 
             <TabsContent value="content" className="mt-6">
-              <ChapterBrowser bookId={bookSummary.id} bookTitle={bookSummary.title} />
+              <ChapterBrowser bookId={bookSummary.id} />
             </TabsContent>
 
             <TabsContent value="about" className="mt-6 space-y-5">

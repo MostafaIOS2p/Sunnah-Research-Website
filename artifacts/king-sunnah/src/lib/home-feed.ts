@@ -294,7 +294,12 @@ export function useBookDetail(id: string | number | undefined) {
   });
 }
 
-export function useChapters(id: string | number | undefined, page = 1, pageSize = 20) {
+export function useChapters(
+  id: string | number | undefined,
+  page = 1,
+  pageSize = 20,
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: ['home-feed', 'chapters', id, page, pageSize],
     queryFn: async () => {
@@ -304,7 +309,7 @@ export function useChapters(id: string | number | undefined, page = 1, pageSize 
       if (!data?.value) throw new Error('Chapter not found');
       return data.value;
     },
-    enabled: id !== undefined && id !== '',
+    enabled: (id !== undefined && id !== '') && (options?.enabled ?? true),
     staleTime: 30 * 60 * 1000,
   });
 }
