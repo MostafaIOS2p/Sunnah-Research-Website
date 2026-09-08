@@ -1,11 +1,4 @@
 import { ChevronLeft } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import type { HadithSourceServices } from '@/lib/home-feed';
 
@@ -39,63 +32,54 @@ const SERVICE_DEFS: { key: string; label: string; description: string }[] = [
   { key: 'hasTahleel', label: 'تحليل الحديث', description: 'تحليل علمي لمعنى الحديث ودلالاته' },
 ];
 
-export function HadithServicesDialog({
-  open,
-  onOpenChange,
-  hadithNumber,
-  bookTitle,
+// A persistent panel that sits beside the hadith text (a website's sidebar,
+// not a mobile modal) — the desktop reading page keeps its available
+// services visible at all times rather than hiding them behind a button
+// that opens a popup.
+export function HadithServicesPanel({
   services,
+  className,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  hadithNumber?: string | null;
-  bookTitle?: string;
   services?: HadithSourceServices;
+  className?: string;
 }) {
   const { toast } = useToast();
 
   const available = SERVICE_DEFS.filter((def) => services?.[def.key]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] max-w-xl overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center justify-between gap-3">
-            <DialogTitle>خدمات الحديث</DialogTitle>
-            {available.length > 0 && (
-              <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-300">
-                {available.length.toLocaleString('ar-SA')}
-              </span>
-            )}
-          </div>
-          <DialogDescription>
-            {hadithNumber ? `حديث رقم ${hadithNumber} — ${bookTitle ?? ''}` : bookTitle}
-          </DialogDescription>
-        </DialogHeader>
-
-        {available.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            لا تتوفر خدمات علمية لهذا الحديث حالياً.
-          </p>
-        ) : (
-          <div className="divide-y divide-border/60 border-y border-border/60">
-            {available.map(({ key, label, description }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => toast({ title: 'قريباً', description: `خدمة "${label}" قيد التطوير حالياً.` })}
-                className="group flex w-full items-center justify-between gap-4 py-3.5 text-right transition-colors hover:bg-foreground/[0.03]"
-              >
-                <span className="min-w-0">
-                  <span className="block text-sm font-medium leading-snug">{label}</span>
-                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">{description}</span>
-                </span>
-                <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-              </button>
-            ))}
-          </div>
+    <div className={`surface-card overflow-hidden ${className ?? ''}`}>
+      <div className="flex items-center justify-between gap-3 border-b border-border/60 px-5 py-4">
+        <h2 className="font-display text-base font-medium">خدمات الحديث</h2>
+        {available.length > 0 && (
+          <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-300">
+            {available.length.toLocaleString('ar-SA')}
+          </span>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+
+      {available.length === 0 ? (
+        <p className="px-5 py-8 text-center text-sm text-muted-foreground">
+          لا تتوفر خدمات علمية لهذا الحديث حالياً.
+        </p>
+      ) : (
+        <div className="divide-y divide-border/60">
+          {available.map(({ key, label, description }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => toast({ title: 'قريباً', description: `خدمة "${label}" قيد التطوير حالياً.` })}
+              className="group flex w-full items-center justify-between gap-3 px-5 py-3.5 text-right transition-colors hover:bg-foreground/[0.03]"
+            >
+              <span className="min-w-0">
+                <span className="block text-sm font-medium leading-snug">{label}</span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">{description}</span>
+              </span>
+              <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

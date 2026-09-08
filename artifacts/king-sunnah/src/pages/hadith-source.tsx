@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useHadithSource, hadithSourcePlainText, type HadithSourceToken } from '@/lib/home-feed';
 import { useToast } from '@/hooks/use-toast';
-import { HadithServicesDialog } from '@/components/hadith/services-dialog';
+import { HadithServicesPanel } from '@/components/hadith/services-panel';
 import { HadithCommentsPanel } from '@/components/hadith/comments-panel';
 
 // A page-level action, named in the open with an icon alongside its label —
@@ -163,7 +163,6 @@ export default function HadithSource() {
 
   const [showTashkeel, setShowTashkeel] = React.useState(true);
   const [fontSize, setFontSize] = React.useState(DEFAULT_FONT_SIZE);
-  const [servicesOpen, setServicesOpen] = React.useState(false);
   const [commentsOpen, setCommentsOpen] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -290,7 +289,7 @@ export default function HadithSource() {
   };
 
   return (
-    <div className="mx-auto max-w-4xl animate-in fade-in px-5 py-14 duration-500 md:px-8 md:py-20">
+    <div className="mx-auto max-w-6xl animate-in fade-in px-5 py-14 duration-500 md:px-8 md:py-20">
       {/* Breadcrumb and page-level actions share one header line — the
           actions are named, spaced apart, and live outside the card
           entirely, closer to how a document toolbar sits above a page than
@@ -417,6 +416,11 @@ export default function HadithSource() {
         </div>
       )}
 
+      {/* The services panel sits beside the hadith itself as a persistent
+          sidebar — a website's layout, not a mobile button-opens-popup
+          pattern — following the same lg:grid sidebar precedent used for
+          the book's chapter tree. */}
+      <div className="lg:grid lg:grid-cols-[1fr_280px] lg:items-start lg:gap-10">
       <div className="surface-card overflow-hidden">
         <div className="space-y-7 p-8 md:p-12">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -507,22 +511,13 @@ export default function HadithSource() {
             الحديث السابق
           </Button>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setServicesOpen(true)}
-              className="rounded-full bg-brass/10 px-4 py-1.5 text-sm font-medium text-brass transition-transform hover:scale-[1.02]"
-            >
-              خدمات الحديث
-            </button>
-            <Link
-              href={`/book/${hadith.bookId}`}
-              className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
-            >
-              <BookOpen className="h-4 w-4" />
-              محتوى الكتاب
-            </Link>
-          </div>
+          <Link
+            href={`/book/${hadith.bookId}`}
+            className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
+          >
+            <BookOpen className="h-4 w-4" />
+            محتوى الكتاب
+          </Link>
 
           <Button
             variant="outline"
@@ -536,13 +531,11 @@ export default function HadithSource() {
         </div>
       </div>
 
-      <HadithServicesDialog
-        open={servicesOpen}
-        onOpenChange={setServicesOpen}
-        hadithNumber={metadata.hadithNumber}
-        bookTitle={hadith.bookTitle}
-        services={hadith.services}
-      />
+      <aside className="mt-6 lg:sticky lg:top-24 lg:mt-0">
+        <HadithServicesPanel services={hadith.services} />
+      </aside>
+      </div>
+
       <HadithCommentsPanel
         open={commentsOpen}
         onOpenChange={setCommentsOpen}
